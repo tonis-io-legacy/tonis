@@ -1,0 +1,21 @@
+language: php
+php:
+- 5.5
+- 5.6
+- 7.0
+- hhvm
+matrix:
+  fast_finish: true
+before_script:
+- composer self-update
+- composer install --prefer-source --no-interaction
+script:
+- cd $TRAVIS_BUILD_DIR
+- vendor/bin/phpunit -c test/phpunit.xml --coverage-clover=./build/clover.xml
+- vendor/bin/phpcs --standard=PSR2 -s -p src/
+after_script:
+- if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.5" ]]; then wget https://scrutinizer-ci.com/ocular.phar;
+  php ocular.phar code-coverage:upload build/clover.xml --format=php-clover; fi
+notifications:
+  slack:
+    secure: vZ7ODPMz2iGvyJbASHvHTQKv4oklxSya2FxeNtz1RHvd1piL352xdbTHSrU7lZRAQcBMp3zib2ULVG+i0G8Q0RX6P5nUxUU23wKh3P8EOoGvMKy0qw4i5aPWfLFMh2IzSQasRjgSyRJqWY8YHzTwHC/OSWH352Bdv4IQrF9ztMY8rM9H8c+LMt5XtZkPiKuMLuqJ5G5iXNKnrNueEn0VgNAEIhJMEnUFUfJeo+UvORbnzl5lxIU/OLwJpfEohhAGrbDSthe6ivW0fsZWM5JjXgyTHIa86cISRhR19LO4PpaII8om/+dRSEGuujy8W4Y3Ls67UUQX+nuVj2cZaiRNx3Kau3IjgfJWCbDQQCwr8eM6JWIfvEdXiVZwhivQNn+QX5lMK63yHAFJTrj3cAzQnddhNTo+v0EkqdW+FrI9WapxP3HJIs9wYaCHWU9D+bEv0dRwA6jcSj/eq54TpRRZEFLq3QwYrmu6G7wtZ6NXe9G9IqtwlU9gtjv3eT+mVgs9EPF1Thx7rAvzzeVz98nFquEe7MfJhvzg65ERJTudhu1auU12gxA8HAQ8PpfGOC4/gYqZns7s/gjzK3MKTPtnwMFeJuwh/kaLSxQI7G8nXsnkB9QvUSf/7IKYOMAAkvdRmLXOLRUMFKSDB+yu/9qfQ4VrzFx6LdIFPFOlZgL0Qfc=

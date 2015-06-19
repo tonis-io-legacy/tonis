@@ -1,0 +1,53 @@
+{
+    "name": "tonis/web",
+    "authors": [
+        {
+            "name": "Kyle Spraggs",
+            "email": "theman@spiffyjr.me"
+        }
+    ],
+    "description": "Tonis is a light-weight, PSR-7 compliant, MVC middleware layer.",
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": ">=5.5",
+        "tonis/di": "~1.0-dev",
+        "tonis/dispatcher": "~1.0-dev",
+        "tonis/event": "~1.0-dev",
+        "tonis/package": "~1.0-dev",
+        "tonis/router": "~1.0-dev",
+        "tonis/view": "~1.0-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.0",
+        "scrutinizer/ocular": "^1.1.1",
+        "squizlabs/php_codesniffer": "^1.0",
+        "league/plates": "^3.1",
+        "twig/twig": "^1.18",
+        "zendframework/zend-diactoros": "^1.0"
+    },
+    "suggest": {
+        "symfony/console": "To add Console integration",
+        "twig/twig": "To use the Twig templating engine",
+        "league/plates": "To use the PlatesPHP templating engine",
+        "zendframework/zend-diactoros": "Or another PSR-7 implementation"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tonis\\Web\\": [
+                "src/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tonis\\Web\\": [
+                "test/"
+            ]
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
