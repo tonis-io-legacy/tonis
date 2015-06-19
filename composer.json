@@ -10,7 +10,7 @@
     "license": "BSD-3-Clause",
     "require": {
         "php": ">=5.5",
-        "tonis/di": "~1.0-dev",
+        "tonis-io/di": "~1.0-dev",
         "zendframework/zend-stratigility": "^1.0"
     },
     "require-dev": {
