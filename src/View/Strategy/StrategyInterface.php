@@ -1,6 +1,6 @@
 <?php
 
-namespace Tonis\View;
+namespace Tonis\View\Strategy;
 
 interface StrategyInterface
 {

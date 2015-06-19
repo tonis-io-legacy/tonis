@@ -1,9 +1,10 @@
 <?php
-namespace Tonis\Web;
+namespace Tonis\Middleware;
 
+use Tonis\App;
+use Tonis\Http\Request;
+use Tonis\Http\Response;
 use Tonis\Router\Router;
-use Tonis\Web\Http\Request;
-use Tonis\Web\Http\Response;
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {

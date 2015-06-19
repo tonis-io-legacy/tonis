@@ -8,15 +8,9 @@ final class Route
     /** @var mixed */
     private $handler;
     /** @var array */
-    private $defaults = [];
-    /** @var array */
-    private $accepts = ['*'];
-    /** @var array */
     private $methods = [];
     /** @var string */
     private $regex;
-    /** @var null|bool */
-    private $secure = null;
     /** @var \SplFixedArray */
     protected $tokens;
 
@@ -50,34 +44,6 @@ final class Route
     }
 
     /**
-     * @param bool $secure
-     * @return $this
-     */
-    public function secure($secure)
-    {
-        $this->secure = (bool) $secure;
-        return $this;
-    }
-
-    /**
-     * @param array $accepts
-     * @return $this
-     */
-    public function accepts(array $accepts)
-    {
-        $this->accepts = $accepts;
-        return $this;
-    }
-
-    /**
-     * @param array $defaults
-     */
-    public function defaults(array $defaults)
-    {
-        $this->defaults = $defaults;
-    }
-
-    /**
      * @param array $methods
      * @return $this
      */
@@ -88,30 +54,6 @@ final class Route
         }
         $this->methods = $methods;
         return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function getSecure()
-    {
-        return $this->secure;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDefaults()
-    {
-        return $this->defaults;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAccepts()
-    {
-        return $this->accepts;
     }
 
     /**

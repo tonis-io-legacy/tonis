@@ -1,8 +1,9 @@
 <?php
-namespace Tonis\Web;
+namespace Tonis\Middleware;
 
-use Tonis\Web\Http\Request;
-use Tonis\Web\Http\Response;
+use Tonis\App;
+use Tonis\Http\Request;
+use Tonis\Http\Response;
 
 interface MiddlewareInterface
 {
@@ -16,7 +17,7 @@ interface MiddlewareInterface
 
     /**
      * @param App $app
-     * @return \Tonis\Router\Router|null
+     * @return \Tonis\Router|null
      */
     public function configure(App $app);
 }

@@ -1,10 +1,10 @@
 <?php
-namespace Tonis\Web\Http;
+namespace Tonis\Http;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use Tonis\Web\App;
+use Tonis\App;
 use Zend\Stratigility\Http\Request as StratigilityRequest;
 
 class Request extends StratigilityRequest

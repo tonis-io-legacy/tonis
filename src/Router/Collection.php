@@ -1,12 +1,7 @@
 <?php
 namespace Tonis\Router;
 
-use Psr\Http\Message\RequestInterface;
-use Tonis\Router\Exception\InvalidRouteException;
-use Tonis\Router\Exception\RouteDoesNotExistException;
-use Tonis\Router\Exception\RouteExistsException;
-
-final class RouteCollection implements \ArrayAccess, \Countable, \Iterator
+final class Collection implements \ArrayAccess, \Countable, \Iterator
 {
     /** @var Route[] */
     private $routes = [];
@@ -39,7 +34,7 @@ final class RouteCollection implements \ArrayAccess, \Countable, \Iterator
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new RouteDoesNotExistException($offset);
+            throw new Exception\RouteDoesNotExistException($offset);
         }
         return $this->routes[$offset];
     }
@@ -50,14 +45,14 @@ final class RouteCollection implements \ArrayAccess, \Countable, \Iterator
     public function offsetSet($offset, $value)
     {
         if (!$value instanceof Route) {
-            throw new InvalidRouteException;
+            throw new Exception\InvalidRouteException;
         }
         if (null === $offset) {
             $this->routes[] = $value;
         } elseif (!isset($this->routes[$offset])) {
             $this->routes[$offset] = $value;
         } else {
-            throw new RouteExistsException($offset);
+            throw new Exception\RouteExistsException($offset);
         }
     }
 
@@ -67,7 +62,7 @@ final class RouteCollection implements \ArrayAccess, \Countable, \Iterator
     public function offsetUnset($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new RouteDoesNotExistException($offset);
+            throw new Exception\RouteDoesNotExistException($offset);
         }
         unset($this->routes[$offset]);
     }

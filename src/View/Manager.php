@@ -1,12 +1,9 @@
 <?php
 namespace Tonis\View;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
-final class ViewManager
+final class Manager
 {
-    /** @var StrategyInterface[] */
+    /** @var Strategy\StrategyInterface[] */
     private $strategies = [];
 
     /**
@@ -36,22 +33,22 @@ final class ViewManager
 
     /**
      * @param string $name
-     * @param StrategyInterface $strategy
+     * @param Strategy\StrategyInterface $strategy
      */
-    public function addStrategy($name, StrategyInterface $strategy)
+    public function addStrategy($name, Strategy\StrategyInterface $strategy)
     {
         $this->strategies[$name] = $strategy;
     }
 
     /**
      * @param string $name
-     * @return StrategyInterface
-     * @throws MissingStrategyException
+     * @return Strategy\StrategyInterface
+     * @throws Exception\MissingStrategyException
      */
     public function getStrategy($name)
     {
         if (!$this->hasStrategy($name)) {
-            throw new MissingStrategyException;
+            throw new Exception\MissingStrategyException;
         }
         return $this->strategies[$name];
     }
@@ -66,7 +63,7 @@ final class ViewManager
     }
 
     /**
-     * @return StrategyInterface[]
+     * @return Strategy\StrategyInterface[]
      */
     public function getStrategies()
     {

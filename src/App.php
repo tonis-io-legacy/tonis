@@ -1,13 +1,10 @@
 <?php
-namespace Tonis\Web;
+namespace Tonis;
 
 use Interop\Container\ContainerInterface;
-use League\Plates\Engine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tonis\Di\Container;
-use Tonis\Router\Router;
-use Tonis\View\ViewManager;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App
@@ -19,7 +16,7 @@ final class App
     {
         $this->pipe = new MiddlewarePipe();
         $this->serviceContainer = new Container();
-        $this->viewManager = new ViewManager();
+        $this->viewManager = new View\Manager();
     }
 
     /**
@@ -37,11 +34,56 @@ final class App
     }
 
     /**
-     * @return Router
+     * @return Router\Router
      */
     public function createRouter()
     {
-        return new Router;
+        return new Router\Router;
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function get($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function post($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function put($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function patch($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function delete($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -65,11 +107,24 @@ final class App
     }
 
     /**
-     * @return ViewManager
+     * @return View\Manager
      */
     public function getViewManager()
     {
         return $this->viewManager;
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     * @param string $type
+     */
+    private function addRouteVerb($path, $handler, $type)
+    {
+        $router = $this->createRouter();
+        $router->$type($path, $handler);
+
+        $this->pipe($router);
     }
 
     /**

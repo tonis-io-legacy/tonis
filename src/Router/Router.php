@@ -9,29 +9,33 @@ final class Router
 {
     /** @var Dispatcher */
     private $dispatcher;
-    /** @var RouteCollection */
-    private $routeCollection;
-    /** @var Rule\RuleInterface[] */
-    private $rules;
+    /** @var Collection */
+    private $collection;
 
     public function __construct()
     {
         $this->dispatcher = new Dispatcher;
-        $this->routeCollection = new RouteCollection;
-        $this->rules = [new Rule\Secure, new Rule\Method(), new Rule\Path()];
+        $this->collection = new Collection;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param callable $next
+     * @return ResponseInterface
+     * @throws Exception\InvalidHandlerException
+     */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $match = $this->match($request);
 
-        if (!$match instanceof RouteMatch) {
+        if (empty($match)) {
             return $next ? $next($request, $response) : $response;
         }
 
-        $request = $request->withAttribute('handler', $match->getRoute()->getHandler());
+        $request = $request->withAttribute('handler', $match[0]);
 
-        foreach ($match->getParams() as $key => $value) {
+        foreach ($match[1] as $key => $value) {
             $request = $request->withAttribute($key, $value);
         }
 
@@ -56,44 +60,38 @@ final class Router
     }
 
     /**
-     * @param string $name
-     * @param array $params
-     * @return string
-     * @throws Exception\RouteDoesNotExistException
-     */
-    public function assemble($name, array $params = [])
-    {
-        $route = $this->routeCollection[$name];
-        foreach ($route->getTokens() as $token) {
-            list($name, $optional) = $token;
-            if (!$optional && !isset($params[$name])) {
-                throw new Exception\MissingParameterException($route->getPath(), $name);
-            }
-        }
-        $replace = function ($matches) use ($params) {
-            if (isset($params[$matches[2]])) {
-                return $matches[1] . $params[$matches[2]];
-            }
-            return '';
-        };
-        return preg_replace_callback('@{([^A-Za-z]*)([A-Za-z]+)[?]?(?::[^}]+)?}@', $replace, $route->getPath());
-    }
-
-    /**
      * @param RequestInterface $request
-     * @return null|RouteMatch
+     * @return array
      */
     public function match(RequestInterface $request)
     {
-        foreach ($this->routeCollection as $route) {
-            $match = $this->matchRoute($request, $route);
+        foreach ($this->collection as $route) {
+            $methods = $route->getMethods();
+            if (!empty($methods)) {
+                $success = false;
 
-            if ($match instanceof RouteMatch) {
-                $this->lastMatch = $match;
-                return $match;
+                foreach ($methods as $allowed) {
+                    if (0 === strcasecmp($request->getMethod(), $allowed)) {
+                        $success = true;
+                        break;
+                    }
+                }
+
+                if (!$success) {
+                    return [];
+                }
+            }
+
+            if (preg_match('@^' . $route->getRegex() . '$@', $request->getUri()->getPath(), $params)) {
+                foreach ($params as $index => $param) {
+                    if (is_numeric($index)) {
+                        unset($params[$index]);
+                    }
+                }
+                return [$route->getHandler(), $params];
             }
         }
-        return null;
+        return [];
     }
 
     /**
@@ -104,7 +102,7 @@ final class Router
      */
     public function add($path, $handler, $name = null)
     {
-        return $this->routeCollection->add($path, $handler, $name);
+        return $this->collection->add($path, $handler, $name);
     }
 
     /**
@@ -163,27 +161,11 @@ final class Router
     }
 
     /**
-     * @return RouteCollection
+     * @return Collection
      */
-    public function getRouteCollection()
+    public function getCollection()
     {
-        return $this->routeCollection;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param Route $route
-     * @return bool
-     */
-    private function matchRoute(RequestInterface $request, Route $route)
-    {
-        $match = new RouteMatch($route);
-        foreach ($this->rules as $rule) {
-            if (!$rule($request, $match)) {
-                return false;
-            }
-        }
-        return $match;
+        return $this->collection;
     }
 
     /**
@@ -195,6 +177,6 @@ final class Router
      */
     private function addWithMethod($path, $handler, $method, $name = null)
     {
-        return $this->routeCollection->add($path, $handler, $name)->methods([$method]);
+        return $this->collection->add($path, $handler, $name)->methods([$method]);
     }
 }

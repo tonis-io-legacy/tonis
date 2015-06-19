@@ -3,7 +3,6 @@
 namespace Tonis\View\Strategy;
 
 use League\Plates\Engine;
-use Tonis\View\StrategyInterface;
 
 final class PlatesStrategy implements StrategyInterface
 {

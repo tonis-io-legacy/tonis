@@ -1,10 +1,10 @@
 <?php
-namespace Tonis\Web\Http;
+namespace Tonis\Http;
 
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Tonis\Web\App;
+use Tonis\App;
 use Zend\Stratigility\Http\Response as StratigilityResponse;
 
 class Response extends StratigilityResponse
