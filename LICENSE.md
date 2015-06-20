@@ -1,4 +1,4 @@
-Copyright (c) 2014, Kyle Spraggs.
+Copyright (c) 2015, Kyle Spraggs.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

@@ -3,7 +3,7 @@ namespace Tonis;
 
 use Exception;
 
-class FinalHandler
+final class FinalHandler
 {
     public function __invoke(Http\Request $req, Http\Response $res, $err = null)
     {
