@@ -2,38 +2,88 @@
 namespace Tonis;
 
 use Interop\Container\ContainerInterface;
+use League\Plates\Engine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tonis\Di\Container;
+use Tonis\View\Strategy\PlatesStrategy;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
+    /** @var array */
+    private $config = [];
     /** @var MiddlewarePipe */
     private $pipe;
+    /** @var ContainerInterface  */
+    private $serviceContainer;
+    /** @var View\Manager */
+    private $viewManager;
 
-    public function __construct()
+    /**
+     * Tonis is a middleware framework stack built on Stratigility. It provides
+     * some quality of life features out of the box.
+     *
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
+        $defaults = [
+            'env' => getenv('TONIS_ENV') ? getenv('TONIS_ENV') : 'development',
+            'fallback_strategy' => null,
+            'error_template' => 'error/error',
+            'not_found_template' => 'error/404',
+        ];
+        $this->config = array_merge($defaults, $config);
+
         $this->pipe = new MiddlewarePipe();
         $this->serviceContainer = new Container();
-        $this->viewManager = new View\Manager();
+
+        if (null === $this->config['fallback_strategy']) {
+            $this->config['fallback_strategy'] = new PlatesStrategy(new Engine(__DIR__ . '/../view'));
+        }
+
+        $this->viewManager = new View\Manager($this->config['fallback_strategy']);
     }
 
     /**
+     * Decorates the request and response so they are aware of Tonis. Additionally, register some helper
+     * middleware if enabled.
+     *
      * @param ServerRequestInterface $req
      * @param ResponseInterface $res
-     * @param callable $next
+     * @param callable $out
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $req, ResponseInterface $res, callable $next = null)
+    public function __invoke(ServerRequestInterface $req, ResponseInterface $res, callable $out = null)
     {
         $req = $this->decorateRequest($req);
         $res = $this->decorateResponse($res);
 
-        return $this->pipe->__invoke($req, $res, $next);
+        return $this->pipe->__invoke($req, $res, $out ?: new FinalHandler());
     }
 
     /**
+     * @param string $key
+     * @param null $value
+     * @return mixed
+     */
+    public function config($key, $value = null)
+    {
+        if (null !== $value) {
+            $this->config[$key] = $value;
+        }
+        return isset($this->config[$key]) ? $this->config[$key] : null;
+    }
+
+    /**
+     * Routers are middleware enabled and can be piped back into Tonis.
+     *
+     * e.g., $router = $app->createRouter();
+     *       $router->get(...)
+     *
+     *       $app->pipe('/foo', $router);
+     *
      * @return Router\Router
      */
     public function createRouter()

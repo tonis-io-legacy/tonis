@@ -1,10 +1,22 @@
 <?php
 namespace Tonis\View;
 
+use Tonis\View\Strategy\StrategyInterface;
+
 final class Manager
 {
     /** @var Strategy\StrategyInterface[] */
     private $strategies = [];
+    /** @var Strategy\StrategyInterface */
+    private $fallbackStrategy;
+
+    /**
+     * @param StrategyInterface $fallbackStrategy
+     */
+    public function __construct(StrategyInterface $fallbackStrategy)
+    {
+        $this->fallbackStrategy = $fallbackStrategy;
+    }
 
     /**
      * @param string $template
@@ -25,7 +37,7 @@ final class Manager
         }
 
         if (null === $result) {
-            throw new Exception\UnableToRenderException;
+            $result = $this->fallbackStrategy->render($template, $params);
         }
 
         return $result;

@@ -13,11 +13,11 @@ interface MiddlewareInterface
      * @param $next
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function __invoke(Request $request, Response $response, $next);
+    public function __invoke(Request $request, Response $response, callable $next = null);
 
     /**
      * @param App $app
-     * @return \Tonis\Router|null
+     * @return \Tonis\Router\Router|null
      */
     public function configure(App $app);
 }
