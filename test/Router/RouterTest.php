@@ -2,30 +2,30 @@
 namespace Tonis\Router;
 
 /**
- * @covers \Tonis\Router\RouteCollection
+ * @covers \Tonis\Router\Router
  */
-class RouteCollectionTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var RouteCollection */
-    private $collection;
+    /** @var Router */
+    private $router;
 
     protected function setUp()
     {
-        $this->collection = new RouteCollection;
+        $this->router = new Router;
     }
 
     public function testGetDispatcher()
     {
-        $dispatcher = $this->collection->getDispatcher();
+        $dispatcher = $this->router->getDispatcher();
         $this->assertInstanceOf(Dispatcher::class, $dispatcher);
     }
 
     public function testAddProxiesToRouteCollectorAddRoute()
     {
-        $collector = $this->collection->getRouteCollector();
+        $collector = $this->router->getRouteCollector();
         $this->assertEmpty($collector->getData()[0]);
 
-        $this->collection->add(['GET', 'POST'], 'foo', 'handler');
+        $this->router->add(['GET', 'POST'], 'foo', 'handler');
         $this->assertNotEmpty($collector->getData()[0]);
     }
 
@@ -35,10 +35,10 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testHttpVerbsProxy($method)
     {
-        $collector = $this->collection->getRouteCollector();
+        $collector = $this->router->getRouteCollector();
         $this->assertEmpty($collector->getData()[0]);
 
-        $this->collection->$method('/foo', 'handler');
+        $this->router->$method('/foo', 'handler');
         $this->assertNotEmpty($collector->getData()[0]);
         $this->assertSame(['/foo' => 'handler'], $collector->getData()[0][strtoupper($method)]);
     }

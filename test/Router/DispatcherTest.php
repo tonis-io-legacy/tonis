@@ -15,10 +15,10 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $collection = new RouteCollection();
-        $collection->get('/foo', 'handler');
+        $router = new Router();
+        $router->get('/foo', 'handler');
 
-        $this->dispatcher = $collection->getDispatcher();
+        $this->dispatcher = $router->getDispatcher();
     }
 
     public function testDispatchProxiesToFastRouter()

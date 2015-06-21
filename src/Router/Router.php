@@ -5,8 +5,10 @@ use FastRoute\DataGenerator;
 use FastRoute\Dispatcher as FastDispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as StdRouteParser;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Stratigility\Http\ResponseInterface;
 
-class RouteCollection
+class Router
 {
     /** @var RouteCollector */
     private $routeCollector;
@@ -17,9 +19,33 @@ class RouteCollection
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param callable $next
+     * @return ResponseInterface
+     */
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
+    {
+        $dispatcher = $this->getDispatcher();
+        $result = $dispatcher->dispatch($request);
+
+        list($code, $handler, $params) = $result;
+
+        if ($code == FastDispatcher::NOT_FOUND || $code == FastDispatcher::METHOD_NOT_ALLOWED) {
+            return $next ? $next($request, $response) : $response;
+        }
+
+        foreach ((array) $params as $key => $value) {
+            $request = $request->withAttribute($key, $value);
+        }
+
+        return $handler($request, $response, $next);
+    }
+
+    /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function get($route, $handler)
     {
@@ -29,7 +55,7 @@ class RouteCollection
     /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function post($route, $handler)
     {
@@ -39,7 +65,7 @@ class RouteCollection
     /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function patch($route, $handler)
     {
@@ -49,7 +75,7 @@ class RouteCollection
     /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function put($route, $handler)
     {
@@ -59,7 +85,7 @@ class RouteCollection
     /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function delete($route, $handler)
     {
@@ -69,7 +95,7 @@ class RouteCollection
     /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function head($route, $handler)
     {
@@ -79,7 +105,7 @@ class RouteCollection
     /**
      * @param string $route
      * @param string $handler
-     * @return RouteCollection
+     * @return self
      */
     public function options($route, $handler)
     {
