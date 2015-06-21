@@ -1,23 +1,30 @@
 <?php
 namespace Tonis\Router;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use FastRoute\Dispatcher as FastDispatcher;
+use Psr\Http\Message\RequestInterface;
 
-final class Dispatcher
+class Dispatcher
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
+    /** @var FastDispatcher */
+    private $fastDispatcher;
+
+    /**
+     * @param FastDispatcher $fastDispatcher
+     */
+    public function __construct(FastDispatcher $fastDispatcher)
     {
-        $handler = $request->getAttribute('handler');
-        $request = $request->withoutAttribute('handler');
+        $this->fastDispatcher = $fastDispatcher;
+    }
 
-        if (is_string($handler)) {
-            $handler = new $handler;
-        }
-        if (!is_callable($handler)) {
-            throw new Exception\InvalidHandlerException;
-        }
-
-        return $handler($request, $response, $next);
+    /**
+     * Proxies to \FastRouter\Dispatcher::dispatch()
+     *
+     * @param RequestInterface $request
+     * @return array
+     */
+    public function dispatch(RequestInterface $request)
+    {
+        return $this->fastDispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
     }
 }
