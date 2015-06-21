@@ -26,14 +26,20 @@ class Router
         $dispatcher = $this->getDispatcher();
         $result = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
 
-        list($code, $handler, $params) = $result;
+        $code = $result[0];
+        $handler = isset($result[1]) ? $result[1] : null;
+        $params = isset($result[2]) ? $result[2] : [];
 
         if ($code == Dispatcher::NOT_FOUND || $code == Dispatcher::METHOD_NOT_ALLOWED) {
             return $next ? $next($request, $response) : $response;
         }
 
-        foreach ((array) $params as $key => $value) {
+        foreach ($params as $key => $value) {
             $request = $request->withAttribute($key, $value);
+        }
+
+        if (!is_callable($handler)) {
+            throw new \RuntimeException('Invalid handler');
         }
 
         return $handler($request, $response, $next);
