@@ -4,7 +4,7 @@ namespace Tonis\Middleware;
 use Tonis\App;
 use Tonis\Http\Request;
 use Tonis\Http\Response;
-use Tonis\Router\Router;
+use Tonis\Router;
 
 abstract class AbstractMiddleware implements MiddlewareInterface
 {

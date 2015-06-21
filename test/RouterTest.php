@@ -1,5 +1,5 @@
 <?php
-namespace Tonis\Router;
+namespace Tonis;
 
 /**
  * @covers \Tonis\Router\Router
@@ -12,12 +12,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->router = new Router;
-    }
-
-    public function testGetDispatcher()
-    {
-        $dispatcher = $this->router->getDispatcher();
-        $this->assertInstanceOf(Dispatcher::class, $dispatcher);
     }
 
     public function testAddProxiesToRouteCollectorAddRoute()

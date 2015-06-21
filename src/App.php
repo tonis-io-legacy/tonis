@@ -84,11 +84,11 @@ final class App
      *
      *       $app->pipe('/foo', $router);
      *
-     * @return Router\Router
+     * @return Router
      */
     public function createRouter()
     {
-        return new Router\Router;
+        return new Router;
     }
 
     /**

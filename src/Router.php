@@ -1,21 +1,18 @@
 <?php
-namespace Tonis\Router;
+namespace Tonis;
 
 use FastRoute\DataGenerator;
-use FastRoute\Dispatcher as FastDispatcher;
+use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use FastRoute\RouteParser\Std as StdRouteParser;
+use FastRoute\RouteParser\Std;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Stratigility\Http\ResponseInterface;
 
 class Router
 {
-    /** @var RouteCollector */
-    private $routeCollector;
-
     public function __construct()
     {
-        $this->routeCollector = new RouteCollector(new StdRouteParser, new DataGenerator\GroupCountBased);
+        $this->routeCollector = new RouteCollector(new Std(), new DataGenerator\GroupCountBased());
     }
 
     /**
@@ -27,11 +24,11 @@ class Router
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $dispatcher = $this->getDispatcher();
-        $result = $dispatcher->dispatch($request);
+        $result = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
 
         list($code, $handler, $params) = $result;
 
-        if ($code == FastDispatcher::NOT_FOUND || $code == FastDispatcher::METHOD_NOT_ALLOWED) {
+        if ($code == Dispatcher::NOT_FOUND || $code == Dispatcher::METHOD_NOT_ALLOWED) {
             return $next ? $next($request, $response) : $response;
         }
 
@@ -125,12 +122,11 @@ class Router
     }
 
     /**
-     * @return Dispatcher
+     * @return Dispatcher\GroupCountBased
      */
     public function getDispatcher()
     {
-        $fastDispatcher = new FastDispatcher\GroupCountBased($this->getRouteCollector()->getData());
-        return new Dispatcher($fastDispatcher);
+        return new Dispatcher\GroupCountBased($this->getRouteCollector()->getData());
     }
 
     /**
