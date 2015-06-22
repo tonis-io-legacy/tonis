@@ -5,10 +5,10 @@ use FastRoute\DataGenerator;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Stratigility\Http\ResponseInterface;
 
-class Router
+final class Router
 {
     public function __construct()
     {
@@ -39,7 +39,7 @@ class Router
         }
 
         if (!is_callable($handler)) {
-            throw new \RuntimeException('Invalid handler');
+            throw new Exception\InvalidHandler('Invalid handler');
         }
 
         return $handler($request, $response, $next);

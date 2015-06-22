@@ -1,13 +1,11 @@
 <?php
 namespace Tonis\View;
 
-use Tonis\View\Strategy\StrategyInterface;
-
 final class Manager
 {
-    /** @var Strategy\StrategyInterface[] */
+    /** @var StrategyInterface[] */
     private $strategies = [];
-    /** @var Strategy\StrategyInterface */
+    /** @var StrategyInterface */
     private $fallbackStrategy;
 
     /**
@@ -45,22 +43,22 @@ final class Manager
 
     /**
      * @param string $name
-     * @param Strategy\StrategyInterface $strategy
+     * @param StrategyInterface $strategy
      */
-    public function addStrategy($name, Strategy\StrategyInterface $strategy)
+    public function addStrategy($name, StrategyInterface $strategy)
     {
         $this->strategies[$name] = $strategy;
     }
 
     /**
      * @param string $name
-     * @return Strategy\StrategyInterface
-     * @throws Exception\MissingStrategyException
+     * @return StrategyInterface
+     * @throws Exception\MissingStrategy
      */
     public function getStrategy($name)
     {
         if (!$this->hasStrategy($name)) {
-            throw new Exception\MissingStrategyException;
+            throw new Exception\MissingStrategy($name);
         }
         return $this->strategies[$name];
     }
@@ -75,7 +73,15 @@ final class Manager
     }
 
     /**
-     * @return Strategy\StrategyInterface[]
+     * @return StrategyInterface
+     */
+    public function getFallbackStrategy()
+    {
+        return $this->fallbackStrategy;
+    }
+
+    /**
+     * @return StrategyInterface[]
      */
     public function getStrategies()
     {

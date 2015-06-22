@@ -1,6 +1,6 @@
 <?php
 
-namespace Tonis\View\Strategy;
+namespace Tonis\View;
 
 use League\Plates\Engine;
 

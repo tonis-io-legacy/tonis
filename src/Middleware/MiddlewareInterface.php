@@ -17,7 +17,7 @@ interface MiddlewareInterface
 
     /**
      * @param App $app
-     * @return \Tonis\Router\Router|null
+     * @return \Tonis\Router|null
      */
     public function configure(App $app);
 }

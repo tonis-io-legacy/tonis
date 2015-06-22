@@ -6,11 +6,13 @@ use League\Plates\Engine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tonis\Di\Container;
-use Tonis\View\Strategy\PlatesStrategy;
+use Tonis\View\PlatesStrategy;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
+    /** @var Router|null */
+    private $currentRouter;
     /** @var array */
     private $config = [];
     /** @var MiddlewarePipe */
@@ -137,6 +139,24 @@ final class App
     }
 
     /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function options($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
+    }
+
+    /**
+     * @param string $path
+     * @param callable $handler
+     */
+    public function head($path, $handler)
+    {
+        $this->addRouteVerb($path, $handler, __FUNCTION__);
+    }
+
+    /**
      * Proxies to MiddlewarePipe::pipe.
      *
      * @param string $path
@@ -145,6 +165,7 @@ final class App
      */
     public function pipe($path, $middleware = null)
     {
+        $this->currentRouter = null;
         return $this->pipe->pipe($path, $middleware);
     }
 
@@ -168,13 +189,18 @@ final class App
      * @param string $path
      * @param callable $handler
      * @param string $type
+     * @return Router
      */
     private function addRouteVerb($path, $handler, $type)
     {
-        $router = $this->createRouter();
-        $router->$type($path, $handler);
+        if (null === $this->currentRouter) {
+            $router = $this->createRouter();
+            $this->currentRouter = $router;
+        } else {
+            $router = $this->currentRouter;
+        }
 
-        $this->pipe($router);
+        $this->pipe($router->$type($path, $handler));
     }
 
     /**
