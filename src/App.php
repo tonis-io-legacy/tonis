@@ -23,9 +23,6 @@ final class App
     private $viewManager;
 
     /**
-     * Tonis is a middleware framework stack built on Stratigility. It provides
-     * some quality of life features out of the box.
-     *
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -81,14 +78,14 @@ final class App
     /**
      * Routers are middleware enabled and can be piped back into Tonis.
      *
-     * e.g., $router = $app->createRouter();
+     * e.g., $router = $app->router();
      *       $router->get(...)
      *
      *       $app->pipe('/foo', $router);
      *
      * @return Router
      */
-    public function createRouter()
+    public function router()
     {
         return new Router;
     }
@@ -194,7 +191,7 @@ final class App
     private function addRouteVerb($path, $handler, $type)
     {
         if (null === $this->currentRouter) {
-            $router = $this->createRouter();
+            $router = $this->router();
             $this->currentRouter = $router;
         } else {
             $router = $this->currentRouter;

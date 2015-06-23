@@ -5,49 +5,77 @@ use Exception;
 
 final class FinalHandler
 {
-    public function __invoke(Http\Request $req, Http\Response $res, $err = null)
+    /**
+     * Checks if $error is present and responds with error or 404 appropriately.
+     *
+     * @param Http\Request $request
+     * @param Http\Response $response
+     * @param mixed $error
+     * @return Http\Response
+     */
+    public function __invoke(Http\Request $request, Http\Response $response, $error = null)
     {
-        if ($err) {
-            return $this->handleError($err, $req, $res);
+        if ($error) {
+            return $this->handleError($error, $request, $response);
         }
-        return $this->handle404($req, $res);
+        return $this->handle404($request, $response);
     }
 
-    private function handleError($err, Http\Request $req, Http\Response $res)
+    /**
+     * Handles an error. Similar to Stratigilities except we're rendering a template.
+     *
+     * @param mixed $error
+     * @param Http\Request $request
+     * @param Http\Response $response
+     * @return Http\Response
+     */
+    private function handleError($error, Http\Request $request, Http\Response $response)
     {
-        $res = $res->withStatus($this->getStatusCode($err, $res));
+        $response = $response->withStatus($this->getStatusCode($error, $response));
         $vars = [
-            'request' => $req,
-            'response' => $res
+            'request' => $request,
+            'response' => $response
         ];
 
-        if ($err instanceof Exception) {
-            $vars['exception'] = $err;
-            $vars['message'] = $err->getMessage();
+        if ($error instanceof Exception) {
+            $vars['exception'] = $error;
+            $vars['message'] = $error->getMessage();
         } else {
-            $vars['message'] = $err;
+            $vars['message'] = $error;
         }
 
-        $res->render('error/error', $vars);
-
-        return $res;
+        return $response->render('error/error', $vars);
     }
 
-    private function handle404(Http\Request $req, Http\Response $res)
+    /**
+     * Handles a 404. Similar to Stratigilities except we're rendering a template.
+     *
+     * @param Http\Request $request
+     * @param Http\Response $response
+     * @return Http\Response
+     */
+    private function handle404(Http\Request $request, Http\Response $response)
     {
-        $res = $res->withStatus(404);
-        $res->render('error/404', ['request' => $req]);
-
-        return $res;
+        return $response
+            ->withStatus(404)
+            ->render('error/404', ['request' => $request]);
     }
 
-    private function getStatusCode($err, Http\Response $res)
+    /**
+     * Identical to Zend\Stratigiilty\FinalHandler::getStatusCode. Stratigilities is a private method, however,
+     * so I couldn't reuse it.
+     *
+     * @param mixed $error
+     * @param Http\Response $response
+     * @return int|mixed
+     */
+    private function getStatusCode($error, Http\Response $response)
     {
-        if ($err instanceof Exception && ($err->getCode() >= 400 && $err->getCode() < 600)) {
-            return $err->getCode();
+        if ($error instanceof Exception && ($error->getCode() >= 400 && $error->getCode() < 600)) {
+            return $error->getCode();
         }
 
-        $status = $res->getStatusCode();
+        $status = $response->getStatusCode();
         if (!$status || $status < 400 || $status >= 600) {
             $status = 500;
         }

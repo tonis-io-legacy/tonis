@@ -2,9 +2,8 @@
 
 <p><?=$this->e($message)?></p>
 
-<?php if ($exception) : ?>
+<?php if (isset($exception)) : ?>
 <h2>Additional Information:</h2>
-<?php endif; ?>
 
 <li>
     <h3><?=get_class($exception)?></h3>
@@ -23,3 +22,4 @@
         </dd>
     </dl>
 </li>
+<?php endif; ?>
