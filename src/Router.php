@@ -10,6 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class Router
 {
+    /** @var RouteCollector */
+    private $routeCollector;
+
     public function __construct()
     {
         $this->routeCollector = new RouteCollector(new Std(), new DataGenerator\GroupCountBased());
@@ -39,7 +42,7 @@ final class Router
         }
 
         if (!is_callable($handler)) {
-            throw new Exception\InvalidHandler('Invalid handler');
+            throw new Exception\InvalidHandler;
         }
 
         return $handler($request, $response, $next);
@@ -116,7 +119,7 @@ final class Router
     }
 
     /**
-     * @param array|string $methods
+     * @param string|string[] $methods
      * @param string $route
      * @param string $handler
      * @return self

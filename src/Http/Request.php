@@ -9,6 +9,9 @@ use Zend\Stratigility\Http\Request as StratigilityRequest;
 
 final class Request extends StratigilityRequest
 {
+    /** @var App */
+    private $app;
+
     /**
      * @param App $app
      * @param ServerRequestInterface $request
