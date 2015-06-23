@@ -23,9 +23,36 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->app = new App();
     }
 
-    public function testNewRouterGetsCreatedAfterPipe()
+    public function testVerbsCreateAndReuseRouter()
     {
-        
+        $app  = $this->app;
+        $refl = new \ReflectionClass($app);
+        $prop = $refl->getProperty('currentRouter');
+        $prop->setAccessible(true);
+
+        $router = $prop->getValue($app);
+        $this->assertNull($router);
+        $app->get('/', 'handler');
+
+        $router = $prop->getValue($app);
+        $this->assertInstanceOf(Router::class, $router);
+
+        $app->get('/foo', 'handler');
+        $this->assertSame($router, $prop->getValue($app));
+    }
+
+    public function testPipe()
+    {
+        $router = $this->app->router();
+        $router->get('/', function($req, $res) {
+            $res->end('success');
+        });
+
+        $this->app->pipe($router);
+
+        $response = $this->app->__invoke($this->newRequest('/'), new Response());
+        $this->assertInstanceOf(TonisResponse::class, $response);
+        $this->assertSame('success', $response->getBody()->__toString());
     }
 
     public function testConfig()

@@ -87,7 +87,8 @@ final class App
      */
     public function router()
     {
-        return new Router;
+        $this->currentRouter = new Router;
+        return $this->currentRouter;
     }
 
     /**
@@ -162,7 +163,6 @@ final class App
      */
     public function pipe($path, $middleware = null)
     {
-        $this->currentRouter = null;
         return $this->pipe->pipe($path, $middleware);
     }
 
@@ -191,13 +191,10 @@ final class App
     private function addRouteVerb($path, $handler, $type)
     {
         if (null === $this->currentRouter) {
-            $router = $this->router();
-            $this->currentRouter = $router;
-        } else {
-            $router = $this->currentRouter;
+            $this->currentRouter = $this->router();
         }
 
-        $this->pipe($router->$type($path, $handler));
+        $this->pipe->pipe($this->currentRouter->$type($path, $handler));
     }
 
     /**
