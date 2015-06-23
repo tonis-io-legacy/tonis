@@ -2024,16 +2024,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "1dce37e6df582f65d7db29cabb3310ddc50b4a50"
+                "reference": "86f8035337387b87881975b5d31d66f09260a891"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/1dce37e6df582f65d7db29cabb3310ddc50b4a50",
-                "reference": "1dce37e6df582f65d7db29cabb3310ddc50b4a50",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/86f8035337387b87881975b5d31d66f09260a891",
+                "reference": "86f8035337387b87881975b5d31d66f09260a891",
                 "shasum": ""
             },
             "require": {
@@ -2070,7 +2070,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2015-06-04 19:49:11"
+            "time": "2015-06-23 15:55:00"
         }
     ],
     "aliases": [],
