@@ -5,25 +5,11 @@ site_url: http://tonis.io
 repo_url: https://github.com/tonis-io/tonis/
 theme: readthedocs
 pages:
-- What is Tonis?: 'index.md'
+- Home: 'index.md'
 - Getting Started:
-  - getting-started/installation.md
+  - getting-started/installing.md
+  - getting-started/hello-world.md
   - getting-started/contributing.md
   - getting-started/license.md
-- Configuration:
-  - configuration/overview.md
-  - configuration/settings.md
 - Basics:
   - basics/routing.md
-  - basics/dispatching.md
-  - basics/views.md
-  - basics/services.md
-  - basics/packages.md
-- Advanced Topics:
-  - advanced/middleware.md
-  - advanced/lifecycle.md
-- Development:
-  - development/vagrant.md
-  - development/docker.md
-- Other:
-  - 'Components & Packages': 'other/components-and-packages.md'
