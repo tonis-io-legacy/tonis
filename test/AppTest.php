@@ -41,14 +41,14 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($router, $prop->getValue($app));
     }
 
-    public function testPipe()
+    public function testAdd()
     {
         $router = $this->app->router();
         $router->get('/', function($req, $res) {
             $res->end('success');
         });
 
-        $this->app->pipe($router);
+        $this->app->add($router);
 
         $response = $this->app->__invoke($this->newRequest('/'), new Response());
         $this->assertInstanceOf(TonisResponse::class, $response);

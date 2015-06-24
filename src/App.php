@@ -161,7 +161,7 @@ final class App
      * @param null $middleware
      * @return MiddlewarePipe
      */
-    public function pipe($path, $middleware = null)
+    public function add($path, $middleware = null)
     {
         return $this->pipe->pipe($path, $middleware);
     }

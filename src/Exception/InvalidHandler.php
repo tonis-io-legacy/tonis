@@ -1,7 +1,7 @@
 <?php
 namespace Tonis\Exception;
 
-class InvalidHandler extends \RuntimeException
+final class InvalidHandler extends \RuntimeException
 {
     public function __construct()
     {
