@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/",
-            "text": "Tonis is a PSR-7 middleware framework and was built with an emphasis simplicity and performance.\n\n\nWhy Tonis?\n\n\nWith the abundance of frameworks and micro-frameworks out there why would you use Tonis?\n\n\n\n\nYou are using PHP 5.5+ and want to take advantage of modern features.\n\n\nYou want 100% unit tested and integration tested code.\n\n\nYou want high quality code.\n\n\nYou want to take advantage of PSR-7.\n\n\nYou want a middleware ready framework.\n\n\nYou want code that runs on HHVM or PHP7 out of the box.\n\n\nYou want to avoid overused globals and static method calls.\n\n\nYou want modular and reusable code.\n\n\nYou want the freedom to choose your own project structure.\n\n\nYou want to get into open source and become a contributor.\n\n\n\n\nIf you answered yes to one or more of the above Tonis might be for you.\n\n\nThe Name\n\n\nI originally got into programming by writing scripts for a game called \nGemstone III\n \n(now Gemstone IV). The name comes from \nTonis\n in Gemstone's world of \n\nElanthia\n. Tonis is the messenger of the gods and is renowned for \nhis speed.",
+            "text": "Tonis is a PSR-7 middleware framework and was built with an emphasis simplicity and performance.\n\n\nWhy Tonis?\n\n\nWith the abundance of frameworks and micro-frameworks out there why would you use Tonis?\n\n\n\n\nYou are using PHP 5.5+ and want to take advantage of modern features.\n\n\nYou want 100% unit tested and integration tested code.\n\n\nYou want high quality code.\n\n\nYou want to take advantage of PSR-7.\n\n\nYou want a middleware ready framework.\n\n\nYou want code that runs on HHVM or PHP7 out of the box.\n\n\nYou want to avoid overused globals and static method calls.\n\n\nYou want modular and reusable code.\n\n\nYou want the freedom to choose your own project structure.\n\n\nYou want to get into open source and become a contributor.\n\n\n\n\nIf you answered yes to one or more of the above Tonis might be for you.\n\n\nThe Name\n\n\nI originally got into programming by writing scripts for a game called \nGemstone III\n \n(now Gemstone IV). The name comes from \nTonis\n in Gemstone's world of \n\nElanthia\n. Tonis is the messenger of the gods and is renowned for \nhis speed.\n\n\nBenchmarks\n\n\nBenchmarks for simple hello world applications are nearly useless but are provided to prevent the inevitable question.\n\n\nSilex: 1.182 ms\nLumen: 0.829 ms\nTonis: 0.742 ms\nSlim3: 0.718 ms\n Slim: 0.561 ms\n\n\n\n\nThese results are generated with ab using 1,000 requests with no concurrency. For more information see the \n\nbench project\n.",
             "title": "Home"
         },
         {
@@ -14,6 +14,11 @@
             "location": "/#the-name",
             "text": "I originally got into programming by writing scripts for a game called  Gemstone III  \n(now Gemstone IV). The name comes from  Tonis  in Gemstone's world of  Elanthia . Tonis is the messenger of the gods and is renowned for \nhis speed.",
             "title": "The Name"
+        },
+        {
+            "location": "/#benchmarks",
+            "text": "Benchmarks for simple hello world applications are nearly useless but are provided to prevent the inevitable question.  Silex: 1.182 ms\nLumen: 0.829 ms\nTonis: 0.742 ms\nSlim3: 0.718 ms\n Slim: 0.561 ms  These results are generated with ab using 1,000 requests with no concurrency. For more information see the  bench project .",
+            "title": "Benchmarks"
         },
         {
             "location": "/getting-started/installing/",
