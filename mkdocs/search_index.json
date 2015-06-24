@@ -1,0 +1,84 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "Tonis is a PSR-7 middleware framework and was built with an emphasis simplicity and performance.\n\n\nWhy Tonis?\n\n\nWith the abundance of frameworks and micro-frameworks out there why would you use Tonis?\n\n\n\n\nYou are using PHP 5.5+ and want to take advantage of modern features.\n\n\nYou want 100% unit tested and integration tested code.\n\n\nYou want high quality code.\n\n\nYou want to take advantage of PSR-7.\n\n\nYou want a middleware ready framework.\n\n\nYou want code that runs on HHVM or PHP7 out of the box.\n\n\nYou want to avoid overused globals and static method calls.\n\n\nYou want modular and reusable code.\n\n\nYou want the freedom to choose your own project structure.\n\n\nYou want to get into open source and become a contributor.\n\n\n\n\nIf you answered yes to one or more of the above Tonis might be for you.\n\n\nThe Name\n\n\nI originally got into programming by writing scripts for a game called \nGemstone III\n \n(now Gemstone IV). The name comes from \nTonis\n in Gemstone's world of \n\nElanthia\n. Tonis is the messenger of the gods and is renowned for \nhis speed.",
+            "title": "Home"
+        },
+        {
+            "location": "/#why-tonis",
+            "text": "With the abundance of frameworks and micro-frameworks out there why would you use Tonis?   You are using PHP 5.5+ and want to take advantage of modern features.  You want 100% unit tested and integration tested code.  You want high quality code.  You want to take advantage of PSR-7.  You want a middleware ready framework.  You want code that runs on HHVM or PHP7 out of the box.  You want to avoid overused globals and static method calls.  You want modular and reusable code.  You want the freedom to choose your own project structure.  You want to get into open source and become a contributor.   If you answered yes to one or more of the above Tonis might be for you.",
+            "title": "Why Tonis?"
+        },
+        {
+            "location": "/#the-name",
+            "text": "I originally got into programming by writing scripts for a game called  Gemstone III  \n(now Gemstone IV). The name comes from  Tonis  in Gemstone's world of  Elanthia . Tonis is the messenger of the gods and is renowned for \nhis speed.",
+            "title": "The Name"
+        },
+        {
+            "location": "/getting-started/installing/",
+            "text": "Tonis uses \nComposer\n to manage dependencies and is required. Once composer is \ninstalled you can install Tonis using the following command:\n\n\ncomposer require tonis-/tonis zendframework/zend-diactoros\n\n\n\n\nNote\n Tonis works with any PSR-7 compatible installation but recommends Diactoros by Zend.\n\n\nServer Requirements\n\n\nTonis has the following requirement:\n\n\n\n\nPHP 5.5 or greater",
+            "title": "Installing"
+        },
+        {
+            "location": "/getting-started/installing/#server-requirements",
+            "text": "Tonis has the following requirement:   PHP 5.5 or greater",
+            "title": "Server Requirements"
+        },
+        {
+            "location": "/getting-started/hello-world/",
+            "text": "Here is an example of a very basic Tonis app.\n\n\n?php\n\nrequire __DIR__ . '/../vendor/autoload.php';\n\n$app = new Tonis\\App;\n$app-\nget('/', function($req, $res) {\n    $res-\nend('Hello from Tonis');\n});\n\n$server = Zend\\Diactoros\\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);\n$server-\nlisten();\n\n\n\n\nYou can run it with:\n\n\nphp -S 127.0.0.1:8080 index.php\n\n\nThen, load \nhttp://127.0.0.1:8080\n in a browser to see the output.",
+            "title": "Hello world"
+        },
+        {
+            "location": "/getting-started/contributing/",
+            "text": "Tonis and related components are open source and licensed as BSD-3-Clause. Contributions are welcome in the form of issue \nreports and pull requests. \n\n\nGetting the Source\n\n\ngit clone git@github.com:tonis-io/tonis\ncomposer install\n\n\n\n\nRunning Tests\n\n\n./vendor/bin/phpunit -c test/phpunit.xml\n\n\n\n\nCoding Standards\n\n\nTonis uses PSR-2 coding standards and checks standards using \nPHP_CodeSniffer\n.\nTo check coding standards:\n\n\nvendor/bin/phpcs --standard=PSR2 -s -p src/ test/\n\n\n\n\nAdditonally, this is automatically checked by \nTravis CI\n and will cause a build failure if not valid.\n\n\nDocumentation\n\n\nAfter \"Getting the Source\" steps above you can find the documentation in in the \ndocs/\n folder. All documentation is written\nin markdown. Once you update the documentation, commit your changes and open a pull request.",
+            "title": "Contributing"
+        },
+        {
+            "location": "/getting-started/contributing/#getting-the-source",
+            "text": "git clone git@github.com:tonis-io/tonis\ncomposer install",
+            "title": "Getting the Source"
+        },
+        {
+            "location": "/getting-started/contributing/#running-tests",
+            "text": "./vendor/bin/phpunit -c test/phpunit.xml",
+            "title": "Running Tests"
+        },
+        {
+            "location": "/getting-started/contributing/#coding-standards",
+            "text": "Tonis uses PSR-2 coding standards and checks standards using  PHP_CodeSniffer .\nTo check coding standards:  vendor/bin/phpcs --standard=PSR2 -s -p src/ test/  Additonally, this is automatically checked by  Travis CI  and will cause a build failure if not valid.",
+            "title": "Coding Standards"
+        },
+        {
+            "location": "/getting-started/contributing/#documentation",
+            "text": "After \"Getting the Source\" steps above you can find the documentation in in the  docs/  folder. All documentation is written\nin markdown. Once you update the documentation, commit your changes and open a pull request.",
+            "title": "Documentation"
+        },
+        {
+            "location": "/getting-started/license/",
+            "text": "Copyright (c) 2015, Kyle Spraggs.\nAll rights reserved.\n\n\nRedistribution and use in source and binary forms, with or without modification,\nare permitted provided that the following conditions are met:\n\n\n\n\n\n\nRedistributions of source code must retain the above copyright notice,\n    this list of conditions and the following disclaimer.\n\n\n\n\n\n\nRedistributions in binary form must reproduce the above copyright notice,\n    this list of conditions and the following disclaimer in the documentation\n    and/or other materials provided with the distribution.\n\n\n\n\n\n\nNeither the name of Kyle Spraggs nor the names of its\n    contributors may be used to endorse or promote products derived from this\n    software without specific prior written permission.\n\n\n\n\n\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\nANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\nWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\nANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON\nANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+            "title": "License"
+        },
+        {
+            "location": "/basics/routing/",
+            "text": "Routing refers to the definition of URIs and how an application responds to a client request. A route\nis a combination of a \nURI\n, a \n\nrequest method\n, and one or more handlers.\n\n\nThe following is an example of a very basic route:\n\n\n$app = new \\Tonis\\App;\n\n// respond with \nhello world\n when a GET request is made to \n/\n\n$app-\nget('/', function ($req, $res) {\n    $res-\nend(\nhello world\n);    \n});\n\n\n\n\nRoute Methods\n\n\nTonis supports the following HTTP methods: \nGET\n, \nPOST\n, \nPUT\n, \nPATCH\n, \nDELETE\n, \nOPTIONS\n, \n\nHEAD\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/', function ($req, $res) {\n    $res-\nend(\nGET request to homepage\n);    \n});\n\n$app-\npost('/', function ($req, $res) {\n    $res-\nend(\nPOST request to homepage\n);    \n});\n\n\n\n\nRoute Parameters\n\n\nRoute parameters may be used by enclosing part of the route in \n{...}\n.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name}', function ($req, $res) {\n    $res-\nend('I match /foo, /bar, /foobar, etc.');\n});\n\n\n\n\nYou can specify a custom pattern match by using \n{foo:regex}\n where regex is a regular expression.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name:[0-9]+', function ($req, $res) {\n    $res-\nend('I match /123 but not /foo');\n});\n\n\n\n\nAdditionally, parts of the route enclosed in \n[...]\n are considered optional.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/foo[bar]', function ($req, $res) {\n    $res-\nend('I match /foo and /foobar but not /bar');\n});\n\n\n\n\nAccessing Parameters\n\n\nAll matched route parameters are available in the \n$request\n object of the route handler. \n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name}', function ($req, $res) {\n    $res-\nend('Hi ' . $req-\ngetAttribute('name'));\n});",
+            "title": "Routing"
+        },
+        {
+            "location": "/basics/routing/#route-methods",
+            "text": "Tonis supports the following HTTP methods:  GET ,  POST ,  PUT ,  PATCH ,  DELETE ,  OPTIONS ,  HEAD  $app = new \\Tonis\\App;\n\n$app- get('/', function ($req, $res) {\n    $res- end( GET request to homepage );    \n});\n\n$app- post('/', function ($req, $res) {\n    $res- end( POST request to homepage );    \n});",
+            "title": "Route Methods"
+        },
+        {
+            "location": "/basics/routing/#route-parameters",
+            "text": "Route parameters may be used by enclosing part of the route in  {...} .  $app = new \\Tonis\\App;\n\n$app- get('/{name}', function ($req, $res) {\n    $res- end('I match /foo, /bar, /foobar, etc.');\n});  You can specify a custom pattern match by using  {foo:regex}  where regex is a regular expression.  $app = new \\Tonis\\App;\n\n$app- get('/{name:[0-9]+', function ($req, $res) {\n    $res- end('I match /123 but not /foo');\n});  Additionally, parts of the route enclosed in  [...]  are considered optional.  $app = new \\Tonis\\App;\n\n$app- get('/foo[bar]', function ($req, $res) {\n    $res- end('I match /foo and /foobar but not /bar');\n});",
+            "title": "Route Parameters"
+        },
+        {
+            "location": "/basics/routing/#accessing-parameters",
+            "text": "All matched route parameters are available in the  $request  object of the route handler.   $app = new \\Tonis\\App;\n\n$app- get('/{name}', function ($req, $res) {\n    $res- end('Hi ' . $req- getAttribute('name'));\n});",
+            "title": "Accessing Parameters"
+        }
+    ]
+}
