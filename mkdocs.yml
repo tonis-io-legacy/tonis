@@ -1,7 +1,7 @@
 site_name: Tonis
 site_author: Kyle Spraggs
 copyright: '&copy; 2015 Kyle Spraggs. All Rights Reserved.'
-site_url: http://tonis.io
+site_url: http://docs.tonis.io
 repo_url: https://github.com/tonis-io/tonis/
 theme: readthedocs
 pages:

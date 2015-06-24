@@ -25,3 +25,19 @@ I originally got into programming by writing scripts for a game called [Gemstone
 (now Gemstone IV). The name comes from [Tonis](https://gswiki.play.net/mediawiki/index.php/Tonis) in Gemstone's world of 
 [Elanthia](https://gswiki.play.net/mediawiki/index.php/Elanthia). Tonis is the messenger of the gods and is renowned for 
 his speed.
+
+Benchmarks
+----------
+
+Benchmarks for simple hello world applications are nearly useless but are provided to prevent the inevitable question.
+ 
+```
+Silex: 1.182 ms
+Lumen: 0.829 ms
+Tonis: 0.742 ms
+Slim3: 0.718 ms
+ Slim: 0.561 ms
+```
+
+These results are generated with ab using 1,000 requests with no concurrency. For more information see the 
+[bench project](https://github.com/tonis-io/bench).
