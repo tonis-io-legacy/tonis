@@ -43,10 +43,7 @@ final class Router
             $request = $request->withAttribute($key, $value);
         }
 
-        if (!$route instanceof Route) {
-            throw new Exception\InvalidHandler;
-        }
-
+        /** @var Route $route */
         $route->setParams($params);
 
         return $route($request, $response);

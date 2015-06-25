@@ -76,6 +76,24 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0][strtoupper($method)]);
     }
 
+    public function testAny()
+    {
+        $handler = function() {};
+
+        $collector = $this->router->getRouteCollector();
+        $this->assertEmpty($collector->getData()[0]);
+        $this->router->any('/foo', $handler);
+
+        $this->assertNotEmpty($collector->getData()[0]);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['GET']);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['POST']);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['PATCH']);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['PUT']);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['DELETE']);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['HEAD']);
+        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['OPTIONS']);
+    }
+
     public function httpVerbProvider()
     {
         return [
