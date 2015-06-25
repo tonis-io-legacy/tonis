@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aee92735664c1b469e20f113a3f7fb1a",
+    "hash": "2a8bb98d1d59d64625a69f29af96c31f",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -237,16 +237,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "df65f70fc36f24d51a90ad706a09cd9b74fc4dd8"
+                "reference": "eeedadd333b80bb5d93559e2285047463fe4fe33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/df65f70fc36f24d51a90ad706a09cd9b74fc4dd8",
-                "reference": "df65f70fc36f24d51a90ad706a09cd9b74fc4dd8",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/eeedadd333b80bb5d93559e2285047463fe4fe33",
+                "reference": "eeedadd333b80bb5d93559e2285047463fe4fe33",
                 "shasum": ""
             },
             "require": {
@@ -283,7 +283,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2015-06-24 20:42:54"
+            "time": "2015-06-25 18:07:28"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -2088,7 +2088,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }

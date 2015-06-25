@@ -9,7 +9,7 @@
     "description": "Tonis is a middleware framework built on top of Stratigility.",
     "license": "BSD-3-Clause",
     "require": {
-        "php": ">=5.6",
+        "php": ">=5.5",
         "container-interop/container-interop": "^1.1",
         "nikic/fast-route": "^0.5.0",
         "league/container": "^1.3",
