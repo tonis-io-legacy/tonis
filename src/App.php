@@ -2,10 +2,10 @@
 namespace Tonis;
 
 use Interop\Container\ContainerInterface;
+use League\Container\Container;
 use League\Plates\Engine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tonis\Di\Container;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App
@@ -19,10 +19,14 @@ final class App
     /** @var View\Manager */
     private $viewManager;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container = null)
     {
         if (null === $container) {
-            $container = new Container;
+            $container = new Container();
+            $container->addServiceProvider(new ServiceProvider);
         }
 
         $this->pipe = new MiddlewarePipe();
