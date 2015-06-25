@@ -3,7 +3,6 @@ namespace Tonis;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Tonis\Exception\InvalidHandler;
 
 class Route
 {
