@@ -31,11 +31,10 @@ final class Router
     {
         $dispatcher = $this->getDispatcher();
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
-        $code       = $result[0];
-        $route      = isset($result[1]) ? $result[1] : null;
-        $params     = isset($result[2]) ? $result[2] : [];
 
-        if ($code == Dispatcher::NOT_FOUND || $code == Dispatcher::METHOD_NOT_ALLOWED) {
+        list($code, $route, $params) = $result;
+
+        if ($code != Dispatcher::FOUND) {
             return $next ? $next($request, $response) : $response;
         }
 
