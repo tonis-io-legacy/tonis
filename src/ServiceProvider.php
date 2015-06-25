@@ -18,7 +18,7 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $container->add(View\Manager::class, function() {
+        $container->add(View\Manager::class, function () {
             return new View\Manager(new PlatesStrategy(new Engine(__DIR__ . '/../view')));
         });
     }
