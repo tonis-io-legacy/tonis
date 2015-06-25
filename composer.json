@@ -11,8 +11,9 @@
     "require": {
         "php": ">=5.5",
         "nikic/fast-route": "^0.5.0",
+        "league/container": "^3.0",
         "league/plates": "^3.0",
-        "tonis-io/di": "~1.0-dev",
+        "zendframework/zend-diactoros": "^1.0",
         "zendframework/zend-stratigility": "^1.0"
     },
     "require-dev": {
@@ -20,9 +21,6 @@
         "scrutinizer/ocular": "^1.1.1",
         "squizlabs/php_codesniffer": "^1.0",
         "zendframework/zend-diactoros": "^1.0"
-    },
-    "suggest": {
-        "zendframework/zend-diactoros": "Or another PSR-7 implementation"
     },
     "autoload": {
         "psr-4": {

@@ -10,11 +10,14 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class Router
 {
+    /** @var \SplQueue */
+    private $middleware;
     /** @var RouteCollector */
     private $routeCollector;
 
     public function __construct()
     {
+        $this->middleware = new \SplQueue;
         $this->routeCollector = new RouteCollector(new Std(), new DataGenerator\GroupCountBased());
     }
 
@@ -41,93 +44,111 @@ final class Router
             $request = $request->withAttribute($key, $value);
         }
 
-        if (!is_callable($handler)) {
-            throw new Exception\InvalidHandler;
-        }
+        $callable = function($request, $response, callable $next = null) use (&$callable, $handler) {
+            if ($this->middleware->isEmpty()) {
+                return $next($request, $response);
+            }
 
-        return $handler($request, $response, $next);
+            $middleware = $this->middleware->dequeue();
+
+            if ($middleware instanceof Route && $middleware !== $handler) {
+                $middleware = $this->middleware->dequeue();
+            }
+
+            return $middleware($request, $response, $callable);
+        };
+
+        return $callable($request, $response, $next);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function get($route, $handler)
+    public function get($path, $handler)
     {
-        return $this->add('GET', $route, $handler);
+        return $this->route('GET', $path, $handler);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function post($route, $handler)
+    public function post($path, $handler)
     {
-        return $this->add('POST', $route, $handler);
+        return $this->route('POST', $path, $handler);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function patch($route, $handler)
+    public function patch($path, $handler)
     {
-        return $this->add('PATCH', $route, $handler);
+        return $this->route('PATCH', $path, $handler);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function put($route, $handler)
+    public function put($path, $handler)
     {
-        return $this->add('PUT', $route, $handler);
+        return $this->route('PUT', $path, $handler);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function delete($route, $handler)
+    public function delete($path, $handler)
     {
-        return $this->add('DELETE', $route, $handler);
+        return $this->route('DELETE', $path, $handler);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function head($route, $handler)
+    public function head($path, $handler)
     {
-        return $this->add('HEAD', $route, $handler);
+        return $this->route('HEAD', $path, $handler);
     }
 
     /**
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function options($route, $handler)
+    public function options($path, $handler)
     {
-        return $this->add('OPTIONS', $route, $handler);
+        return $this->route('OPTIONS', $path, $handler);
     }
 
     /**
      * @param string|string[] $methods
-     * @param string $route
+     * @param string $path
      * @param string $handler
      * @return self
      */
-    public function add($methods, $route, $handler)
+    public function route($methods, $path, $handler)
     {
-        $this->routeCollector->addRoute($methods, $route, $handler);
+        $route = new Route($handler);
+        $this->add($route);
+        $this->routeCollector->addRoute($methods, $path, $route);
+
         return $this;
+    }
+
+    public function add($middleware)
+    {
+        $this->middleware->enqueue($middleware);
     }
 
     /**

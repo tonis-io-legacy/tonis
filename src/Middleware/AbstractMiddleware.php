@@ -9,21 +9,21 @@ use Tonis\Router;
 abstract class AbstractMiddleware implements MiddlewareInterface
 {
     /**
-     * @param Request $req
-     * @param Response $res
+     * @param Request $request
+     * @param Response $response
      * @param callable $next
      * @return Response
      */
-    public function __invoke(Request $req, Response $res, callable $next = null)
+    public function __invoke(Request $request, Response $response, callable $next = null)
     {
-        $app    = $req->app();
+        $app    = $request->app();
         $result = $this->configure($app);
 
         if ($result instanceof Router) {
-            return $result($req, $res, $next);
+            return $result($request, $response, $next);
         }
 
-        return $next ? $next($req, $res) : $res;
+        return $next ? $next($request, $response) : $response;
     }
 
     /**

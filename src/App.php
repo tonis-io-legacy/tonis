@@ -6,13 +6,10 @@ use League\Plates\Engine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tonis\Di\Container;
-use Tonis\View\PlatesStrategy;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
-    /** @var Router|null */
-    private $currentRouter;
     /** @var array */
     private $config = [];
     /** @var MiddlewarePipe */
@@ -22,27 +19,15 @@ final class App
     /** @var View\Manager */
     private $viewManager;
 
-    /**
-     * @param array $config
-     */
-    public function __construct(array $config = [])
+    public function __construct(ContainerInterface $container = null)
     {
-        $defaults = [
-            'env' => getenv('TONIS_ENV') ? getenv('TONIS_ENV') : 'development',
-            'fallback_strategy' => null,
-            'error_template' => 'error/error',
-            'not_found_template' => 'error/404',
-        ];
-        $this->config = array_merge($defaults, $config);
-
-        $this->pipe = new MiddlewarePipe();
-        $this->serviceContainer = new Container();
-
-        if (null === $this->config['fallback_strategy']) {
-            $this->config['fallback_strategy'] = new PlatesStrategy(new Engine(__DIR__ . '/../view'));
+        if (null === $container) {
+            $container = new Container;
         }
 
-        $this->viewManager = new View\Manager($this->config['fallback_strategy']);
+        $this->pipe = new MiddlewarePipe();
+        $this->serviceContainer = $container;
+        $this->viewManager = $container->get(View\Manager::class);
     }
 
     /**
@@ -87,8 +72,7 @@ final class App
      */
     public function router()
     {
-        $this->currentRouter = new Router;
-        return $this->currentRouter;
+        return new Router;
     }
 
     /**
@@ -186,15 +170,10 @@ final class App
      * @param string $path
      * @param callable $handler
      * @param string $type
-     * @return Router
      */
     private function addRouteVerb($path, $handler, $type)
     {
-        if (null === $this->currentRouter) {
-            $this->currentRouter = $this->router();
-        }
-
-        $this->pipe->pipe($this->currentRouter->$type($path, $handler));
+        $this->pipe->pipe($this->router()->$type($path, $handler));
     }
 
     /**

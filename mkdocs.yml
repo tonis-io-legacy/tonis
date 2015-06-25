@@ -13,3 +13,4 @@ pages:
   - getting-started/license.md
 - Basics:
   - basics/routing.md
+  - basics/middleware.md

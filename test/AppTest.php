@@ -23,24 +23,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->app = new App();
     }
 
-    public function testVerbsCreateAndReuseRouter()
-    {
-        $app  = $this->app;
-        $refl = new \ReflectionClass($app);
-        $prop = $refl->getProperty('currentRouter');
-        $prop->setAccessible(true);
-
-        $router = $prop->getValue($app);
-        $this->assertNull($router);
-        $app->get('/', 'handler');
-
-        $router = $prop->getValue($app);
-        $this->assertInstanceOf(Router::class, $router);
-
-        $app->get('/foo', 'handler');
-        $this->assertSame($router, $prop->getValue($app));
-    }
-
     public function testAdd()
     {
         $router = $this->app->router();
