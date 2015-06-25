@@ -3,7 +3,6 @@ namespace Tonis;
 
 use Interop\Container\ContainerInterface;
 use League\Container\Container;
-use League\Plates\Engine;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Stratigility\MiddlewarePipe;
