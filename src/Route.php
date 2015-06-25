@@ -7,19 +7,49 @@ use Tonis\Exception\InvalidHandler;
 
 class Route
 {
-    public function __construct($handler)
+    /** @var callable */
+    private $handler;
+    /** @var array */
+    private $params;
+
+    /**
+     * @param callable $handler
+     */
+    public function __construct(callable $handler)
     {
         $this->handler = $handler;
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
-        $handler = $this->handler;
+        $function = new \ReflectionFunction($this->handler);
+        $args     = [$request, $response];
 
-        if (!is_callable($handler)) {
-            throw new InvalidHandler;
+        foreach ($function->getParameters() as $index => $param) {
+            if ($param->getPosition() < 2) {
+                continue;
+            }
+
+            if (!$param->isOptional() && !array_key_exists($param->getName(), $this->params)) {
+                throw new Exception\MissingArgumentException($param->getName());
+            }
+
+            $args[] = $this->params[$param->getName()];
         }
 
-        return $handler($request, $response, $next);
+        return $function->invokeArgs($args);
+    }
+
+    /**
+     * @param array $params
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
     }
 }

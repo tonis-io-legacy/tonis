@@ -8,8 +8,10 @@ use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
+    /** @var Router */
+    private $currentRouter;
     /** @var MiddlewarePipe */
-    private $pipe;
+    private $stratigility;
     /** @var ContainerInterface  */
     private $serviceContainer;
     /** @var View\Manager */
@@ -25,9 +27,9 @@ final class App
             $container->addServiceProvider(new ServiceProvider);
         }
 
-        $this->pipe = new MiddlewarePipe();
+        $this->stratigility     = new MiddlewarePipe();
         $this->serviceContainer = $container;
-        $this->viewManager = $container->get(View\Manager::class);
+        $this->viewManager      = $container->get(View\Manager::class);
     }
 
     /**
@@ -44,7 +46,7 @@ final class App
         $req = $this->decorateRequest($req);
         $res = $this->decorateResponse($res);
 
-        return $this->pipe->__invoke($req, $res, $out ?: new FinalHandler());
+        return $this->stratigility->__invoke($req, $res, $out ?: new FinalHandler());
     }
 
     /**
@@ -53,13 +55,14 @@ final class App
      * e.g., $router = $app->router();
      *       $router->get(...)
      *
-     *       $app->pipe('/foo', $router);
+     *       $app->stratigility('/foo', $router);
      *
      * @return Router
      */
     public function router()
     {
-        return new Router;
+        $this->currentRouter = new Router;
+        return $this->currentRouter;
     }
 
     /**
@@ -134,7 +137,7 @@ final class App
      */
     public function add($path, $middleware = null)
     {
-        return $this->pipe->pipe($path, $middleware);
+        return $this->stratigility->pipe($path, $middleware);
     }
 
     /**
@@ -160,7 +163,10 @@ final class App
      */
     private function addRouteVerb($path, $handler, $type)
     {
-        $this->pipe->pipe($this->router()->$type($path, $handler));
+        $router = $this->currentRouter ?: $this->router();
+        $router->$type($path, $handler);
+
+        $this->stratigility->pipe($router);
     }
 
     /**

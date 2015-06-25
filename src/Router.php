@@ -30,11 +30,10 @@ final class Router
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $dispatcher = $this->getDispatcher();
-        $result = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
-
-        $code = $result[0];
-        $handler = isset($result[1]) ? $result[1] : null;
-        $params = isset($result[2]) ? $result[2] : [];
+        $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
+        $code       = $result[0];
+        $route      = isset($result[1]) ? $result[1] : null;
+        $params     = isset($result[2]) ? $result[2] : [];
 
         if ($code == Dispatcher::NOT_FOUND || $code == Dispatcher::METHOD_NOT_ALLOWED) {
             return $next ? $next($request, $response) : $response;
@@ -44,12 +43,18 @@ final class Router
             $request = $request->withAttribute($key, $value);
         }
 
-        return (new RouteHandler($this->middleware, $handler))->__invoke($request, $response, $next);
+        if (!$route instanceof Route) {
+            throw new Exception\InvalidHandler;
+        }
+
+        $route->setParams($params);
+
+        return $route($request, $response);
     }
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function get($path, $handler)
@@ -59,7 +64,7 @@ final class Router
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function post($path, $handler)
@@ -69,7 +74,7 @@ final class Router
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function patch($path, $handler)
@@ -79,7 +84,7 @@ final class Router
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function put($path, $handler)
@@ -89,7 +94,7 @@ final class Router
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function delete($path, $handler)
@@ -99,7 +104,7 @@ final class Router
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function head($path, $handler)
@@ -109,7 +114,7 @@ final class Router
 
     /**
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function options($path, $handler)
@@ -118,9 +123,19 @@ final class Router
     }
 
     /**
+     * @param string $path
+     * @param callable $handler
+     * @return Router
+     */
+    public function any($path, $handler)
+    {
+        return $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
+    }
+
+    /**
      * @param string|string[] $methods
      * @param string $path
-     * @param string $handler
+     * @param callable $handler
      * @return self
      */
     public function route($methods, $path, $handler)
