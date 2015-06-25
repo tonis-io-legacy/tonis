@@ -2,15 +2,12 @@
 namespace Tonis;
 
 use Interop\Container\ContainerInterface;
-use League\Container\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
-    /** @var array */
-    private $config = [];
     /** @var MiddlewarePipe */
     private $pipe;
     /** @var ContainerInterface  */
@@ -48,19 +45,6 @@ final class App
         $res = $this->decorateResponse($res);
 
         return $this->pipe->__invoke($req, $res, $out ?: new FinalHandler());
-    }
-
-    /**
-     * @param string $key
-     * @param null $value
-     * @return mixed
-     */
-    public function config($key, $value = null)
-    {
-        if (null !== $value) {
-            $this->config[$key] = $value;
-        }
-        return isset($this->config[$key]) ? $this->config[$key] : null;
     }
 
     /**

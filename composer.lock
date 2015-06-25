@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8cc2c7f3d65d040b3f4dfd903197b81e",
+    "hash": "aee92735664c1b469e20f113a3f7fb1a",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -32,6 +32,64 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "time": "2014-12-30 15:22:37"
+        },
+        {
+            "name": "league/container",
+            "version": "1.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/container.git",
+                "reference": "7e6c17fe48f76f3b97aeca70dc29c3f3c7c88d15"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/container/zipball/7e6c17fe48f76f3b97aeca70dc29c3f3c7c88d15",
+                "reference": "7e6c17fe48f76f3b97aeca70dc29c3f3c7c88d15",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "replace": {
+                "orno/di": "~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev",
+                    "dev-1.x": "1.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Container\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Phil Bennett",
+                    "email": "philipobenito@gmail.com",
+                    "homepage": "http://philipobenito.github.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A fast and intuitive dependency injection container.",
+            "homepage": "https://github.com/thephpleague/container",
+            "keywords": [
+                "container",
+                "dependency",
+                "di",
+                "injection",
+                "league"
+            ],
+            "time": "2015-04-05 17:14:48"
         },
         {
             "name": "league/plates",
@@ -178,53 +236,54 @@
             "time": "2015-05-04 20:22:00"
         },
         {
-            "name": "tonis-io/di",
-            "version": "dev-master",
+            "name": "zendframework/zend-diactoros",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tonis-io/di.git",
-                "reference": "2844ffa0747efd44bd73123af2a4220150c9639d"
+                "url": "https://github.com/zendframework/zend-diactoros.git",
+                "reference": "df65f70fc36f24d51a90ad706a09cd9b74fc4dd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tonis-io/di/zipball/2844ffa0747efd44bd73123af2a4220150c9639d",
-                "reference": "2844ffa0747efd44bd73123af2a4220150c9639d",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/df65f70fc36f24d51a90ad706a09cd9b74fc4dd8",
+                "reference": "df65f70fc36f24d51a90ad706a09cd9b74fc4dd8",
                 "shasum": ""
             },
             "require": {
-                "container-interop/container-interop": "^1.1",
-                "php": ">=5.5"
+                "php": ">=5.4",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "~1.0.0"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.2",
-                "phpunit/phpunit": "^4.0",
-                "squizlabs/php_codesniffer": "^1.0"
+                "phpunit/phpunit": "~4.6",
+                "squizlabs/php_codesniffer": "^2.3.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.0-dev",
+                    "dev-develop": "1.1-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Tonis\\Di\\": [
-                        "src/"
-                    ]
+                    "Zend\\Diactoros\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "BSD-2-Clause"
             ],
-            "authors": [
-                {
-                    "name": "Kyle Spraggs",
-                    "email": "theman@spiffyjr.me"
-                }
+            "description": "PSR HTTP Message implementations",
+            "homepage": "https://github.com/zendframework/zend-diactoros",
+            "keywords": [
+                "http",
+                "psr",
+                "psr-7"
             ],
-            "description": "A light-weight, HHVM compatible, and dependency lite DI container.",
-            "time": "2015-06-20 02:43:26"
+            "time": "2015-06-24 20:42:54"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -272,16 +331,16 @@
         },
         {
             "name": "zendframework/zend-stratigility",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-stratigility.git",
-                "reference": "ecc54a0290e0b526a154072e9410d3bd1d2b9b16"
+                "reference": "47a8cd2348b44afa9ec750c678ba4cbf7b07b2b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-stratigility/zipball/ecc54a0290e0b526a154072e9410d3bd1d2b9b16",
-                "reference": "ecc54a0290e0b526a154072e9410d3bd1d2b9b16",
+                "url": "https://api.github.com/repos/zendframework/zend-stratigility/zipball/47a8cd2348b44afa9ec750c678ba4cbf7b07b2b0",
+                "reference": "47a8cd2348b44afa9ec750c678ba4cbf7b07b2b0",
                 "shasum": ""
             },
             "require": {
@@ -320,7 +379,7 @@
                 "middleware",
                 "psr-7"
             ],
-            "time": "2015-06-16 12:58:05"
+            "time": "2015-06-25 15:07:30"
         }
     ],
     "packages-dev": [
@@ -2021,67 +2080,15 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2015-06-10 15:30:22"
-        },
-        {
-            "name": "zendframework/zend-diactoros",
-            "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "86f8035337387b87881975b5d31d66f09260a891"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/86f8035337387b87881975b5d31d66f09260a891",
-                "reference": "86f8035337387b87881975b5d31d66f09260a891",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "psr/http-message": "~1.0"
-            },
-            "provide": {
-                "psr/http-message-implementation": "~1.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.6",
-                "squizlabs/php_codesniffer": "^2.3.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev",
-                    "dev-develop": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Zend\\Diactoros\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "description": "PSR HTTP Message implementations",
-            "homepage": "https://github.com/zendframework/zend-diactoros",
-            "keywords": [
-                "http",
-                "psr",
-                "psr-7"
-            ],
-            "time": "2015-06-23 15:55:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tonis-io/di": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5"
+        "php": ">=5.6"
     },
     "platform-dev": []
 }

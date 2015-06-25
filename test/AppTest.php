@@ -37,14 +37,6 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('success', $response->getBody()->__toString());
     }
 
-    public function testConfig()
-    {
-        $this->assertSame('development', $this->app->config('env'));
-        $this->assertSame('production', $this->app->config('env', 'production'));
-        $this->assertSame('production', $this->app->config('env'));
-        $this->assertNull($this->app->config('does-not-exist'));
-    }
-
     public function testRouter()
     {
         $router = $this->app->router();

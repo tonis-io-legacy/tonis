@@ -44,21 +44,7 @@ final class Router
             $request = $request->withAttribute($key, $value);
         }
 
-        $callable = function($request, $response, callable $next = null) use (&$callable, $handler) {
-            if ($this->middleware->isEmpty()) {
-                return $next($request, $response);
-            }
-
-            $middleware = $this->middleware->dequeue();
-
-            if ($middleware instanceof Route && $middleware !== $handler) {
-                $middleware = $this->middleware->dequeue();
-            }
-
-            return $middleware($request, $response, $callable);
-        };
-
-        return $callable($request, $response, $next);
+        return (new RouteHandler($this->middleware, $handler))->__invoke($request, $response, $next);
     }
 
     /**
