@@ -42,24 +42,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $request = $this->newRequest('/bar');
         $response = new Response();
 
-        $this->router->get('/{foo}', function ($req) {
-            $this->assertSame('bar', $req->getAttribute('foo'));
+        $that = $this;
+        $this->router->get('/{foo}', function ($req) use ($that) {
+            $that->assertSame('bar', $req->getAttribute('foo'));
             return 'success';
         });
 
         $result = $this->router->__invoke($request, $response);
         $this->assertSame('success', $result);
-    }
-
-    /**
-     * @covers \Tonis\Exception\InvalidHandler
-     * @expectedException \Tonis\Exception\InvalidHandler
-     * @expectedExceptionMessage Invalid handler: must be callable
-     */
-    public function testInvalidHandlerThrowsException()
-    {
-        $this->router->get('/', false);
-        $this->router->__invoke($this->newRequest('/'), new Response());
     }
 
     public function testAddProxiesToRouteCollectorAddRoute()

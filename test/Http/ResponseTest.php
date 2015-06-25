@@ -43,7 +43,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $response = $this->response->jsonp(['foo' => 'bar'], 'test');
         $this->assertInstanceOf(Response::class, $response);
         $this->assertSame('test(' . json_encode(['foo' => 'bar']) . ');', $response->getBody()->__toString());
-        $this->assertSame($response->getHeader('Content-Type'), ['application/json']);
+        $this->assertSame($response->getHeader('Content-Type'), ['application/javascript']);
     }
 
     public function testRender()

@@ -53,7 +53,7 @@ final class Response extends StratigilityResponse
     public function jsonp($input, $callback)
     {
         return $this
-            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Content-Type', 'application/javascript')
             ->write(sprintf('%s(%s);', $callback, json_encode($input)));
     }
 
