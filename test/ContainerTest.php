@@ -1,7 +1,7 @@
 <?php
 namespace Tonis;
 
-use stdClass;
+use StdClass;
 
 /**
  * @covers \Tonis\Container

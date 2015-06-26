@@ -43,8 +43,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
 
         $that = $this;
-        $this->router->get('/{foo}', function ($req) use ($that) {
-            $that->assertSame('bar', $req->getAttribute('foo'));
+        $this->router->get('/{foo}', function () use ($that) {
             return 'success';
         });
 

@@ -31,15 +31,12 @@ final class Router
     {
         $dispatcher = $this->getDispatcher();
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
-
-        list($code, $route, $params) = $result;
+        $code       = $result[0];
+        $route      = isset($result[1]) ? $result[1] : null;
+        $params     = isset($result[2]) ? $result[2] : [];
 
         if ($code != Dispatcher::FOUND) {
             return $next ? $next($request, $response) : $response;
-        }
-
-        foreach ($params as $key => $value) {
-            $request = $request->withAttribute($key, $value);
         }
 
         /** @var Route $route */
