@@ -1,24 +1,25 @@
 <?php
 namespace Tonis;
 
-use FastRoute\DataGenerator;
+use FastRoute\DataGenerator\GroupCountBased as RouteGenerator;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use FastRoute\RouteParser\Std;
+use FastRoute\RouteParser\Std as RouteParser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Stratigility\MiddlewarePipe;
 
 final class Router
 {
-    /** @var \SplQueue */
-    private $middleware;
     /** @var RouteCollector */
     private $routeCollector;
 
     public function __construct()
     {
-        $this->middleware = new \SplQueue;
-        $this->routeCollector = new RouteCollector(new Std(), new DataGenerator\GroupCountBased());
+        $this->stratigility   = new MiddlewarePipe;
+        $this->routeCollector = new RouteCollector(new RouteParser, new RouteGenerator);
+
+        $this->stratigility->pipe([$this, 'run']);
     }
 
     /**
@@ -28,6 +29,11 @@ final class Router
      * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
+    {
+        return $this->stratigility->__invoke($request, $response, $next);
+    }
+
+    public function run(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $dispatcher = $this->getDispatcher();
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
@@ -48,71 +54,64 @@ final class Router
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function get($path, $handler)
     {
-        return $this->route('GET', $path, $handler);
+        $this->route('GET', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function post($path, $handler)
     {
-        return $this->route('POST', $path, $handler);
+        $this->route('POST', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function patch($path, $handler)
     {
-        return $this->route('PATCH', $path, $handler);
+        $this->route('PATCH', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function put($path, $handler)
     {
-        return $this->route('PUT', $path, $handler);
+        $this->route('PUT', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function delete($path, $handler)
     {
-        return $this->route('DELETE', $path, $handler);
+        $this->route('DELETE', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function head($path, $handler)
     {
-        return $this->route('HEAD', $path, $handler);
+        $this->route('HEAD', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function options($path, $handler)
     {
-        return $this->route('OPTIONS', $path, $handler);
+        $this->route('OPTIONS', $path, $handler);
     }
 
     /**
@@ -122,27 +121,23 @@ final class Router
      */
     public function any($path, $handler)
     {
-        return $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
+        $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
     }
 
     /**
      * @param string|string[] $methods
      * @param string $path
      * @param callable $handler
-     * @return self
      */
     public function route($methods, $path, $handler)
     {
         $route = new Route($handler);
-        $this->add($route);
         $this->routeCollector->addRoute($methods, $path, $route);
-
-        return $this;
     }
 
-    public function add($middleware)
+    public function add($path, $middleware = null)
     {
-        $this->middleware->enqueue($middleware);
+        $this->stratigility->pipe($path, $middleware);
     }
 
     /**

@@ -4,14 +4,11 @@ namespace Tonis;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
     /** @var Router */
-    private $currentRouter;
-    /** @var MiddlewarePipe */
-    private $stratigility;
+    private $router;
     /** @var ContainerInterface  */
     private $serviceContainer;
     /** @var View\Manager */
@@ -27,26 +24,25 @@ final class App
             $container->addServiceProvider(new ServiceProvider);
         }
 
-        $this->stratigility     = new MiddlewarePipe();
+        $this->router           = new Router;
         $this->serviceContainer = $container;
         $this->viewManager      = $container->get(View\Manager::class);
     }
 
     /**
-     * Decorates the request and response so they are aware of Tonis. Additionally, register some helper
-     * middleware if enabled.
-     *
-     * @param ServerRequestInterface $req
-     * @param ResponseInterface $res
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
      * @param callable $out
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $req, ResponseInterface $res, callable $out = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
     {
-        $req = $this->decorateRequest($req);
-        $res = $this->decorateResponse($res);
+        $request  = $this->decorateRequest($request);
+        $response = $this->decorateResponse($response);
+        $router   = $this->router;
+        $result   = $router($request, $response, $out ?: new FinalHandler());
 
-        return $this->stratigility->__invoke($req, $res, $out ?: new FinalHandler());
+        return $result instanceof ResponseInterface ? $result : $response;
     }
 
     /**
@@ -61,8 +57,7 @@ final class App
      */
     public function router()
     {
-        $this->currentRouter = new Router;
-        return $this->currentRouter;
+        return new Router;
     }
 
     /**
@@ -132,12 +127,11 @@ final class App
      * Proxies to MiddlewarePipe::pipe.
      *
      * @param string $path
-     * @param null $middleware
-     * @return MiddlewarePipe
+     * @param callable $handler
      */
-    public function add($path, $middleware = null)
+    public function add($path, $handler = null)
     {
-        return $this->stratigility->pipe($path, $middleware);
+        $this->router->add($path, $handler);
     }
 
     /**
@@ -163,37 +157,34 @@ final class App
      */
     private function addRouteVerb($path, $handler, $type)
     {
-        $router = $this->currentRouter ?: $this->router();
-        $router->$type($path, $handler);
-
-        $this->stratigility->pipe($router);
+        $this->router->$type($path, $handler);
     }
 
     /**
      * Decorates a request to add this app to it.
      *
-     * @param ServerRequestInterface $req
+     * @param ServerRequestInterface $request
      * @return ServerRequestInterface|Http\Request
      */
-    private function decorateRequest(ServerRequestInterface $req)
+    private function decorateRequest(ServerRequestInterface $request)
     {
-        if ($req instanceof Http\Request) {
-            return $req;
+        if ($request instanceof Http\Request) {
+            return $request;
         }
-        return new Http\Request($this, $req);
+        return new Http\Request($this, $request);
     }
 
     /**
      * Decorates a response to add this app to it.
      *
-     * @param ResponseInterface $res
+     * @param ResponseInterface $response
      * @return ResponseInterface|Http\Response
      */
-    private function decorateResponse(ResponseInterface $res)
+    private function decorateResponse(ResponseInterface $response)
     {
-        if ($res instanceof Http\Response) {
-            return $res;
+        if ($response instanceof Http\Response) {
+            return $response;
         }
-        return new Http\Response($this, $res);
+        return new Http\Response($this, $response);
     }
 }
