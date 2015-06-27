@@ -13,13 +13,16 @@ final class Router
 {
     /** @var RouteCollector */
     private $routeCollector;
+    /** @var MiddlewarePipe[] */
+    private $paramPipes = [];
+    /** @var MiddlewarePipe */
+    private $routerPipe;
 
     public function __construct()
     {
-        $this->stratigility   = new MiddlewarePipe;
+        $this->paramPipe      = new MiddlewarePipe;
+        $this->routerPipe     = new MiddlewarePipe;
         $this->routeCollector = new RouteCollector(new RouteParser, new RouteGenerator);
-
-        $this->stratigility->pipe([$this, 'run']);
     }
 
     /**
@@ -30,9 +33,18 @@ final class Router
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        return $this->stratigility->__invoke($request, $response, $next);
+        $routerPipe = $this->routerPipe;
+        $routerPipe->pipe([$this, 'run']);
+
+        return $routerPipe($request, $response, $next);
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param callable $next
+     * @return ResponseInterface
+     */
     public function run(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $dispatcher = $this->getDispatcher();
@@ -48,7 +60,39 @@ final class Router
         /** @var Route $route */
         $route->setParams($params);
 
-        return $route($request, $response);
+        foreach ($params as $key => $value) {
+            $request[$key] = $value;
+        }
+
+        $paramHandler = function ($request, $response, $err = null) use (&$params, &$paramHandler, $route, $next) {
+            if (empty($params)) {
+                if (null !== $err) {
+                    return $next($request, $response, $err);
+                }
+                return $route($request, $response);
+            }
+
+            $name  = key($params);
+            $param = array_shift($params);
+            $pipe  = isset($this->paramPipes[$name]) ? $this->paramPipes[$name] : null;
+
+            if (null === $pipe) {
+                return $route($request, $response);
+            }
+
+            return $pipe($request, $response, $paramHandler);
+        };
+
+
+        return $paramHandler($request, $response);
+    }
+
+    public function param($param, $handler)
+    {
+        if (!isset($this->paramPipes[$param])) {
+            $this->paramPipes[$param] = new MiddlewarePipe;
+        }
+        $this->paramPipes[$param]->pipe($handler);
     }
 
     /**
@@ -137,7 +181,7 @@ final class Router
 
     public function add($path, $middleware = null)
     {
-        $this->stratigility->pipe($path, $middleware);
+        $this->routerPipe->pipe($path, $middleware);
     }
 
     /**

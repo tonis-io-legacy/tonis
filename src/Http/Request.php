@@ -7,10 +7,17 @@ use Psr\Http\Message\UriInterface;
 use Tonis\App;
 use Zend\Stratigility\Http\Request as StratigilityRequest;
 
-final class Request extends StratigilityRequest
+final class Request extends StratigilityRequest implements \ArrayAccess
 {
     /** @var App */
     private $app;
+    /**
+     * An array of parameters from route matches. e.g., /user/user_id would have a
+     * param of user_id. Params are accessible via ArrayAccess.
+     *
+     * @var array
+     */
+    private $params = [];
 
     /**
      * @param App $app
@@ -132,5 +139,39 @@ final class Request extends StratigilityRequest
     public function withoutAttribute($attribute)
     {
         return new self($this->app, parent::withoutAttribute($attribute));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetExists($offset)
+    {
+        return array_key_exists($offset, $this->params);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetGet($offset)
+    {
+        return $this->offsetExists($offset) ? $this->params[$offset] : null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->params[$offset] = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetUnset($offset)
+    {
+        if ($this->offsetExists($offset)) {
+            unset($this->params[$offset]);
+        }
     }
 }

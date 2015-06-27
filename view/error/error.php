@@ -1,6 +1,4 @@
-<h1><?=$response->getStatusCode()?> <small>An Error Occurred</small></h1>
-
-<p><?=$this->e($message)?></p>
+<h1><?=$response->getStatusCode()?> <small><?=$this->e($message ? $message : 'An Error Occurred')?></small></h1>
 
 <?php if (isset($exception)) : ?>
 <h2>Additional Information:</h2>
