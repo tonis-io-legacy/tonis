@@ -17,6 +17,5 @@ pages:
 - Objects:
   - objects/request.md
   - objects/response.md
-  - objects/router.md
 - Resources:
   - 'Official Middleware': resources/official-middleware.md
