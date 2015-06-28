@@ -87,8 +87,7 @@ final class Router
                 return $route($request, $response);
             }
 
-            $name  = key($params);
-            $value = array_shift($params);
+            $name = key($params);
 
             if (!isset($this->paramHandlers[$name])) {
                 return $route($request, $response);
