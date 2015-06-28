@@ -217,20 +217,30 @@ $app-&gt;add(function ($request, $response, $next) {
     return $response
 });
 
+$app-&gt;get('/', function ($request, $response) {
+    return $response-&gt;write('GET on /');
+});
+
 // routers are middleware and may be mounted to the app
 // additionally, they are reusable, and you can use them to create bundles/packages/modules
 $router = $app-&gt;router();
 $router-&gt;get('/', function ($request, $response) {
-    return $response-&gt;write('GET on /');
+    return $response-&gt;write('GET on /articles/');
 });
 
 // this mounts the router to /articles so the GET above will respond to /articles/
 $app-&gt;add('/articles', $router);
 </code></pre>
 
-<p>A <code>GET</code> request to <code>/articles/</code> using the above app would return:</p>
+<p>A <code>GET</code> request to <code>/</code> using the above app would return:</p>
 <pre><code>pre
 GET on /
+post
+</code></pre>
+
+<p>A <code>GET</code> request to <code>/articles/</code> using the above app would return:</p>
+<pre><code>pre
+GET on /articles/
 post
 </code></pre>
 
