@@ -22,28 +22,28 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testInvokeWithNoRoute()
     {
-        $request = $this->newRequest('/');
-        $response = new Response();
+        $request  = $this->newTonisRequest('/');
+        $response = $this->newTonisResponse();
 
-        $result = $this->router->__invoke($request, $response, function() {
-            return 'success';
+        $result = $this->router->__invoke($request, $response, function($req, $res) {
+            $res->write('success');
         });
 
-        $this->assertSame('success', $result);
+        $this->assertSame('success', $result->getBody()->__toString());
     }
 
     public function testInvokeWithRoute()
     {
-        $request = $this->newRequest('/bar');
-        $response = new Response();
+        $request  = $this->newTonisRequest('/bar');
+        $response = $this->newTonisResponse();
 
         $that = $this;
-        $this->router->get('/{foo}', function () use ($that) {
-            return 'success';
+        $this->router->get('/{foo}', function ($req, $res) use ($that) {
+            $res->write('success');
         });
 
         $result = $this->router->__invoke($request, $response);
-        $this->assertSame('success', $result);
+        $this->assertSame('success', $result->getBody()->__toString());
     }
 
     /**
@@ -52,33 +52,38 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testHttpVerbsProxy($method)
     {
-        $this->markTestSkipped('need to fix');
-        $handler = function() {};
-        $collector = $this->router->getRouteCollector();
+        $handler   = function() {};
+        $refl      = new \ReflectionClass($this->router);
+        $collector = $refl->getProperty('collector');
+        $collector->setAccessible(true);
+        $collector = $collector->getValue($this->router);
+
         $this->assertEmpty($collector->getData()[0]);
 
         $this->router->$method('/foo', $handler);
         $this->assertNotEmpty($collector->getData()[0]);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0][strtoupper($method)]);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0][strtoupper($method)]);
     }
 
     public function testAny()
     {
-        $this->markTestIncomplete('need to fix');
-        $handler = function() {};
+        $handler   = function() {};
+        $refl      = new \ReflectionClass($this->router);
+        $collector = $refl->getProperty('collector');
+        $collector->setAccessible(true);
+        $collector = $collector->getValue($this->router);
 
-        $collector = $this->router->getRouteCollector();
         $this->assertEmpty($collector->getData()[0]);
         $this->router->any('/foo', $handler);
 
         $this->assertNotEmpty($collector->getData()[0]);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['GET']);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['POST']);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['PATCH']);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['PUT']);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['DELETE']);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['HEAD']);
-        $this->assertEquals(['/foo' => new Route($handler)], $collector->getData()[0]['OPTIONS']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['GET']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['POST']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['PATCH']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['PUT']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['DELETE']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['HEAD']);
+        $this->assertEquals(['/foo' => $handler], $collector->getData()[0]['OPTIONS']);
     }
 
     public function httpVerbProvider()

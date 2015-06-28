@@ -22,7 +22,7 @@ trait NewRequestTrait
     /**
      * @param string $path
      * @param array $server
-     * @return \Zend\Diactoros\ServerRequest
+     * @return TonisRequest
      */
     protected function newTonisRequest($path, array $server = [])
     {

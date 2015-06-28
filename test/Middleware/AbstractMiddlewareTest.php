@@ -43,6 +43,6 @@ class AbstractMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $middle = new TestMiddleware();
         $result = $middle->__invoke($request, $response);
-        $this->assertSame('foo', $result);
+        $this->assertSame('foo', $result->getBody()->__toString());
     }
 }

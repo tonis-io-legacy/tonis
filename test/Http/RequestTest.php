@@ -2,6 +2,7 @@
 namespace Tonis\Http;
 
 use Tonis\App;
+use Tonis\TestAsset\NewRequestTrait;
 use Zend\Diactoros\ServerRequest as DiactorosRequest;
 use Zend\Diactoros\Stream;
 use Zend\Diactoros\Uri;
@@ -12,13 +13,29 @@ use Zend\Stratigility\Http\Request as StratigilityRequest;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    use NewRequestTrait;
+
+    public function testArrayAccess()
+    {
+        $req = $this->newTonisRequest('/');
+        $req['foo'] = 'bar';
+
+        $this->assertCount(1, $req->getParams());
+        $this->assertTrue(isset($req['foo']));
+        $this->assertSame('bar', $req['foo']);
+
+        unset($req['foo']);
+
+        $this->assertCount(0, $req->getParams());
+        $this->assertNull($req['foo']);
+    }
+
     /**
      * @dataProvider proxyProvider
      */
     public function testProxyCalls($method, $input)
     {
-        $sRequest = new StratigilityRequest(new DiactorosRequest);
-        $req = new Request(new App(), $sRequest);
+        $req = $this->newTonisRequest('/');
 
         $result = call_user_func_array([$req, $method], $input);
 
