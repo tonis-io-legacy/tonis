@@ -36,15 +36,29 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testParamWithError()
     {
         $this->router->param('id', function ($req, $res, $next) {
-            $res->write($req['id']);
-            $next($req, $res);
+            $next($req, $res, 'error');
         });
         $this->router->get('/{id}', function ($req, $res) {
             return $res->write('get');
         });
 
         $result = $this->router->__invoke($this->newTonisRequest('/1234'), $this->newTonisResponse());
-        $this->assertSame('1234get', $result->getBody()->__toString());
+        $this->assertSame('error', $result->getBody()->__toString());
+    }
+
+    public function testAddingMiddleware()
+    {
+        $this->router->add(function($req, $res, $next) {
+            $res->write('add');
+            return $next($req, $res);
+        });
+
+        $request  = $this->newTonisRequest('/');
+        $response = $this->newTonisResponse();
+
+        $result = $this->router->__invoke($request, $response);
+
+        $this->assertSame('add', $result->getBody()->__toString());
     }
 
     public function testInvokeWithNoRoute()
