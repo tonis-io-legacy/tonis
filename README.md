@@ -4,9 +4,9 @@
 
 # Tonis
 
-Tonis is a PSR-7 middleware framework built with an emphasis on simplicity and performance. Tonis is inspired
-by [Express](http://expressjs.com/) and uses [Stratigility](https://github.com/zendframework/zend-stratigility) for 
-the middleware pipeline.
+Tonis is a PSR-7 middleware framework built for simplicity and performance. Tonis is inspired by 
+[Express](http://expressjs.com/) and uses [Stratigility](https://github.com/zendframework/zend-stratigility) for the 
+middleware pipeline.
 
 Documentation
 -------------
