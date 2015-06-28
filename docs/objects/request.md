@@ -13,9 +13,9 @@ ArrayAccess
 `Tonis\Http\Request` implements `ArrayAccess` to provide access to the route match parameters.
 
 ```php
-$app = new \Tonis\App;
 $app->get('/hello/{name}', function ($request, $response) {
-    $response->write('Hello, ' . $request['name']);
+    // output is Hello, foo
+    return $response->write('Hello, ' . $request['name']);
 });
 ```
 
@@ -26,9 +26,23 @@ app()
 
 Retrieve the instance of `Tonis\App` bound to the request.
 
+```php
+$app->get('/', function ($request, $response) {
+    // output is Tonis\App
+    return $response->write(get_class($request->app()); 
+});
+```
+
 getParams()
 -----------
 
 `public function getParams(): array`
 
 Get all route params from the matched route.
+
+```php
+$app->get('/hello/{name}', function ($request, $response) {
+    // output is array ('name' => 'foo',)
+    return $response->write(var_export($request->getParams(), true));
+});
+```
