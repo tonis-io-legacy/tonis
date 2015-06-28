@@ -1,7 +1,6 @@
 <?php
 namespace Tonis\Http;
 
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Tonis\App;
@@ -23,6 +22,8 @@ final class Response extends StratigilityResponse
     }
 
     /**
+     * Retrieve the instance of `Tonis\App` bound to the response.
+     *
      * @return App
      */
     public function app()
@@ -31,7 +32,7 @@ final class Response extends StratigilityResponse
     }
 
     /**
-     * Encodes the input as JSON.
+     * Encodes the input as JSON and sets the Content-Type header to application/json.
      *
      * @param mixed $input
      * @return self
@@ -44,10 +45,10 @@ final class Response extends StratigilityResponse
     }
 
     /**
-     * Encodes the input as JSONP.
+     * Encodes the input as JSONP and sets the Content-Type header to application/javascript.
      *
      * @param mixed $input
-     * @param $callback
+     * @param string $callback
      * @return self
      */
     public function jsonp($input, $callback)
@@ -58,11 +59,12 @@ final class Response extends StratigilityResponse
     }
 
     /**
-     * Renders the input using the ViewManager.
+     * Attempts to render the `$template` with `$params` using the ViewManager. If a strategy
+     * is not available then the Tonis fallback strategy is used.
      *
      * @param string $template
      * @param array $params
-     * @return self
+     * @return string
      */
     public function render($template, array $params = [])
     {
