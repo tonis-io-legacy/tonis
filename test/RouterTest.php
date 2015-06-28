@@ -1,7 +1,6 @@
 <?php
 namespace Tonis;
 
-use FastRoute\Dispatcher\GroupCountBased;
 use Tonis\TestAsset\NewRequestTrait;
 use Zend\Diactoros\Response;
 
@@ -18,6 +17,34 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->router = new Router;
+    }
+
+    public function testParam()
+    {
+        $this->router->param('id', function ($req, $res, $next) {
+            $res->write($req['id']);
+            $next($req, $res);
+        });
+        $this->router->get('/{id}', function ($req, $res) {
+            return $res->write('get');
+        });
+
+        $result = $this->router->__invoke($this->newTonisRequest('/1234'), $this->newTonisResponse());
+        $this->assertSame('1234get', $result->getBody()->__toString());
+    }
+
+    public function testParamWithError()
+    {
+        $this->router->param('id', function ($req, $res, $next) {
+            $res->write($req['id']);
+            $next($req, $res);
+        });
+        $this->router->get('/{id}', function ($req, $res) {
+            return $res->write('get');
+        });
+
+        $result = $this->router->__invoke($this->newTonisRequest('/1234'), $this->newTonisResponse());
+        $this->assertSame('1234get', $result->getBody()->__toString());
     }
 
     public function testInvokeWithNoRoute()

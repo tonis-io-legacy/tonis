@@ -45,7 +45,7 @@ final class Router
      * @param callable $next
      * @return Response
      */
-    public function dispatchHandler(Request $request, Response $response, callable $next = null)
+    public function dispatchHandler(Request $request, Response $response, callable $next)
     {
         $dispatcher = new Dispatcher($this->collector->getData());
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
