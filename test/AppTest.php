@@ -26,7 +26,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
     public function testAdd()
     {
         $router = $this->app->router();
-        $router->get('/', function($req, $res) {
+        $router->get('/', function ($req, $res) {
             $res->end('success');
         });
 

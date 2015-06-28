@@ -23,7 +23,7 @@ class AbstractMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $request = new TonisRequest($app, new StratigilityRequest($this->newRequest('/')));
         $response = new TonisResponse($app, new StratigilityResponse(new Response()));
-        $next = function() {
+        $next = function () {
             return 'ran';
         };
 

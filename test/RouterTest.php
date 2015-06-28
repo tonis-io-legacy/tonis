@@ -48,7 +48,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testAddingMiddleware()
     {
-        $this->router->add(function($req, $res, $next) {
+        $this->router->add(function ($req, $res, $next) {
             $res->write('add');
             return $next($req, $res);
         });
@@ -66,7 +66,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $request  = $this->newTonisRequest('/');
         $response = $this->newTonisResponse();
 
-        $result = $this->router->__invoke($request, $response, function($req, $res) {
+        $result = $this->router->__invoke($request, $response, function ($req, $res) {
             $res->write('success');
         });
 
@@ -93,7 +93,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testHttpVerbsProxy($method)
     {
-        $handler   = function() {};
+        $handler   = function () {
+        };
         $refl      = new \ReflectionClass($this->router);
         $collector = $refl->getProperty('collector');
         $collector->setAccessible(true);
@@ -108,7 +109,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testAny()
     {
-        $handler   = function() {};
+        $handler   = function () {
+        };
         $refl      = new \ReflectionClass($this->router);
         $collector = $refl->getProperty('collector');
         $collector->setAccessible(true);

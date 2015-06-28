@@ -79,7 +79,7 @@ final class Router
         callable $route,
         array $params
     ) {
-        $handler = function($request, $response, $err = null) use (&$handler, $done, $route, &$params) {
+        $handler = function ($request, $response, $err = null) use (&$handler, $done, $route, &$params) {
             if (empty($params)) {
                 if (null !== $err) {
                     return $done($request, $response, $err);

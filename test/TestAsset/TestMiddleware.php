@@ -9,7 +9,7 @@ class TestMiddleware extends AbstractMiddleware
     public function configure(App $app)
     {
         $router = $app->router();
-        $router->get('/', function($req, $res) {
+        $router->get('/', function ($req, $res) {
             $res->write('foo');
         });
 
