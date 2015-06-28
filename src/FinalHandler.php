@@ -2,6 +2,7 @@
 namespace Tonis;
 
 use Exception;
+use Zend\Stratigility\Utils;
 
 final class FinalHandler
 {
@@ -31,7 +32,7 @@ final class FinalHandler
      */
     private function handleError($error, Http\Request $request, Http\Response $response)
     {
-        $response = $response->withStatus($this->getStatusCode($error, $response));
+        $response = $response->withStatus(Utils::getStatusCode($error, $response));
         $vars = [
             'request' => $request,
             'response' => $response
@@ -48,7 +49,7 @@ final class FinalHandler
     }
 
     /**
-     * Handles a 404. Similar to Stratigilities except we're rendering a template.
+     * Handles a 404. Similar to Stratigility except we're rendering a template.
      *
      * @param Http\Request $request
      * @param Http\Response $response
@@ -59,26 +60,5 @@ final class FinalHandler
         return $response
             ->withStatus(404)
             ->render('error/404', ['request' => $request]);
-    }
-
-    /**
-     * Identical to Zend\Stratigiilty\FinalHandler::getStatusCode. Stratigilities is a private method, however,
-     * so I couldn't reuse it.
-     *
-     * @param mixed $error
-     * @param Http\Response $response
-     * @return int|mixed
-     */
-    private function getStatusCode($error, Http\Response $response)
-    {
-        if ($error instanceof Exception && ($error->getCode() >= 400 && $error->getCode() < 600)) {
-            return $error->getCode();
-        }
-
-        $status = $response->getStatusCode();
-        if (!$status || $status < 400 || $status >= 600) {
-            $status = 500;
-        }
-        return $status;
     }
 }
