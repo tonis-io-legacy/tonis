@@ -9,6 +9,11 @@ Documentation
 
 For full documentation see the [Tonis docs](http://docs.tonis.io).
 
+Quick Start
+-----------
+
+See the [hello world documentation](http://docs.tonis.io/getting-started/hello-world) for a quick start.
+
 Why Tonis?
 ----------
 
