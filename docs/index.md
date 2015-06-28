@@ -2,7 +2,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/tonis-io/tonis/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/tonis-io/tonis/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/tonis-io/tonis/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tonis-io/tonis/build-status/master)
 
-Tonis is a PSR-7 middleware framework and was built with an emphasis simplicity and performance.
+Tonis is a PSR-7 middleware framework and was built with an emphasis on simplicity and performance.
 
 Why Tonis?
 ----------
