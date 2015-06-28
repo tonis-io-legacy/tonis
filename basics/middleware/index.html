@@ -110,6 +110,9 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#overview">Overview</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#application-level-middleware">Application Level Middleware</a></li>
                 
             
@@ -211,7 +214,8 @@
           <div role="main">
             <div class="section">
               
-                <p>Middleware is a <a href="http://php.net/manual/en/language.types.callable.php">callable</a> that interacts with the request-response cycle. 
+                <h2 id="overview">Overview</h2>
+<p>Middleware is a <a href="http://php.net/manual/en/language.types.callable.php">callable</a> that interacts with the request-response cycle. 
 It may modify the request/response, terminate the request-response cycle early, and call the next middleware in the stack. 
 Middleware accepts the following arguments:</p>
 <ul>

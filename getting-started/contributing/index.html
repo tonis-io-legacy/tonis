@@ -81,6 +81,9 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#overview">Overview</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#getting-the-source">Getting the Source</a></li>
                 
             
@@ -88,6 +91,9 @@
                 
             
                 <li class="toctree-l3"><a href="#coding-standards">Coding Standards</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#pull-requests">Pull Requests</a></li>
                 
             
                 <li class="toctree-l3"><a href="#documentation">Documentation</a></li>
@@ -214,7 +220,8 @@
           <div role="main">
             <div class="section">
               
-                <p>Tonis and related components are open source and licensed as BSD-3-Clause. Contributions are welcome in the form of issue 
+                <h2 id="overview">Overview</h2>
+<p>Tonis and related components are open source and licensed as BSD-3-Clause. Contributions are welcome in the form of issue 
 reports and pull requests. </p>
 <h2 id="getting-the-source">Getting the Source</h2>
 <pre><code class="sh">git clone git@github.com:tonis-io/tonis
@@ -232,6 +239,21 @@ To check coding standards:</p>
 </code></pre>
 
 <p>Additonally, this is automatically checked by <a href="https://travis-ci.org">Travis CI</a> and will cause a build failure if not valid.</p>
+<h2 id="pull-requests">Pull Requests</h2>
+<p>All contributions should be submitted via a pull request on <a href="http://github.com">GitHub</a>. All pull requests have the following
+requirements before they can be merged:</p>
+<ul>
+<li>Travis build must pass.</li>
+<li>Scrutinizer build must pass.<ul>
+<li>Coding standards pass.</li>
+<li>No classes with &lt; B grade.</li>
+<li>Overall quality does not drop below 9.8.</li>
+<li>Test coverage must not fall below 100%.</li>
+<li>No MAJOR severity issues exist.</li>
+</ul>
+</li>
+</ul>
+<p><strong>NOTE</strong> Documentation is exempt from the above requirements.</p>
 <h2 id="documentation">Documentation</h2>
 <p>After "Getting the Source" steps above you can find the documentation in in the <code>docs/</code> folder. All documentation is written
 in markdown. Once you update the documentation, commit your changes and open a pull request.</p>
