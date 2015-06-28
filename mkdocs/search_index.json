@@ -32,8 +32,13 @@
         },
         {
             "location": "/getting-started/hello-world/",
-            "text": "Here is an example of a very basic Tonis app.\n\n\n?php\n\nrequire __DIR__ . '/../vendor/autoload.php';\n\n$app = new Tonis\\App;\n$app-\nget('/', function($request, $response) {\n    $response-\nend('Hello from Tonis');\n});\n\n$server = Zend\\Diactoros\\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);\n$server-\nlisten();\n\n\n\n\nYou can run it with:\n\n\nphp -S 127.0.0.1:8080 index.php\n\n\nThen, load \nhttp://127.0.0.1:8080\n in a browser to see the output.",
+            "text": "Here is an example of a very basic Tonis app.\n\n\n?php\n\nrequire __DIR__ . '/../vendor/autoload.php';\n\n$app = new Tonis\\App;\n$app-\nget('/', function($request, $response) {\n    $response-\nend('Hello from Tonis');\n});\n\n$server = Zend\\Diactoros\\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);\n$server-\nlisten();\n\n\n\n\nYou can run it with:\n\n\nphp -S 127.0.0.1:8080 index.php\n\n\nThen, load \nhttp://127.0.0.1:8080\n in a browser to see the output.\n\n\nTonis Project\n\n\nFor a more detailed example you can clone the \nTonis Project\n which \nincludes a recommended application skeleton.",
             "title": "Hello world"
+        },
+        {
+            "location": "/getting-started/hello-world/#tonis-project",
+            "text": "For a more detailed example you can clone the  Tonis Project  which \nincludes a recommended application skeleton.",
+            "title": "Tonis Project"
         },
         {
             "location": "/getting-started/contributing/",
