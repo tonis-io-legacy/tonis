@@ -109,6 +109,11 @@
             "location": "/basics/middleware/#error-handling",
             "text": "Error-handling middleware is similar to other middleware except with four arguments instead of three.   $errorMiddleware = function ($request, $response, $next, $err) { ... }  For example, to add an error handler that uses  error_log  you would do the following:  $app = new \\Tonis\\App;\n\n$app- add(function ($request, $response, $next) {\n    return $next($request, $response, 'The third argument to next causes an error');\n});\n\n$app- add(function ($request, $response, $next, $error) {\n    error_log($error); // logs  The third argument to next causes an error \n    $next($request, $response);\n});\n\n$app- get('/', function ($request, $response) {\n    return response- write('foo');\n});",
             "title": "Error-handling"
+        },
+        {
+            "location": "/resources/official-middleware/",
+            "text": "The following is a list of officially supported middleware:\n\n\n\n\n\n\n\n\nMiddleware\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\nError Handler\n\n\nAdds an error handler that supports logging with Mongolog.\n\n\n\n\n\n\nResponse Time\n\n\nAdds a X-Response-Time header to your responses.",
+            "title": "Official Middleware"
         }
     ]
 }

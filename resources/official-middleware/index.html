@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hello world - Tonis</title>
+  <title>Official Middleware - Tonis</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -20,7 +20,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Hello world";
+    var mkdocs_page_name = "Official Middleware";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -63,35 +63,28 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../installing/">Installing</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Hello world</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#tonis-project">Tonis Project</a></li>
-                
-            
-            </ul>
+        <a class="" href="../../getting-started/installing/">Installing</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../contributing/">Contributing</a>
+        <a class="" href="../../getting-started/hello-world/">Hello world</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../license/">License</a>
+        <a class="" href="../../getting-started/contributing/">Contributing</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../getting-started/license/">License</a>
         
     </li>
 
@@ -127,8 +120,12 @@
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../../resources/official-middleware/">Official Middleware</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Official Middleware</a>
+        
+            <ul>
+            
+            </ul>
         
     </li>
 
@@ -158,11 +155,11 @@
     
       
         
-          <li>Getting Started &raquo;</li>
+          <li>Resources &raquo;</li>
         
       
     
-    <li>Hello world</li>
+    <li>Official Middleware</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -176,26 +173,25 @@
           <div role="main">
             <div class="section">
               
-                <p>Here is an example of a very basic Tonis app.</p>
-<pre><code class="php">&lt;?php
-
-require __DIR__ . '/../vendor/autoload.php';
-
-$app = new Tonis\App;
-$app-&gt;get('/', function($request, $response) {
-    $response-&gt;end('Hello from Tonis');
-});
-
-$server = Zend\Diactoros\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
-$server-&gt;listen();
-</code></pre>
-
-<p>You can run it with:</p>
-<p><code>php -S 127.0.0.1:8080 index.php</code></p>
-<p>Then, load <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> in a browser to see the output.</p>
-<h2 id="tonis-project">Tonis Project</h2>
-<p>For a more detailed example you can clone the <a href="http://github.com/tonis-io/tonis-project">Tonis Project</a> which 
-includes a recommended application skeleton.</p>
+                <p>The following is a list of officially supported middleware:</p>
+<table>
+<thead>
+<tr>
+<th>Middleware</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http:///github.com/tonis-io/error-handler">Error Handler</a></td>
+<td>Adds an error handler that supports logging with Mongolog.</td>
+</tr>
+<tr>
+<td><a href="http:///github.com/tonis-io/response-time">Response Time</a></td>
+<td>Adds a X-Response-Time header to your responses.</td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div>
@@ -203,10 +199,8 @@ includes a recommended application skeleton.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../contributing/" class="btn btn-neutral float-right" title="Contributing"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../installing/" class="btn btn-neutral" title="Installing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../basics/middleware/" class="btn btn-neutral" title="Middleware"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -236,10 +230,8 @@ includes a recommended application skeleton.</p>
           <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../installing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../../basics/middleware/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../contributing/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
