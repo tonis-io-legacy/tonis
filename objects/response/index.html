@@ -132,6 +132,21 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#overview">Overview</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#app">app()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#json">json()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#jsonp">jsonp()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#render">render()</a></li>
+                
+            
             </ul>
         
     </li>
@@ -202,7 +217,24 @@
           <div role="main">
             <div class="section">
               
-                
+                <h2 id="overview">Overview</h2>
+<p>The Response object encapsulates data sent during a HTTP response. The <code>Tonis\Http\Response</code> object decorates 
+<code>Zend\Stratigility\Http\Response</code> which implements <code>Psr\Http\Message\ResponseInterface</code>. It's highly recommended that you
+review <a href="http://www.php-fig.org/psr/psr-7/">PSR-7 - HTTP messages interfaces</a> to fully understand PSR-7.</p>
+<p>The following are methods available in addition to what PSR-7 provides.</p>
+<h2 id="app">app()</h2>
+<p><code>public function app(): Tonis\App</code></p>
+<p>Retrieve the instance of <code>Tonis\App</code> bound to the response.</p>
+<h2 id="json">json()</h2>
+<p><code>public function json(mixed $input): Tonis\Http\Response</code></p>
+<p>Encodes the input as JSON and sets the Content-Type header to application/json.</p>
+<h2 id="jsonp">jsonp()</h2>
+<p><code>public function jsonp(mixed $input, string $callback): Tonis\Http\Response</code></p>
+<p>Encodes the input as JSONP and sets the Content-Type header to application/javascript.</p>
+<h2 id="render">render()</h2>
+<p><code>public function render(string $template, array $params = []): string</code></p>
+<p>Attempts to render the <code>$template</code> with <code>$params</code> using the ViewManager. If a strategy 
+is not available then the Tonis fallback strategy is used. </p>
               
             </div>
           </div>
