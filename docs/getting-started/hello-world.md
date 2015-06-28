@@ -19,3 +19,9 @@ You can run it with:
 ```php -S 127.0.0.1:8080 index.php```
 
 Then, load [http://127.0.0.1:8080](http://127.0.0.1:8080) in a browser to see the output.
+
+Tonis Project
+-------------
+
+For a more detailed example you can clone the [Tonis Project](http://github.com/tonis-io/tonis-project) which 
+includes a recommended application skeleton.
