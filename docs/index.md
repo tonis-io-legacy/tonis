@@ -6,13 +6,11 @@ Why Tonis?
 With the abundance of frameworks and micro-frameworks out there why would you use Tonis?
 
  * You are using PHP 5.5+ and want to take advantage of modern features.
- * You want 100% unit tested and integration tested code.
+ * You want 100% unit tested code.
  * You want high quality code.
  * You want to take advantage of PSR-7.
  * You want a middleware ready framework.
  * You want code that runs on HHVM or PHP7 out of the box.
- * You want to avoid overused globals and static method calls.
- * You want modular and reusable code.
  * You want the freedom to choose your own project structure.
  * You want to get into open source and become a contributor.
 
@@ -34,7 +32,7 @@ Benchmarks for simple hello world applications are nearly useless but are provid
 ```
 Silex: 1.182 ms
 Lumen: 0.829 ms
-Tonis: 0.742 ms
+Tonis: 0.816 ms
 Slim3: 0.718 ms
  Slim: 0.561 ms
 ```

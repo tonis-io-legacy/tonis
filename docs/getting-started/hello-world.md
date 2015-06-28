@@ -6,8 +6,8 @@ Here is an example of a very basic Tonis app.
 require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Tonis\App;
-$app->get('/', function($req, $res) {
-    $res->end('Hello from Tonis');
+$app->get('/', function($request, $response) {
+    $response->end('Hello from Tonis');
 });
 
 $server = Zend\Diactoros\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);

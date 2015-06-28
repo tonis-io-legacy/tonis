@@ -8,8 +8,8 @@ The following is an example of a very basic route:
 $app = new \Tonis\App;
 
 // respond with "hello world" when a GET request is made to "/"
-$app->get('/', function ($req, $res) {
-    $res->end("hello world");    
+$app->get('/', function ($request, $response) {
+    $response->end("hello world");    
 });
 ```
 
@@ -22,12 +22,12 @@ Tonis supports the following HTTP methods: ```GET```, ```POST```, ```PUT```, ```
 ```php
 $app = new \Tonis\App;
 
-$app->get('/', function ($req, $res) {
-    $res->end("GET request to homepage");    
+$app->get('/', function ($request, $response) {
+    $response->end("GET request to homepage");    
 });
 
-$app->post('/', function ($req, $res) {
-    $res->end("POST request to homepage");    
+$app->post('/', function ($request, $response) {
+    $response->end("POST request to homepage");    
 });
 ```
 
@@ -39,8 +39,8 @@ Route parameters may be used by enclosing part of the route in ```{...}```.
 ```php
 $app = new \Tonis\App;
 
-$app->get('/{name}', function ($req, $res) {
-    $res->end('I match /foo, /bar, /foobar, etc.');
+$app->get('/{name}', function ($request, $response) {
+    $response->end('I match /foo, /bar, /foobar, etc.');
 });
 ```
 
@@ -49,8 +49,8 @@ You can specify a custom pattern match by using ```{foo:regex}``` where regex is
 ```php
 $app = new \Tonis\App;
 
-$app->get('/{name:[0-9]+', function ($req, $res) {
-    $res->end('I match /123 but not /foo');
+$app->get('/{name:[0-9]+', function ($request, $response) {
+    $response->end('I match /123 but not /foo');
 });
 ```
 
@@ -59,20 +59,21 @@ Additionally, parts of the route enclosed in ```[...]``` are considered optional
 ```php
 $app = new \Tonis\App;
 
-$app->get('/foo[bar]', function ($req, $res) {
-    $res->end('I match /foo and /foobar but not /bar');
+$app->get('/foo[bar]', function ($request, $response) {
+    $response->end('I match /foo and /foobar but not /bar');
 });
 ```
 
 Accessing Parameters
 --------------------
 
-All matched route parameters are available in the ```$request``` object of the route handler. 
+All matched route parameters are available in the ```$requestuest``` object of the route handler using 
+[ArrayAccess](http://www.php.net/arrayaccess). 
 
 ```php
 $app = new \Tonis\App;
 
-$app->get('/{name}', function ($req, $res) {
-    $res->end('Hi ' . $req->getAttribute('name'));
+$app->get('/{name}', function ($request, $response) {
+    $response->end('Hi ' . $request['name']);
 });
 ```
