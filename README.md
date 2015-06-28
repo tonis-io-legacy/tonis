@@ -2,7 +2,9 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/tonis-io/tonis/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/tonis-io/tonis/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/tonis-io/tonis/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tonis-io/tonis/build-status/master)
 
-Tonis is a PSR-7 middleware framework and was built with an emphasis on simplicity and performance.
+Tonis is a PSR-7 middleware framework built with an emphasis on simplicity and performance. Tonis is inspired
+by [Express](http://expressjs.com/) and uses [Stratigility](https://github.com/zendframework/zend-stratigility) for 
+the middleware pipeline.
 
 Documentation
 -------------

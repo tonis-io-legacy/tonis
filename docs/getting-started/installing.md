@@ -12,6 +12,6 @@ Server Requirements
 
 Tonis has the following requirement:
 
-  * PHP 5.5 or greater
+  * PHP 5.5+ or HHVM
   
 

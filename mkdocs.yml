@@ -14,5 +14,9 @@ pages:
 - Basics:
   - basics/routing.md
   - basics/middleware.md
+- Objects:
+  - objects/request.md
+  - objects/response.md
+  - objects/router.md
 - Resources:
   - 'Official Middleware': resources/official-middleware.md
