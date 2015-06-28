@@ -41,22 +41,34 @@ $app->add(function ($request, $response, $next) {
     return $response
 });
 
+$app->get('/', function ($request, $response) {
+    return $response->write('GET on /');
+});
+
 // routers are middleware and may be mounted to the app
 // additionally, they are reusable, and you can use them to create bundles/packages/modules
 $router = $app->router();
 $router->get('/', function ($request, $response) {
-    return $response->write('GET on /');
+    return $response->write('GET on /articles/');
 });
 
 // this mounts the router to /articles so the GET above will respond to /articles/
 $app->add('/articles', $router);
 ```
 
+A `GET` request to `/` using the above app would return:
+
+```
+pre
+GET on /
+post
+```
+
 A `GET` request to `/articles/` using the above app would return:
  
 ```
 pre
-GET on /
+GET on /articles/
 post
 ```
 
