@@ -4,7 +4,7 @@
     
     <url>
      <loc>http://docs.tonis.io/</loc>
-     <lastmod>2015-06-23</lastmod>
+     <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,25 +13,25 @@
         
     <url>
      <loc>http://docs.tonis.io/getting-started/installing/</loc>
-     <lastmod>2015-06-23</lastmod>
+     <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/getting-started/hello-world/</loc>
-     <lastmod>2015-06-23</lastmod>
+     <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/getting-started/contributing/</loc>
-     <lastmod>2015-06-23</lastmod>
+     <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/getting-started/license/</loc>
-     <lastmod>2015-06-23</lastmod>
+     <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -41,7 +41,13 @@
         
     <url>
      <loc>http://docs.tonis.io/basics/routing/</loc>
-     <lastmod>2015-06-23</lastmod>
+     <lastmod>2015-06-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>http://docs.tonis.io/basics/middleware/</loc>
+     <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>
     </url>
         

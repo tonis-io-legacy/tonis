@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Routing - Tonis</title>
+  <title>Middleware - Tonis</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -20,7 +20,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Routing";
+    var mkdocs_page_name = "Middleware";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -98,28 +98,28 @@
 
         
             
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Routing</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#route-methods">Route Methods</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#route-parameters">Route Parameters</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#accessing-parameters">Accessing Parameters</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../routing/">Routing</a>
         
     </li>
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../middleware/">Middleware</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Middleware</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#application-level-middleware">Application Level Middleware</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#router-level-middleware">Router Level Middleware</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#error-handling">Error-handling</a></li>
+                
+            
+            </ul>
         
     </li>
 
@@ -153,7 +153,7 @@
         
       
     
-    <li>Routing</li>
+    <li>Middleware</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -167,64 +167,83 @@
           <div role="main">
             <div class="section">
               
-                <p>Routing refers to the definition of URIs and how an application responds to a client request. A route
-is a combination of a <a href="https://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a>, a 
-<a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">request method</a>, and one or more handlers.</p>
-<p>The following is an example of a very basic route:</p>
+                <p>Middleware is a <a href="http://php.net/manual/en/language.types.callable.php">callable</a> that interacts with the request-response cycle. 
+It may modify the request/response, terminate the request-response cycle early, and call the next middleware in the stack. 
+Middleware accepts the following arguments:</p>
+<ul>
+<li><code>$request</code> <strong>MUST</strong> implement <code>Psr\HttpMessage\RequestInterface</code></li>
+<li><code>$response</code> <strong>MUST</strong> implement \Psr\HttpMessage\ResponseInterface`</li>
+<li><code>$next</code> <strong>MUST</strong> be a callable</li>
+</ul>
+<p>Middleware may be loaded at the application level or router level and may include a mount path. Loading a series of 
+middleware on the same mount path will create a stack for that path. </p>
+<h2 id="application-level-middleware">Application Level Middleware</h2>
+<p>Application level middleware is added to <code>Tonis</code> with the <code>add</code> method and may include a path to mount to.</p>
 <pre><code class="php">$app = new \Tonis\App;
 
-// respond with &quot;hello world&quot; when a GET request is made to &quot;/&quot;
+// middleware with no mount path gets executed on every request 
+$app-&gt;add(function ($request, $response, $next) {
+    $response-&gt;write('always executed');
+    return $next($request, $response);
+});
+
+// middleware mounted on /articles will be executed for any requested that has /articles
+$app-&gt;add('/articles', function ($request, $response, $next) {
+    $response-&gt;write('articles');
+    return $next($request, $response);
+});
+
+$app-&gt;get('/articles/{id}', function ($request, $response) {
+    $response-&gt;end('Articles');
+});
+</code></pre>
+
+<h2 id="router-level-middleware">Router Level Middleware</h2>
+<p>Router level middleware is similar to application middleware except it is added to an instance of <code>Tonis\Router</code>.
+Typically, you'll create a router instance using the <code>router()</code> method.</p>
+<pre><code class="php">$app    = new \Tonis\App;
+$router = $app-&gt;router():
+
+// middleware with no mount path gets executed on every request 
+$router-&gt;add(function ($request, $response, $next) {
+    $response-&gt;write('always executed');
+    return $next($request, $response);
+});
+
+// middleware mounted on /articles will be executed for any requested that has /articles
+$router-&gt;add('', function ($request, $response, $next) {
+    $response-&gt;write('articles');
+    return $next($request, $response);
+});
+
+$router-&gt;get('/{id}', function ($request, $response) {
+    $response-&gt;end('Articles');
+});
+
+// this mounts the $router middleware to /articles which will then respond to /articles and /articles/{id}
+$app-&gt;add('/articles', $router);
+</code></pre>
+
+<p><strong>NOTE</strong> Middleware added to a router and then mounted to Tonis with <code>add</code> will only be executed if the path matches. </p>
+<h2 id="error-handling">Error-handling</h2>
+<p>Error-handling middleware is similar to other middleware except with four arguments instead of three. </p>
+<pre><code class="php">$errorMiddleware = function ($request, $response, $next, $err) { ... }
+</code></pre>
+
+<p>For example, to add an error handler that uses <code>error_log</code> you would do the following:</p>
+<pre><code class="php">$app = new \Tonis\App;
+
+$app-&gt;add(function ($request, $response, $next) {
+    return $next($request, $response, 'The third argument to next causes an error');
+});
+
+$app-&gt;add(function ($request, $response, $next, $error) {
+    error_log($error); // logs &quot;The third argument to next causes an error&quot;
+    $next($request, $response);
+});
+
 $app-&gt;get('/', function ($request, $response) {
-    $response-&gt;end(&quot;hello world&quot;);    
-});
-</code></pre>
-
-<h2 id="route-methods">Route Methods</h2>
-<p>Tonis supports the following HTTP methods: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>, <code>OPTIONS</code>, 
-<code>HEAD</code></p>
-<pre><code class="php">$app = new \Tonis\App;
-
-$app-&gt;get('/', function ($request, $response) {
-    $response-&gt;end(&quot;GET request to homepage&quot;);    
-});
-
-$app-&gt;post('/', function ($request, $response) {
-    $response-&gt;end(&quot;POST request to homepage&quot;);    
-});
-</code></pre>
-
-<h2 id="route-parameters">Route Parameters</h2>
-<p>Route parameters may be used by enclosing part of the route in <code>{...}</code>.</p>
-<pre><code class="php">$app = new \Tonis\App;
-
-$app-&gt;get('/{name}', function ($request, $response) {
-    $response-&gt;end('I match /foo, /bar, /foobar, etc.');
-});
-</code></pre>
-
-<p>You can specify a custom pattern match by using <code>{foo:regex}</code> where regex is a regular expression.</p>
-<pre><code class="php">$app = new \Tonis\App;
-
-$app-&gt;get('/{name:[0-9]+', function ($request, $response) {
-    $response-&gt;end('I match /123 but not /foo');
-});
-</code></pre>
-
-<p>Additionally, parts of the route enclosed in <code>[...]</code> are considered optional.</p>
-<pre><code class="php">$app = new \Tonis\App;
-
-$app-&gt;get('/foo[bar]', function ($request, $response) {
-    $response-&gt;end('I match /foo and /foobar but not /bar');
-});
-</code></pre>
-
-<h2 id="accessing-parameters">Accessing Parameters</h2>
-<p>All matched route parameters are available in the <code>$requestuest</code> object of the route handler using 
-<a href="http://www.php.net/arrayaccess">ArrayAccess</a>. </p>
-<pre><code class="php">$app = new \Tonis\App;
-
-$app-&gt;get('/{name}', function ($request, $response) {
-    $response-&gt;end('Hi ' . $request['name']);
+    return response-&gt;write('foo');
 });
 </code></pre>
               
@@ -234,10 +253,8 @@ $app-&gt;get('/{name}', function ($request, $response) {
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../middleware/" class="btn btn-neutral float-right" title="Middleware"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../../getting-started/license/" class="btn btn-neutral" title="License"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../routing/" class="btn btn-neutral" title="Routing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -267,10 +284,8 @@ $app-&gt;get('/{name}', function ($request, $response) {
           <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../../getting-started/license/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../routing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../middleware/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
