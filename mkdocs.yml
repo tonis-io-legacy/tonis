@@ -14,3 +14,5 @@ pages:
 - Basics:
   - basics/routing.md
   - basics/middleware.md
+- Resources:
+  - 'Official Middleware': resources/official-middleware.md
