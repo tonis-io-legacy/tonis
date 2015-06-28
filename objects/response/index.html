@@ -218,16 +218,39 @@ review <a href="http://www.php-fig.org/psr/psr-7/">PSR-7 - HTTP messages interfa
 <h2 id="app">app()</h2>
 <p><code>public function app(): Tonis\App</code></p>
 <p>Retrieve the instance of <code>Tonis\App</code> bound to the response.</p>
+<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
+    // output is Tonis\App
+    return $response-&gt;write(get_class($reponse-&gt;app()); 
+});
+</code></pre>
+
 <h2 id="json">json()</h2>
 <p><code>public function json(mixed $input): Tonis\Http\Response</code></p>
 <p>Encodes the input as JSON and sets the Content-Type header to application/json.</p>
+<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
+    // output is {&quot;foo&quot;: &quot;bar&quot;}
+    return $response-&gt;json(['foo' =&gt; 'bar']);
+});
+</code></pre>
+
 <h2 id="jsonp">jsonp()</h2>
 <p><code>public function jsonp(mixed $input, string $callback): Tonis\Http\Response</code></p>
 <p>Encodes the input as JSONP and sets the Content-Type header to application/javascript.</p>
+<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
+    // output is MyFunction({&quot;foo&quot;: &quot;bar&quot;});
+    return $response-&gt;jsonp(['foo' =&gt; 'bar'], 'MyFunction);
+});
+</code></pre>
+
 <h2 id="render">render()</h2>
 <p><code>public function render(string $template, array $params = []): string</code></p>
 <p>Attempts to render the <code>$template</code> with <code>$params</code> using the ViewManager. If a strategy 
 is not available then the Tonis fallback strategy is used. </p>
+<pre><code class="php">$app-&gt;get('/article/{id}', function ($request, $response) {
+    // output is render result of `article/view` template
+    return $response-&gt;render('article/view', $request-&gt;getParams());
+});
+</code></pre>
               
             </div>
           </div>

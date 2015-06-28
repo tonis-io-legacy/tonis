@@ -162,7 +162,7 @@
         },
         {
             "location": "/objects/request/",
-            "text": "Overview\n\n\nThe Request object encapsulates data sent during a HTTP request. The \nTonis\\Http\\Request\n object decorates \n\nZend\\Stratigility\\Http\\Request\n which implements \nPsr\\Http\\Message\\RequestInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\nArrayAccess\n\n\nTonis\\Http\\Request\n implements \nArrayAccess\n to provide access to the route match parameters.\n\n\n$app = new \\Tonis\\App;\n$app-\nget('/hello/{name}', function ($request, $response) {\n    $response-\nwrite('Hello, ' . $request['name']);\n});\n\n\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the request.\n\n\ngetParams()\n\n\npublic function getParams(): array\n\n\nGet all route params from the matched route.",
+            "text": "Overview\n\n\nThe Request object encapsulates data sent during a HTTP request. The \nTonis\\Http\\Request\n object decorates \n\nZend\\Stratigility\\Http\\Request\n which implements \nPsr\\Http\\Message\\RequestInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\nArrayAccess\n\n\nTonis\\Http\\Request\n implements \nArrayAccess\n to provide access to the route match parameters.\n\n\n$app-\nget('/hello/{name}', function ($request, $response) {\n    // output is Hello, foo\n    return $response-\nwrite('Hello, ' . $request['name']);\n});\n\n\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the request.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response-\nwrite(get_class($request-\napp()); \n});\n\n\n\n\ngetParams()\n\n\npublic function getParams(): array\n\n\nGet all route params from the matched route.\n\n\n$app-\nget('/hello/{name}', function ($request, $response) {\n    // output is array ('name' =\n 'foo',)\n    return $response-\nwrite(var_export($request-\ngetParams(), true));\n});",
             "title": "Request"
         },
         {
@@ -172,22 +172,22 @@
         },
         {
             "location": "/objects/request/#arrayaccess",
-            "text": "Tonis\\Http\\Request  implements  ArrayAccess  to provide access to the route match parameters.  $app = new \\Tonis\\App;\n$app- get('/hello/{name}', function ($request, $response) {\n    $response- write('Hello, ' . $request['name']);\n});",
+            "text": "Tonis\\Http\\Request  implements  ArrayAccess  to provide access to the route match parameters.  $app- get('/hello/{name}', function ($request, $response) {\n    // output is Hello, foo\n    return $response- write('Hello, ' . $request['name']);\n});",
             "title": "ArrayAccess"
         },
         {
             "location": "/objects/request/#app",
-            "text": "public function app(): Tonis\\App  Retrieve the instance of  Tonis\\App  bound to the request.",
+            "text": "public function app(): Tonis\\App  Retrieve the instance of  Tonis\\App  bound to the request.  $app- get('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response- write(get_class($request- app()); \n});",
             "title": "app()"
         },
         {
             "location": "/objects/request/#getparams",
-            "text": "public function getParams(): array  Get all route params from the matched route.",
+            "text": "public function getParams(): array  Get all route params from the matched route.  $app- get('/hello/{name}', function ($request, $response) {\n    // output is array ('name' =  'foo',)\n    return $response- write(var_export($request- getParams(), true));\n});",
             "title": "getParams()"
         },
         {
             "location": "/objects/response/",
-            "text": "Overview\n\n\nThe Response object encapsulates data sent during a HTTP response. The \nTonis\\Http\\Response\n object decorates \n\nZend\\Stratigility\\Http\\Response\n which implements \nPsr\\Http\\Message\\ResponseInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the response.\n\n\njson()\n\n\npublic function json(mixed $input): Tonis\\Http\\Response\n\n\nEncodes the input as JSON and sets the Content-Type header to application/json.\n\n\njsonp()\n\n\npublic function jsonp(mixed $input, string $callback): Tonis\\Http\\Response\n\n\nEncodes the input as JSONP and sets the Content-Type header to application/javascript.\n\n\nrender()\n\n\npublic function render(string $template, array $params = []): string\n\n\nAttempts to render the \n$template\n with \n$params\n using the ViewManager. If a strategy \nis not available then the Tonis fallback strategy is used.",
+            "text": "Overview\n\n\nThe Response object encapsulates data sent during a HTTP response. The \nTonis\\Http\\Response\n object decorates \n\nZend\\Stratigility\\Http\\Response\n which implements \nPsr\\Http\\Message\\ResponseInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the response.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response-\nwrite(get_class($reponse-\napp()); \n});\n\n\n\n\njson()\n\n\npublic function json(mixed $input): Tonis\\Http\\Response\n\n\nEncodes the input as JSON and sets the Content-Type header to application/json.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is {\nfoo\n: \nbar\n}\n    return $response-\njson(['foo' =\n 'bar']);\n});\n\n\n\n\njsonp()\n\n\npublic function jsonp(mixed $input, string $callback): Tonis\\Http\\Response\n\n\nEncodes the input as JSONP and sets the Content-Type header to application/javascript.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is MyFunction({\nfoo\n: \nbar\n});\n    return $response-\njsonp(['foo' =\n 'bar'], 'MyFunction);\n});\n\n\n\n\nrender()\n\n\npublic function render(string $template, array $params = []): string\n\n\nAttempts to render the \n$template\n with \n$params\n using the ViewManager. If a strategy \nis not available then the Tonis fallback strategy is used. \n\n\n$app-\nget('/article/{id}', function ($request, $response) {\n    // output is render result of `article/view` template\n    return $response-\nrender('article/view', $request-\ngetParams());\n});",
             "title": "Response"
         },
         {
@@ -197,22 +197,22 @@
         },
         {
             "location": "/objects/response/#app",
-            "text": "public function app(): Tonis\\App  Retrieve the instance of  Tonis\\App  bound to the response.",
+            "text": "public function app(): Tonis\\App  Retrieve the instance of  Tonis\\App  bound to the response.  $app- get('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response- write(get_class($reponse- app()); \n});",
             "title": "app()"
         },
         {
             "location": "/objects/response/#json",
-            "text": "public function json(mixed $input): Tonis\\Http\\Response  Encodes the input as JSON and sets the Content-Type header to application/json.",
+            "text": "public function json(mixed $input): Tonis\\Http\\Response  Encodes the input as JSON and sets the Content-Type header to application/json.  $app- get('/', function ($request, $response) {\n    // output is { foo :  bar }\n    return $response- json(['foo' =  'bar']);\n});",
             "title": "json()"
         },
         {
             "location": "/objects/response/#jsonp",
-            "text": "public function jsonp(mixed $input, string $callback): Tonis\\Http\\Response  Encodes the input as JSONP and sets the Content-Type header to application/javascript.",
+            "text": "public function jsonp(mixed $input, string $callback): Tonis\\Http\\Response  Encodes the input as JSONP and sets the Content-Type header to application/javascript.  $app- get('/', function ($request, $response) {\n    // output is MyFunction({ foo :  bar });\n    return $response- jsonp(['foo' =  'bar'], 'MyFunction);\n});",
             "title": "jsonp()"
         },
         {
             "location": "/objects/response/#render",
-            "text": "public function render(string $template, array $params = []): string  Attempts to render the  $template  with  $params  using the ViewManager. If a strategy \nis not available then the Tonis fallback strategy is used.",
+            "text": "public function render(string $template, array $params = []): string  Attempts to render the  $template  with  $params  using the ViewManager. If a strategy \nis not available then the Tonis fallback strategy is used.   $app- get('/article/{id}', function ($request, $response) {\n    // output is render result of `article/view` template\n    return $response- render('article/view', $request- getParams());\n});",
             "title": "render()"
         },
         {

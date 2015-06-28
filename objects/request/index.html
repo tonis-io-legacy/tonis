@@ -214,18 +214,29 @@ review <a href="http://www.php-fig.org/psr/psr-7/">PSR-7 - HTTP messages interfa
 <p>The following are methods available in addition to what PSR-7 provides.</p>
 <h2 id="arrayaccess">ArrayAccess</h2>
 <p><code>Tonis\Http\Request</code> implements <code>ArrayAccess</code> to provide access to the route match parameters.</p>
-<pre><code class="php">$app = new \Tonis\App;
-$app-&gt;get('/hello/{name}', function ($request, $response) {
-    $response-&gt;write('Hello, ' . $request['name']);
+<pre><code class="php">$app-&gt;get('/hello/{name}', function ($request, $response) {
+    // output is Hello, foo
+    return $response-&gt;write('Hello, ' . $request['name']);
 });
 </code></pre>
 
 <h2 id="app">app()</h2>
 <p><code>public function app(): Tonis\App</code></p>
 <p>Retrieve the instance of <code>Tonis\App</code> bound to the request.</p>
+<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
+    // output is Tonis\App
+    return $response-&gt;write(get_class($request-&gt;app()); 
+});
+</code></pre>
+
 <h2 id="getparams">getParams()</h2>
 <p><code>public function getParams(): array</code></p>
 <p>Get all route params from the matched route.</p>
+<pre><code class="php">$app-&gt;get('/hello/{name}', function ($request, $response) {
+    // output is array ('name' =&gt; 'foo',)
+    return $response-&gt;write(var_export($request-&gt;getParams(), true));
+});
+</code></pre>
               
             </div>
           </div>
