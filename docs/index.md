@@ -35,15 +35,15 @@ his speed.
 Benchmarks
 ----------
 
-Benchmarks for simple hello world applications are nearly useless but are provided to prevent the inevitable question.
+Benchmarks for simple hello world applications are nearly useless but are provided to dissuade the inevitable question.
  
 ```
-Silex: 1.182 ms
-Lumen: 0.829 ms
-Tonis: 0.816 ms
-Slim3: 0.718 ms
- Slim: 0.561 ms
+Silex: 1.195 ms
+Tonis: 0.812 ms
+Lumen: 0.805 ms
+Slim3: 0.737 ms
+ Slim: 0.562 ms
 ```
 
-These results are generated with ab using 1,000 requests with no concurrency. For more information see the 
+These results are generated with ab using 10,000 requests with no concurrency. For more information see the 
 [bench project](https://github.com/tonis-io/bench).
