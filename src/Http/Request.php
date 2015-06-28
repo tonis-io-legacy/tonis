@@ -30,6 +30,8 @@ final class Request extends StratigilityRequest implements \ArrayAccess
     }
 
     /**
+     * Retrieve the instance of `Tonis\App` bound to the request.
+     *
      * @return App
      */
     public function app()
@@ -38,6 +40,8 @@ final class Request extends StratigilityRequest implements \ArrayAccess
     }
 
     /**
+     * Get all route params from the matched route.
+     *
      * @return array
      */
     public function getParams()
