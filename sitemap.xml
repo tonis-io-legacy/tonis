@@ -56,6 +56,28 @@
     
         
     <url>
+     <loc>http://docs.tonis.io/objects/request/</loc>
+     <lastmod>2015-06-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>http://docs.tonis.io/objects/response/</loc>
+     <lastmod>2015-06-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>http://docs.tonis.io/objects/router/</loc>
+     <lastmod>2015-06-28</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
      <loc>http://docs.tonis.io/resources/official-middleware/</loc>
      <lastmod>2015-06-28</lastmod>
      <changefreq>daily</changefreq>

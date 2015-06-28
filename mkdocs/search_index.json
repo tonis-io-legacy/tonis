@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/",
-            "text": "Tonis is a PSR-7 middleware framework and was built with an emphasis on simplicity and performance.\n\n\nWhy Tonis?\n\n\nWith the abundance of frameworks and micro-frameworks out there why would you use Tonis?\n\n\n\n\nYou are using PHP 5.5+ and want to take advantage of modern features.\n\n\nYou want 100% unit tested code.\n\n\nYou want high quality code.\n\n\nYou want to take advantage of PSR-7.\n\n\nYou want a middleware ready framework.\n\n\nYou want code that runs on HHVM or PHP7 out of the box.\n\n\nYou want the freedom to choose your own project structure.\n\n\nYou want to get into open source and become a contributor.\n\n\n\n\nIf you answered yes to one or more of the above Tonis might be for you.\n\n\nThe Name\n\n\nI originally got into programming by writing scripts for a game called \nGemstone III\n \n(now Gemstone IV). The name comes from \nTonis\n in Gemstone's world of \n\nElanthia\n. Tonis is the messenger of the gods and is renowned for \nhis speed.\n\n\nBenchmarks\n\n\nBenchmarks for simple hello world applications are nearly useless but are provided to prevent the inevitable question.\n\n\nSilex: 1.182 ms\nLumen: 0.829 ms\nTonis: 0.816 ms\nSlim3: 0.718 ms\n Slim: 0.561 ms\n\n\n\n\nThese results are generated with ab using 1,000 requests with no concurrency. For more information see the \n\nbench project\n.",
+            "text": "Tonis is a PSR-7 middleware framework built with an emphasis on simplicity and performance. Tonis is inspired\nby \nExpress\n and uses \nStratigility\n for \nthe middleware pipeline.\n\n\nWhy Tonis?\n\n\nWith the abundance of frameworks and micro-frameworks out there why would you use Tonis?\n\n\n\n\nYou are using PHP 5.5+ and want to take advantage of modern features.\n\n\nYou want 100% unit tested code.\n\n\nYou want high quality code.\n\n\nYou want to take advantage of PSR-7.\n\n\nYou want a middleware ready framework.\n\n\nYou want code that runs on HHVM or PHP7 out of the box.\n\n\nYou want the freedom to choose your own project structure.\n\n\nYou want to get into open source and become a contributor.\n\n\n\n\nIf you answered yes to one or more of the above Tonis might be for you.\n\n\nThe Name\n\n\nI originally got into programming by writing scripts for a game called \nGemstone III\n \n(now Gemstone IV). The name comes from \nTonis\n in Gemstone's world of \n\nElanthia\n. Tonis is the messenger of the gods and is renowned for \nhis speed.\n\n\nBenchmarks\n\n\nBenchmarks for simple hello world applications are nearly useless but are provided to prevent the inevitable question.\n\n\nSilex: 1.182 ms\nLumen: 0.829 ms\nTonis: 0.816 ms\nSlim3: 0.718 ms\n Slim: 0.561 ms\n\n\n\n\nThese results are generated with ab using 1,000 requests with no concurrency. For more information see the \n\nbench project\n.",
             "title": "Home"
         },
         {
@@ -22,12 +22,12 @@
         },
         {
             "location": "/getting-started/installing/",
-            "text": "Tonis uses \nComposer\n to manage dependencies and is required. Once composer is \ninstalled you can install Tonis using the following command:\n\n\ncomposer require tonis-io/tonis\n\n\n\n\nSee the \nhello world\n for an example \nindex.php\n file.\n\n\nServer Requirements\n\n\nTonis has the following requirement:\n\n\n\n\nPHP 5.5 or greater",
+            "text": "Tonis uses \nComposer\n to manage dependencies and is required. Once composer is \ninstalled you can install Tonis using the following command:\n\n\ncomposer require tonis-io/tonis\n\n\n\n\nSee the \nhello world\n for an example \nindex.php\n file.\n\n\nServer Requirements\n\n\nTonis has the following requirement:\n\n\n\n\nPHP 5.5+ or HHVM",
             "title": "Installing"
         },
         {
             "location": "/getting-started/installing/#server-requirements",
-            "text": "Tonis has the following requirement:   PHP 5.5 or greater",
+            "text": "Tonis has the following requirement:   PHP 5.5+ or HHVM",
             "title": "Server Requirements"
         },
         {
@@ -124,6 +124,21 @@
             "location": "/basics/middleware/#error-handling",
             "text": "Error-handling middleware is similar to other middleware except with four arguments instead of three.   $errorMiddleware = function ($request, $response, $next, $err) { ... }  For example, to add an error handler that uses  error_log  you would do the following:  $app = new \\Tonis\\App;\n\n$app- add(function ($request, $response, $next) {\n    return $next($request, $response, 'The third argument to next causes an error');\n});\n\n$app- add(function ($request, $response, $next, $error) {\n    error_log($error); // logs  The third argument to next causes an error \n    $next($request, $response);\n});\n\n$app- get('/', function ($request, $response) {\n    return response- write('foo');\n});",
             "title": "Error-handling"
+        },
+        {
+            "location": "/objects/request/",
+            "text": "The Request object encapsulates data sent during a request. The \nTonis\\Http\\Request\n object decorates \nZend\\Stratigility\\Http\\Request\n\nto provide helper methods on top of what Stratigiility provides.",
+            "title": "Request"
+        },
+        {
+            "location": "/objects/response/",
+            "text": "",
+            "title": "Response"
+        },
+        {
+            "location": "/objects/router/",
+            "text": "",
+            "title": "Router"
         },
         {
             "location": "/resources/official-middleware/",
