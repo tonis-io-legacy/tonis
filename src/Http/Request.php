@@ -38,6 +38,14 @@ final class Request extends StratigilityRequest implements \ArrayAccess
     }
 
     /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function withRequestTarget($requestTarget)

@@ -2,97 +2,114 @@
 namespace Tonis;
 
 use FastRoute\DataGenerator\GroupCountBased as RouteGenerator;
-use FastRoute\Dispatcher;
+use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Tonis\Http\Request;
+use Tonis\Http\Response;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class Router
 {
     /** @var RouteCollector */
-    private $routeCollector;
+    private $collector;
     /** @var MiddlewarePipe[] */
-    private $paramPipes = [];
+    private $paramHandlers = [];
     /** @var MiddlewarePipe */
-    private $routerPipe;
+    private $pipe;
 
     public function __construct()
     {
-        $this->paramPipe      = new MiddlewarePipe;
-        $this->routerPipe     = new MiddlewarePipe;
-        $this->routeCollector = new RouteCollector(new RouteParser, new RouteGenerator);
+        $this->pipe       = new MiddlewarePipe;
+        $this->collector  = new RouteCollector(new RouteParser, new RouteGenerator);
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @param Request $request
+     * @param Response $response
      * @param callable $next
-     * @return ResponseInterface
+     * @return Response
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
+    public function __invoke(Request $request, Response $response, callable $next = null)
     {
-        $routerPipe = $this->routerPipe;
-        $routerPipe->pipe([$this, 'run']);
+        $pipe = $this->pipe;
+        $pipe->pipe([$this, 'dispatchHandler']);
 
-        return $routerPipe($request, $response, $next);
+        return $pipe($request, $response, $next);
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @internal
+     * @param Request $request
+     * @param Response $response
      * @param callable $next
-     * @return ResponseInterface
+     * @return Response
      */
-    public function run(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
+    public function dispatchHandler(Request $request, Response $response, callable $next = null)
     {
-        $dispatcher = $this->getDispatcher();
+        $dispatcher = new Dispatcher($this->collector->getData());
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
         $code       = $result[0];
-        $route      = isset($result[1]) ? $result[1] : null;
+        $handler    = isset($result[1]) ? $result[1] : null;
         $params     = isset($result[2]) ? $result[2] : [];
 
         if ($code != Dispatcher::FOUND) {
             return $next ? $next($request, $response) : $response;
         }
 
-        /** @var Route $route */
-        $route->setParams($params);
-
         foreach ($params as $key => $value) {
             $request[$key] = $value;
         }
 
-        $paramHandler = function ($request, $response, $err = null) use (&$params, &$paramHandler, $route, $next) {
+        return $this->paramHandler($request, $response, $next, $handler, $params);
+    }
+
+    /**
+     * @internal
+     * @param Request $request
+     * @param Response $response
+     * @param callable $done
+     * @param callable $route
+     * @param array $params
+     */
+    public function paramHandler(
+        Request $request,
+        Response $response,
+        callable $done,
+        callable $route,
+        array $params
+    ) {
+        $handler = function($request, $response, $err = null) use (&$handler, $done, $route, &$params) {
             if (empty($params)) {
                 if (null !== $err) {
-                    return $next($request, $response, $err);
+                    return $done($request, $response, $err);
                 }
                 return $route($request, $response);
             }
 
             $name  = key($params);
-            $param = array_shift($params);
-            $pipe  = isset($this->paramPipes[$name]) ? $this->paramPipes[$name] : null;
+            $value = array_shift($params);
 
-            if (null === $pipe) {
+            if (!isset($this->paramHandlers[$name])) {
                 return $route($request, $response);
             }
 
-            return $pipe($request, $response, $paramHandler);
+            return $this->paramHandlers[$name]($request, $response, $handler);
         };
 
-
-        return $paramHandler($request, $response);
+        return $handler($request, $response);
     }
 
+    /**
+     * @param string $param
+     * @param callable $handler
+     */
     public function param($param, $handler)
     {
-        if (!isset($this->paramPipes[$param])) {
-            $this->paramPipes[$param] = new MiddlewarePipe;
+        if (!isset($this->paramHandlers[$param])) {
+            $this->paramHandlers[$param] = new MiddlewarePipe;
         }
-        $this->paramPipes[$param]->pipe($handler);
+        $this->paramHandlers[$param]->pipe($handler);
     }
 
     /**
@@ -175,28 +192,15 @@ final class Router
      */
     public function route($methods, $path, $handler)
     {
-        $route = new Route($handler);
-        $this->routeCollector->addRoute($methods, $path, $route);
-    }
-
-    public function add($path, $middleware = null)
-    {
-        $this->routerPipe->pipe($path, $middleware);
+        $this->collector->addRoute($methods, $path, $handler);
     }
 
     /**
-     * @return Dispatcher\GroupCountBased
+     * @param string|callable $pathOrMiddleware
+     * @param null|callable $middleware
      */
-    public function getDispatcher()
+    public function add($pathOrMiddleware, $middleware = null)
     {
-        return new Dispatcher\GroupCountBased($this->getRouteCollector()->getData());
-    }
-
-    /**
-     * @return RouteCollector
-     */
-    public function getRouteCollector()
-    {
-        return $this->routeCollector;
+        $this->pipe->pipe($pathOrMiddleware, $middleware);
     }
 }

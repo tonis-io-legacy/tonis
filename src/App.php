@@ -46,12 +46,12 @@ final class App
     }
 
     /**
-     * Routers are middleware enabled and can be piped back into Tonis.
+     * Routers are middleware and can be added to Tonis.
      *
      * e.g., $router = $app->router();
      *       $router->get(...)
      *
-     *       $app->stratigility('/foo', $router);
+     *       $app->add('/foo', $router);
      *
      * @return Router
      */
@@ -66,7 +66,7 @@ final class App
      */
     public function get($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -75,7 +75,7 @@ final class App
      */
     public function post($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -84,7 +84,7 @@ final class App
      */
     public function put($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -93,7 +93,7 @@ final class App
      */
     public function patch($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -102,7 +102,7 @@ final class App
      */
     public function delete($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -111,7 +111,7 @@ final class App
      */
     public function options($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -120,7 +120,7 @@ final class App
      */
     public function head($path, $handler)
     {
-        $this->addRouteVerb($path, $handler, __FUNCTION__);
+        $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -155,7 +155,7 @@ final class App
      * @param callable $handler
      * @param string $type
      */
-    private function addRouteVerb($path, $handler, $type)
+    private function httpVerb($path, $handler, $type)
     {
         $this->router->$type($path, $handler);
     }
