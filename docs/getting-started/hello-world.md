@@ -1,5 +1,5 @@
-Basic App
----------
+Quick Start
+-----------
 
 Here is an example of a very basic Tonis app. This will look familiar to many micro-frameworks.
 

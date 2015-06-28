@@ -1,3 +1,6 @@
+Overview
+--------
+
 Middleware is a [callable](http://php.net/manual/en/language.types.callable.php) that interacts with the request-response cycle. 
 It may modify the request/response, terminate the request-response cycle early, and call the next middleware in the stack. 
 Middleware accepts the following arguments:

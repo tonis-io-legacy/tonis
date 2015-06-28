@@ -1,3 +1,6 @@
+Composer
+--------
+
 Tonis uses [Composer](https://getcomposer.org/download/) to manage dependencies and is required. Once composer is 
 installed you can install Tonis using the following command:
 
