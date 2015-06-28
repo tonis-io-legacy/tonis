@@ -127,8 +127,23 @@
         },
         {
             "location": "/objects/request/",
-            "text": "The Request object encapsulates data sent during a request. The \nTonis\\Http\\Request\n object decorates \nZend\\Stratigility\\Http\\Request\n\nto provide helper methods on top of what Stratigiility provides.",
+            "text": "The Request object encapsulates data sent during a HTTP request. The \nTonis\\Http\\Request\n object decorates \n\nZend\\Stratigility\\Http\\Request\n which implements \nPsr\\Http\\Message\\RequestInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\nArrayAccess\n\n\nTonis\\Http\\Request\n implements \nArrayAccess\n to provide access to the route match parameters.\n\n\n$app = new \\Tonis\\App;\n$app-\nget('/hello/{name}', function ($request, $response) {\n    $response-\nwrite('Hello, ' . $request['name']);\n});\n\n\n\n\napp()\n\n\nRetrieve the instance of \nTonis\\App\n bound to the request.\n\n\ngetParams()\n\n\nGet all route params from the matched route.",
             "title": "Request"
+        },
+        {
+            "location": "/objects/request/#arrayaccess",
+            "text": "Tonis\\Http\\Request  implements  ArrayAccess  to provide access to the route match parameters.  $app = new \\Tonis\\App;\n$app- get('/hello/{name}', function ($request, $response) {\n    $response- write('Hello, ' . $request['name']);\n});",
+            "title": "ArrayAccess"
+        },
+        {
+            "location": "/objects/request/#app",
+            "text": "Retrieve the instance of  Tonis\\App  bound to the request.",
+            "title": "app()"
+        },
+        {
+            "location": "/objects/request/#getparams",
+            "text": "Get all route params from the matched route.",
+            "title": "getParams()"
         },
         {
             "location": "/objects/response/",

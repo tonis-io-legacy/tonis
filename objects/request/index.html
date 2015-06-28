@@ -125,6 +125,15 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#arrayaccess">ArrayAccess</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#app">app()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#getparams">getParams()</a></li>
+                
+            
             </ul>
         
     </li>
@@ -202,8 +211,22 @@
           <div role="main">
             <div class="section">
               
-                <p>The Request object encapsulates data sent during a request. The <code>Tonis\Http\Request</code> object decorates <code>Zend\Stratigility\Http\Request</code>
-to provide helper methods on top of what Stratigiility provides.</p>
+                <p>The Request object encapsulates data sent during a HTTP request. The <code>Tonis\Http\Request</code> object decorates 
+<code>Zend\Stratigility\Http\Request</code> which implements <code>Psr\Http\Message\RequestInterface</code>. It's highly recommended that you
+review <a href="http://www.php-fig.org/psr/psr-7/">PSR-7 - HTTP messages interfaces</a> to fully understand PSR-7.</p>
+<p>The following are methods available in addition to what PSR-7 provides.</p>
+<h2 id="arrayaccess">ArrayAccess</h2>
+<p><code>Tonis\Http\Request</code> implements <code>ArrayAccess</code> to provide access to the route match parameters.</p>
+<pre><code class="php">$app = new \Tonis\App;
+$app-&gt;get('/hello/{name}', function ($request, $response) {
+    $response-&gt;write('Hello, ' . $request['name']);
+});
+</code></pre>
+
+<h2 id="app">app()</h2>
+<p>Retrieve the instance of <code>Tonis\App</code> bound to the request.</p>
+<h2 id="getparams">getParams()</h2>
+<p>Get all route params from the matched route.</p>
               
             </div>
           </div>
