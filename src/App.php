@@ -154,6 +154,8 @@ final class App
      * @param string $path
      * @param callable $handler
      * @param string $type
+     *
+     * @todo reuse router instance when possible
      */
     private function httpVerb($path, $handler, $type)
     {
