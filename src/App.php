@@ -4,15 +4,14 @@ namespace Tonis;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Stratigility\MiddlewarePipe;
 
 final class App
 {
-    /** @var Router */
-    private $router;
     /** @var ContainerInterface  */
-    private $serviceContainer;
+    private $container;
     /** @var View\Manager */
-    private $viewManager;
+    private $view;
 
     /**
      * @param ContainerInterface $container
@@ -24,23 +23,24 @@ final class App
             $container->addServiceProvider(new ServiceProvider);
         }
 
-        $this->router           = new Router;
-        $this->serviceContainer = $container;
-        $this->viewManager      = $container->get(View\Manager::class);
+        $this->pipe      = new MiddlewarePipe;
+        $this->container = $container;
+        $this->view      = $container->get(View\Manager::class);
     }
 
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @param callable $out
+     * @param callable $done
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $done = null)
     {
         $request  = $this->decorateRequest($request);
         $response = $this->decorateResponse($response);
-        $router   = $this->router;
-        $result   = $router($request, $response, $out ?: new FinalHandler());
+        $pipe     = $this->pipe;
+        $done     = $done ?: new FinalHandler();
+        $result   = $pipe($request, $response, $done);
 
         return $result instanceof ResponseInterface ? $result : $response;
     }
@@ -131,23 +131,23 @@ final class App
      */
     public function add($path, $handler = null)
     {
-        $this->router->add($path, $handler);
+        $this->pipe->pipe($path, $handler);
     }
 
     /**
      * @return ContainerInterface
      */
-    public function getServiceContainer()
+    public function getContainer()
     {
-        return $this->serviceContainer;
+        return $this->container;
     }
 
     /**
      * @return View\Manager
      */
-    public function getViewManager()
+    public function getView()
     {
-        return $this->viewManager;
+        return $this->view;
     }
 
     /**
@@ -157,7 +157,10 @@ final class App
      */
     private function httpVerb($path, $handler, $type)
     {
-        $this->router->$type($path, $handler);
+        $router = $this->router();
+        $router->$type($path, $handler);
+
+        $this->add($path, $router);
     }
 
     /**

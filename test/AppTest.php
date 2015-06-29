@@ -44,14 +44,14 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($router, $this->app->router());
     }
 
-    public function testGetServiceContainer()
+    public function testGetContainer()
     {
-        $this->assertInstanceOf(ContainerInterface::class, $this->app->getServiceContainer());
+        $this->assertInstanceOf(ContainerInterface::class, $this->app->getContainer());
     }
 
-    public function testGetViewManager()
+    public function testGetView()
     {
-        $this->assertInstanceOf(View\Manager::class, $this->app->getViewManager());
+        $this->assertInstanceOf(View\Manager::class, $this->app->getView());
     }
 
     /**

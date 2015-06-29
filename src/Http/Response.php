@@ -68,7 +68,7 @@ final class Response extends StratigilityResponse
      */
     public function render($template, array $params = [])
     {
-        return $this->write($this->app->getViewManager()->render($template, $params));
+        return $this->write($this->app->getView()->render($template, $params));
     }
 
     /**

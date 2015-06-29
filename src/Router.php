@@ -13,15 +13,12 @@ final class Router
 {
     /** @var RouteCollector */
     private $collector;
-    /** @var MiddlewarePipe[] */
+    /** @var array */
     private $paramHandlers = [];
-    /** @var MiddlewarePipe */
-    private $pipe;
 
     public function __construct()
     {
-        $this->pipe       = new MiddlewarePipe;
-        $this->collector  = new RouteCollector(new RouteParser, new RouteGenerator);
+        $this->collector = new RouteCollector(new RouteParser, new RouteGenerator);
     }
 
     /**
@@ -30,22 +27,7 @@ final class Router
      * @param callable $next
      * @return Response
      */
-    public function __invoke(Request $request, Response $response, callable $next = null)
-    {
-        $pipe = $this->pipe;
-        $pipe->pipe([$this, 'dispatchHandler']);
-
-        return $pipe($request, $response, $next);
-    }
-
-    /**
-     * @internal
-     * @param Request $request
-     * @param Response $response
-     * @param callable $next
-     * @return Response
-     */
-    public function dispatchHandler(Request $request, Response $response, callable $next)
+    public function __invoke(Request $request, Response $response, callable $next)
     {
         $dispatcher = new Dispatcher($this->collector->getData());
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
@@ -54,7 +36,7 @@ final class Router
         $params     = isset($result[2]) ? $result[2] : [];
 
         if ($code != Dispatcher::FOUND) {
-            return $next ? $next($request, $response) : $response;
+            return $next($request, $response);
         }
 
         foreach ($params as $key => $value) {
@@ -80,18 +62,22 @@ final class Router
         array $params
     ) {
         $handler = function ($request, $response, $err = null) use (&$handler, $done, $route, &$params) {
-            if (empty($params)) {
-                if (null !== $err) {
-                    return $done($request, $response, $err);
-                }
-                return $route($request, $response);
+            // if we got an error at any point call the $done handler.
+            if (null !== $err) {
+                return $done($request, $response, $err);
             }
 
-            $name  = key($params);
+            // the params have been exhausted, we can call the route
+            if (empty($params)) {
+                return $route($request, $response, $done);
+            }
+
+            $name = key($params);
             array_shift($params);
 
+            // no param handlers, we can call the route
             if (!isset($this->paramHandlers[$name])) {
-                return $route($request, $response);
+                return $route($request, $response, $done);
             }
 
             return $this->paramHandlers[$name]($request, $response, $handler);
@@ -193,14 +179,5 @@ final class Router
     public function route($methods, $path, $handler)
     {
         $this->collector->addRoute($methods, $path, $handler);
-    }
-
-    /**
-     * @param string|callable $pathOrMiddleware
-     * @param null|callable $middleware
-     */
-    public function add($pathOrMiddleware, $middleware = null)
-    {
-        $this->pipe->pipe($pathOrMiddleware, $middleware);
     }
 }
