@@ -17,6 +17,8 @@ final class Router
     private $middleware = [];
     /** @var array */
     private $paramHandlers = [];
+    /** @var RelayBuilder */
+    private $relayBuilder;
 
     public function __construct()
     {

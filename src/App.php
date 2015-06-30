@@ -10,6 +10,8 @@ final class App
 {
     /** @var ContainerInterface  */
     private $container;
+    /** @var MiddlewarePipe */
+    private $pipe;
     /** @var View\Manager */
     private $view;
 
@@ -126,7 +128,7 @@ final class App
     /**
      * Proxies to MiddlewarePipe::pipe.
      *
-     * @param string $path
+     * @param string|callable $path
      * @param callable $handler
      */
     public function add($path, $handler = null)
