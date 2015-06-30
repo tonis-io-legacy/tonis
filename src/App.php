@@ -162,7 +162,7 @@ final class App
         $router = $this->router();
         $router->$type($path, $handler);
 
-        $this->add($path, $router);
+        $this->add($router);
     }
 
     /**

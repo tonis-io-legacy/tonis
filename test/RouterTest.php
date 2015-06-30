@@ -23,40 +23,34 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $this->router->param('id', function ($req, $res, $next) {
             $res->write($req['id']);
-            $next($req, $res);
+            return $next($req, $res);
         });
         $this->router->get('/{id}', function ($req, $res) {
             return $res->write('get');
         });
 
-        $result = $this->router->__invoke($this->newTonisRequest('/1234'), $this->newTonisResponse());
+        $request  = $this->newTonisRequest('/1234');
+        $response = $this->newTonisResponse();
+        $handler  = function($req, $res) {
+            return $res;
+        };
+
+        $result = $this->router->__invoke($request, $response, $handler);
         $this->assertSame('1234get', $result->getBody()->__toString());
-    }
-
-    public function testParamWithError()
-    {
-        $this->router->param('id', function ($req, $res, $next) {
-            $next($req, $res, 'error');
-        });
-        $this->router->get('/{id}', function ($req, $res) {
-            return $res->write('get');
-        });
-
-        $result = $this->router->__invoke($this->newTonisRequest('/1234'), $this->newTonisResponse());
-        $this->assertSame('error', $result->getBody()->__toString());
     }
 
     public function testAddingMiddleware()
     {
-        $this->router->add(function ($req, $res, $next) {
-            $res->write('add');
-            return $next($req, $res);
+        $this->router->add(function ($req, $res) {
+            return $res->write('add');
+        });
+        $this->router->get('/', function($req, $res) {
+            return $res;
         });
 
         $request  = $this->newTonisRequest('/');
         $response = $this->newTonisResponse();
-
-        $result = $this->router->__invoke($request, $response);
+        $result   = $this->router->__invoke($request, $response, function() {});
 
         $this->assertSame('add', $result->getBody()->__toString());
     }
@@ -65,9 +59,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $request  = $this->newTonisRequest('/');
         $response = $this->newTonisResponse();
-
-        $result = $this->router->__invoke($request, $response, function ($req, $res) {
-            $res->write('success');
+        $result   = $this->router->__invoke($request, $response, function ($req, $res) {
+            return $res->write('success');
         });
 
         $this->assertSame('success', $result->getBody()->__toString());
@@ -80,10 +73,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $that = $this;
         $this->router->get('/{foo}', function ($req, $res) use ($that) {
-            $res->write('success');
+            return $res->write('success');
         });
 
-        $result = $this->router->__invoke($request, $response);
+        $result = $this->router->__invoke($request, $response, function() {});
         $this->assertSame('success', $result->getBody()->__toString());
     }
 

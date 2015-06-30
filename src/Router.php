@@ -5,20 +5,23 @@ use FastRoute\DataGenerator\GroupCountBased as RouteGenerator;
 use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
+use Relay\RelayBuilder;
 use Tonis\Http\Request;
 use Tonis\Http\Response;
-use Zend\Stratigility\MiddlewarePipe;
 
 final class Router
 {
     /** @var RouteCollector */
     private $collector;
     /** @var array */
+    private $middleware = [];
+    /** @var array */
     private $paramHandlers = [];
 
     public function __construct()
     {
-        $this->collector = new RouteCollector(new RouteParser, new RouteGenerator);
+        $this->collector    = new RouteCollector(new RouteParser, new RouteGenerator);
+        $this->relayBuilder = new RelayBuilder;
     }
 
     /**
@@ -43,6 +46,9 @@ final class Router
             $request[$key] = $value;
         }
 
+        $relay    = $this->relayBuilder->newInstance($this->middleware);
+        $response = $relay($request, $response);
+
         return $this->paramHandler($request, $response, $next, $handler, $params);
     }
 
@@ -61,12 +67,7 @@ final class Router
         callable $route,
         array $params
     ) {
-        $handler = function ($request, $response, $err = null) use (&$handler, $done, $route, &$params) {
-            // if we got an error at any point call the $done handler.
-            if (null !== $err) {
-                return $done($request, $response, $err);
-            }
-
+        $handler = function ($request, $response) use (&$handler, $done, $route, &$params) {
             // the params have been exhausted, we can call the route
             if (empty($params)) {
                 return $route($request, $response, $done);
@@ -80,22 +81,25 @@ final class Router
                 return $route($request, $response, $done);
             }
 
-            return $this->paramHandlers[$name]($request, $response, $handler);
+            $builder  = $this->relayBuilder;
+            $relay    = $builder->newInstance($this->paramHandlers[$name]);
+            $response = $relay($request, $response);
+
+            return $handler($request, $response);
         };
 
         return $handler($request, $response);
     }
 
     /**
+     * Adds param handlers to a queue. The queue is processed at invocation by RelayPHP.
+     *
      * @param string $param
      * @param callable $handler
      */
     public function param($param, $handler)
     {
-        if (!isset($this->paramHandlers[$param])) {
-            $this->paramHandlers[$param] = new MiddlewarePipe;
-        }
-        $this->paramHandlers[$param]->pipe($handler);
+        $this->paramHandlers[$param][] = $handler;
     }
 
     /**
@@ -179,5 +183,13 @@ final class Router
     public function route($methods, $path, $handler)
     {
         $this->collector->addRoute($methods, $path, $handler);
+    }
+
+    /**
+     * @param callable $middleware
+     */
+    public function add($middleware)
+    {
+        $this->middleware[] = $middleware;
     }
 }
