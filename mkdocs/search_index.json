@@ -216,6 +216,36 @@
             "title": "render()"
         },
         {
+            "location": "/objects/router/",
+            "text": "Overview\n\n\nThe \nTonis\\Router\n handles all routing in Tonis and is built on \nnikic/FastRoute\n for optimal performance. For more\ninformation on routing see the \nrouting documentation\n.\n\n\nThe following are methods available.\n\n\nHTTP Verbs\n\n\npublic function verb(string $path, callable $handler): void\n\n\nCreates a route that matches on the specified HTTP verb and the path specified. \n\n\nHTTP Verb can be one of: \nget\n \npost\n \nput\n \npatch\n \ndelete\n \nhead\n \noptions\n\n\n$router-\nget('/', function ($request, $response) { ... });\n\n\n\n\nany()\n\n\npublic function any(string $path, callable $handler): void\n\n\nCreates a route that matches any HTTP verb and the path specified.\n\n\n$router-\nany('/', function ($request, $response) { ... });\n\n\n\n\nparam()\n\n\npublic function param(string $param, callable $handler): void\n\n\nAdds middleware for a matched route parameter. \n\n\n// this will be called anytime \narticle_id\n exists in a route\n$router-\nparam('article_id', function ($request, $response, $next) {\n    // assume repository was injected\n    $article = $this-\nrepository-\nfind($request['article_id']);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now \narticle\n is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route with \narticle_id\n so the handler can be called\n$router-\nget('/articles/{article_id};\n\n\n\n\nadd()\n\n\npublic function add(callable $middleware): void\n\n\nAdd middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.\n\n\n$router-\nadd(function ($request, $response, $next) {\n    $response-\nwrite('pre ');\n    $response = $next($request, $response);\n    $response-\nwrite(' post');\n\n    return $response;\n});\n\n// a call to \nGET /\n would output \npre GET / post\n\n$router-\nget('/', function ($request, $response) {\n    return $response-\nwrite('GET /');\n});",
+            "title": "Router"
+        },
+        {
+            "location": "/objects/router/#overview",
+            "text": "The  Tonis\\Router  handles all routing in Tonis and is built on  nikic/FastRoute  for optimal performance. For more\ninformation on routing see the  routing documentation .  The following are methods available.",
+            "title": "Overview"
+        },
+        {
+            "location": "/objects/router/#http-verbs",
+            "text": "public function verb(string $path, callable $handler): void  Creates a route that matches on the specified HTTP verb and the path specified.   HTTP Verb can be one of:  get   post   put   patch   delete   head   options  $router- get('/', function ($request, $response) { ... });",
+            "title": "HTTP Verbs"
+        },
+        {
+            "location": "/objects/router/#any",
+            "text": "public function any(string $path, callable $handler): void  Creates a route that matches any HTTP verb and the path specified.  $router- any('/', function ($request, $response) { ... });",
+            "title": "any()"
+        },
+        {
+            "location": "/objects/router/#param",
+            "text": "public function param(string $param, callable $handler): void  Adds middleware for a matched route parameter.   // this will be called anytime  article_id  exists in a route\n$router- param('article_id', function ($request, $response, $next) {\n    // assume repository was injected\n    $article = $this- repository- find($request['article_id']);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now  article  is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route with  article_id  so the handler can be called\n$router- get('/articles/{article_id};",
+            "title": "param()"
+        },
+        {
+            "location": "/objects/router/#add",
+            "text": "public function add(callable $middleware): void  Add middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.  $router- add(function ($request, $response, $next) {\n    $response- write('pre ');\n    $response = $next($request, $response);\n    $response- write(' post');\n\n    return $response;\n});\n\n// a call to  GET /  would output  pre GET / post \n$router- get('/', function ($request, $response) {\n    return $response- write('GET /');\n});",
+            "title": "add()"
+        },
+        {
             "location": "/resources/official-middleware/",
             "text": "Overview\n\n\nThe following is a list of officially supported middleware:\n\n\n\n\n\n\n\n\nMiddleware\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\nError Handler\n\n\nAdds an error handler that supports logging with Mongolog.\n\n\n\n\n\n\nResponse Time\n\n\nAdds a X-Response-Time header to your responses.",
             "title": "Official Middleware"

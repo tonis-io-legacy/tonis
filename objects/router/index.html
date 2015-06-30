@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installing - Tonis</title>
+  <title>Router - Tonis</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -20,7 +20,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Installing";
+    var mkdocs_page_name = "Router";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -62,39 +62,29 @@
 
         
             
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Installing</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#composer">Composer</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#server-requirements">Server Requirements</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../../getting-started/installing/">Installing</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../hello-world/">Hello world</a>
+        <a class="" href="../../getting-started/hello-world/">Hello world</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../contributing/">Contributing</a>
+        <a class="" href="../../getting-started/contributing/">Contributing</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../license/">License</a>
+        <a class="" href="../../getting-started/license/">License</a>
         
     </li>
 
@@ -131,21 +121,40 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../../objects/request/">Request</a>
+        <a class="" href="../request/">Request</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../../objects/response/">Response</a>
+        <a class="" href="../response/">Response</a>
         
     </li>
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../../objects/router/">Router</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Router</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#overview">Overview</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#http-verbs">HTTP Verbs</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#any">any()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#param">param()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#add">add()</a></li>
+                
+            
+            </ul>
         
     </li>
 
@@ -190,11 +199,11 @@
     
       
         
-          <li>Getting Started &raquo;</li>
+          <li>Objects &raquo;</li>
         
       
     
-    <li>Installing</li>
+    <li>Router</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -208,18 +217,62 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="composer">Composer</h2>
-<p>Tonis uses <a href="https://getcomposer.org/download/">Composer</a> to manage dependencies and is required. Once composer is 
-installed you can install Tonis using the following command:</p>
-<pre><code class="sh">composer require tonis-io/tonis
+                <h2 id="overview">Overview</h2>
+<p>The <code>Tonis\Router</code> handles all routing in Tonis and is built on <code>nikic/FastRoute</code> for optimal performance. For more
+information on routing see the <a href="../../basics/routing">routing documentation</a>.</p>
+<p>The following are methods available.</p>
+<h2 id="http-verbs">HTTP Verbs</h2>
+<p><code>public function verb(string $path, callable $handler): void</code></p>
+<p>Creates a route that matches on the specified HTTP verb and the path specified. </p>
+<p>HTTP Verb can be one of: <code>get</code> <code>post</code> <code>put</code> <code>patch</code> <code>delete</code> <code>head</code> <code>options</code></p>
+<pre><code class="php">$router-&gt;get('/', function ($request, $response) { ... });
 </code></pre>
 
-<p>See the <a href="../../getting-started/hello-world">hello world</a> for an example <code>index.php</code> file.</p>
-<h2 id="server-requirements">Server Requirements</h2>
-<p>Tonis has the following requirement:</p>
-<ul>
-<li>PHP 5.5+ or HHVM</li>
-</ul>
+<h2 id="any">any()</h2>
+<p><code>public function any(string $path, callable $handler): void</code></p>
+<p>Creates a route that matches any HTTP verb and the path specified.</p>
+<pre><code class="php">$router-&gt;any('/', function ($request, $response) { ... });
+</code></pre>
+
+<h2 id="param">param()</h2>
+<p><code>public function param(string $param, callable $handler): void</code></p>
+<p>Adds middleware for a matched route parameter. </p>
+<pre><code class="php">// this will be called anytime &quot;article_id&quot; exists in a route
+$router-&gt;param('article_id', function ($request, $response, $next) {
+    // assume repository was injected
+    $article = $this-&gt;repository-&gt;find($request['article_id']);
+
+    // this will be caught by the default error handler and show a nice 404 page
+    if (!$article) {
+        throw new \RuntimeException('No article', 404);
+    }
+
+    // now &quot;article&quot; is available to any handler with article_id in the route
+    // this let's you easily reuse common code
+    $request['article'] = $article;
+    return $next($request, $response);
+});
+
+// create a route with &quot;article_id&quot; so the handler can be called
+$router-&gt;get('/articles/{article_id};
+</code></pre>
+
+<h2 id="add">add()</h2>
+<p><code>public function add(callable $middleware): void</code></p>
+<p>Add middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.</p>
+<pre><code class="php">$router-&gt;add(function ($request, $response, $next) {
+    $response-&gt;write('pre ');
+    $response = $next($request, $response);
+    $response-&gt;write(' post');
+
+    return $response;
+});
+
+// a call to &quot;GET /&quot; would output &quot;pre GET / post&quot;
+$router-&gt;get('/', function ($request, $response) {
+    return $response-&gt;write('GET /');
+});
+</code></pre>
               
             </div>
           </div>
@@ -227,10 +280,10 @@ installed you can install Tonis using the following command:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../hello-world/" class="btn btn-neutral float-right" title="Hello world"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../resources/official-middleware/" class="btn btn-neutral float-right" title="Official Middleware"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../response/" class="btn btn-neutral" title="Response"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -260,10 +313,10 @@ installed you can install Tonis using the following command:</p>
           <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../response/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../hello-world/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../../resources/official-middleware/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
