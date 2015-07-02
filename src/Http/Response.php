@@ -19,7 +19,7 @@ final class Response implements ResponseInterface
     public function __construct(App $app, ResponseInterface $decorated)
     {
         $this->app       = $app;
-        $this->decorated = $decorated;;
+        $this->decorated = $decorated;
     }
 
     /**

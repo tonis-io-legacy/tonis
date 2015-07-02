@@ -107,7 +107,7 @@ final class Request implements \ArrayAccess, ServerRequestInterface
      */
     public function getHeaders()
     {
-        Return $this->psrRequest->getHeaders();
+        return $this->psrRequest->getHeaders();
     }
 
     /**
@@ -235,7 +235,7 @@ final class Request implements \ArrayAccess, ServerRequestInterface
      */
     public function getCookieParams()
     {
-        Return $this->psrRequest->getCookieParams();
+        return $this->psrRequest->getCookieParams();
     }
 
     /**
