@@ -1,7 +1,6 @@
 <?php
 namespace Tonis;
 
-use FastRoute\Dispatcher\GroupCountBased;
 use Interop\Container\ContainerInterface;
 use Tonis\Http\Request as TonisRequest;
 use Tonis\Http\Response as TonisResponse;

@@ -72,76 +72,121 @@ final class Response implements ResponseInterface
         return $this->write($this->app->getView()->render($template, $params));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getProtocolVersion()
     {
         return $this->decorated->getProtocolVersion();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withProtocolVersion($version)
     {
         return new self($this->app, $this->decorated->withProtocolVersion($version));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getHeaders()
     {
         return $this->decorated->getHeaders();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function hasHeader($name)
     {
         return $this->hasHeader($name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getHeader($name)
     {
         return $this->decorated->getHeader($name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getHeaderLine($name)
     {
         return $this->decorated->getHeader($name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withHeader($name, $value)
     {
         return new self($this->app, $this->decorated->withHeader($name, $value));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withAddedHeader($name, $value)
     {
         return new self($this->app, $this->decorated->withAddedHeader($name, $value));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withoutHeader($name)
     {
         return new self($this->app, $this->decorated->withoutHeader($name));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getBody()
     {
         return $this->decorated->getBody();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withBody(StreamInterface $body)
     {
         return new self($this->app, $this->decorated->withBody($body));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getStatusCode()
     {
         return $this->decorated->getStatusCode();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withStatus($code, $reasonPhrase = '')
     {
         return new self($this->app, $this->decorated->withStatus($code, $reasonPhrase));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getReasonPhrase()
     {
         return $this->decorated->getReasonPhrase();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function write($data)
     {
         $this->getBody()->write($data);

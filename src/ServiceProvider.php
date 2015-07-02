@@ -11,8 +11,8 @@ class ServiceProvider extends BaseServiceProvider
         Engine::class,
         Handler\ErrorInterface::class,
         Handler\NotFoundInterface::class,
-        Router::class,
         RouteMap::class,
+        Router::class,
         View\Manager::class
     ];
 
