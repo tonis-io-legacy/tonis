@@ -4,7 +4,7 @@ namespace Tonis;
 use FastRoute\RouteParser\Std as RouteParser;
 use Tonis\Exception;
 
-class RouteMap implements \Iterator
+class RouteMap implements \Countable, \Iterator
 {
     /** @var Route[] */
     private $routes = [];
@@ -35,19 +35,37 @@ class RouteMap implements \Iterator
      * @param array $params
      * @return string
      */
-    public function assemble($name, $params)
+    public function assemble($name, $params = [])
     {
         $this->buildNameCache();
         if (!$this->hasRoute($name)) {
             throw new Exception\MissingRoute($name);
         }
 
-        $route = $this->nameCache[$name];
-        $path  = $route->getPath();
-        $parts = $this->routeParser->parse($path);
-        $url   = '';
+        $route      = $this->nameCache[$name];
+        $path       = $route->getPath();
+        $routeParts = $this->routeParser->parse($path);
+        $url        = '';
 
-        foreach ($parts[0] as $part) {
+        $useOptional = false;
+
+        // $routeParts contains at most two entries
+        // the first is the route parsed without the optional segment
+        // the second is the route with the optional segment
+        // this determines which part we should use to assemble the array
+        if (isset($routeParts[1])) {
+            $useOptional = true;
+            foreach ($routeParts[1] as $part) {
+                if (is_array($part) && !isset($params[$part[0]])) {
+                    $useOptional = false;
+                    break;
+                }
+            }
+        }
+
+        $parts = $useOptional ? $routeParts[1] : $routeParts[0];
+
+        foreach ($parts as $part) {
             if (is_string($part)) {
                 $url .= $part;
                 continue;
@@ -71,6 +89,14 @@ class RouteMap implements \Iterator
     {
         $this->buildNameCache();
         return isset($this->nameCache[$name]);
+    }
+
+    /**
+     * @return Route[]
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
     }
 
     /**
@@ -127,5 +153,13 @@ class RouteMap implements \Iterator
     public function rewind()
     {
         reset($this->routes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count()
+    {
+        return count($this->routes);
     }
 }

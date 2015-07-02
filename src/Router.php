@@ -48,12 +48,8 @@ final class Router
             return $next($request, $response);
         }
 
-        $route = $result[1];
-
-        if (!$route instanceof Route) {
-            throw new Exception\InvalidRoute;
-        }
-
+        /** @var Route $route */
+        $route  = $result[1];
         $params = $result[2];
 
         foreach ($params as $key => $value) {
