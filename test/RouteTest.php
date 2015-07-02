@@ -6,12 +6,15 @@ namespace Tonis;
  */
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var callable */
+    private $handler;
     /** @var Route */
     private $route;
 
     protected function setUp()
     {
-        $this->route = new Route('/foo', function () {});
+        $this->handler = function () {};
+        $this->route   = new Route('/foo', $this->handler);
     }
 
     public function testName()
@@ -28,6 +31,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testGetHandler()
     {
-        $this->assertEquals(function () {}, $this->route->getHandler());
+        $this->assertSame($this->handler, $this->route->getHandler());
     }
 }
