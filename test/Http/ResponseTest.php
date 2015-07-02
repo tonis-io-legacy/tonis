@@ -2,6 +2,7 @@
 namespace Tonis\Http;
 
 use Tonis\App;
+use Tonis\Http\Response as TonisResponse;
 use Zend\Diactoros\Response as DiactorosResponse;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Stream;
@@ -51,7 +52,22 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider proxyProvider
      */
-    public function testProxyCalls($method, $input)
+    public function testProxyCalls($method, $input = null)
+    {
+        $res  = new DiactorosResponse();
+        $tres = new TonisResponse(new App, $res);
+
+        $expected = call_user_func_array([$res, $method], (array) $input);
+        $actual   = call_user_func_array([$tres, $method], (array) $input);
+
+        $this->assertSame($expected, $actual);
+    }
+
+
+    /**
+     * @dataProvider cloneProxyProvider
+     */
+    public function testProxyCloneCalls($method, $input)
     {
         $result = call_user_func_array([$this->response, $method], $input);
 
@@ -65,6 +81,19 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     public function proxyProvider()
+    {
+        return [
+            ['getProtocolVersion', ['1.0']],
+            ['getHeaders', [[]]],
+            ['hasHeader', ['Content-Type']],
+            ['getHeader', ['Content-Type']],
+            ['getHeaderLine', ['Content-Type']],
+            ['getBody'],
+            ['getReasonPhrase'],
+        ];
+    }
+
+    public function cloneProxyProvider()
     {
         return [
             ['withProtocolVersion', ['1.0']],

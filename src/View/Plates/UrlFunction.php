@@ -21,6 +21,7 @@ class UrlFunction
      *
      * @param string $name
      * @param array $params
+     * @return string
      */
     public function __invoke($name, array $params = [])
     {

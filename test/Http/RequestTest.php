@@ -2,6 +2,7 @@
 namespace Tonis\Http;
 
 use Tonis\App;
+use Tonis\Http\Request as TonisRequest;
 use Tonis\TestAsset\NewRequestTrait;
 use Zend\Diactoros\ServerRequest as DiactorosRequest;
 use Zend\Diactoros\Stream;
@@ -32,14 +33,28 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider proxyProvider
      */
-    public function testProxyCalls($method, $input)
+    public function testProxyCalls($method, $input = null)
     {
-        $req = $this->newTonisRequest('/');
+        $req    = $this->newRequest('/');
+        $treq   = new TonisRequest(new App, $req);
 
-        $result = call_user_func_array([$req, $method], $input);
+        $expected = call_user_func_array([$req, $method], (array) $input);
+        $actual   = call_user_func_array([$treq, $method], (array) $input);
 
-        $this->assertNotSame($req, $result);
-        $this->assertInstanceOf(Request::class, $result);
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @dataProvider cloneProxyProvider
+     */
+    public function testProxyCloneCalls($method, $input = null)
+    {
+        $req    = $this->newRequest('/');
+        $treq   = new TonisRequest(new App, $req);
+        $actual = call_user_func_array([$treq, $method], (array) $input);
+
+        $this->assertNotSame($req, $actual);
+        $this->assertInstanceOf(Request::class, $actual);
     }
 
     public function testApp()
@@ -52,6 +67,28 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     public function proxyProvider()
+    {
+        return [
+            ['getProtocolVersion', ['1.0']],
+            ['getHeaders', [[]]],
+            ['hasHeader', ['Content-Type']],
+            ['getHeader', ['Content-Type']],
+            ['getHeaderLine', ['Content-Type']],
+            ['getBody'],
+            ['getRequestTarget'],
+            ['getMethod'],
+            ['getUri'],
+            ['getServerParams'],
+            ['getCookieParams'],
+            ['getQueryParams'],
+            ['getUploadedFiles'],
+            ['getParsedBody'],
+            ['getAttributes'],
+            ['getAttribute', ['foo', 'bar']],
+        ];
+    }
+
+    public function cloneProxyProvider()
     {
         return [
             ['withRequestTarget', ['foo']],
@@ -67,6 +104,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ['withParsedBody', [['foo' => 'bar']]],
             ['withAttribute', ['foo', 'bar']],
             ['withoutAttribute', ['foo']],
+            ['withUploadedFiles', [[]]],
         ];
     }
 }

@@ -7,9 +7,9 @@ use Tonis\Exception;
 class RouteMap implements \Iterator
 {
     /** @var Route[] */
-    private $routes;
+    private $routes = [];
     /** @var Route[] */
-    private $nameCache;
+    private $nameCache = [];
     /** @var RouteParser  */
     private $routeParser;
 

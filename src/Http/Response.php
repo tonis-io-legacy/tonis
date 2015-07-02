@@ -101,7 +101,7 @@ final class Response implements ResponseInterface
      */
     public function hasHeader($name)
     {
-        return $this->hasHeader($name);
+        return $this->decorated->hasHeader($name);
     }
 
     /**
@@ -117,7 +117,7 @@ final class Response implements ResponseInterface
      */
     public function getHeaderLine($name)
     {
-        return $this->decorated->getHeader($name);
+        return $this->decorated->getHeaderLine($name);
     }
 
     /**
