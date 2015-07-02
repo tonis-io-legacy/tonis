@@ -6,8 +6,6 @@ use Tonis\Http\Request as TonisRequest;
 use Tonis\Http\Response as TonisResponse;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
-use Zend\Stratigility\Http\Request as StratigilityRequest;
-use Zend\Stratigility\Http\Response as StratigilityResponse;
 
 trait NewRequestTrait
 {
@@ -16,7 +14,7 @@ trait NewRequestTrait
      */
     protected function newTonisResponse()
     {
-        return new TonisResponse(new App(), new StratigilityResponse(new Response()));
+        return new TonisResponse(new App(), new Response());
     }
 
     /**
@@ -29,7 +27,7 @@ trait NewRequestTrait
         $server['REQUEST_URI'] = $path;
         $server = array_merge($_SERVER, $server);
 
-        return new TonisRequest(new App(), new StratigilityRequest($this->newRequest($path, $server)));
+        return new TonisRequest(new App(), $this->newRequest($path, $server));
     }
 
     /**

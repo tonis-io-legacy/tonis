@@ -86,8 +86,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testHttpVerbsProxy($method)
     {
-        $handler   = function () {
-        };
+        $handler   = function () {};
         $refl      = new \ReflectionClass($this->router);
         $collector = $refl->getProperty('collector');
         $collector->setAccessible(true);
@@ -102,8 +101,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testAny()
     {
-        $handler   = function () {
-        };
+        $handler   = function () {};
         $refl      = new \ReflectionClass($this->router);
         $collector = $refl->getProperty('collector');
         $collector->setAccessible(true);

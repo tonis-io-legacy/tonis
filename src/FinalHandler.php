@@ -32,7 +32,7 @@ final class FinalHandler
      */
     private function handleError($error, Http\Request $request, Http\Response $response)
     {
-        $response = $response->withStatus(Utils::getStatusCode($error, $response));
+        //$response = $response->withStatus(Utils::getStatusCode($error, $response));
         $vars = [
             'request' => $request,
             'response' => $response

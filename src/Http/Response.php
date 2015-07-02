@@ -4,21 +4,22 @@ namespace Tonis\Http;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Tonis\App;
-use Zend\Stratigility\Http\Response as StratigilityResponse;
 
-final class Response extends StratigilityResponse
+final class Response implements ResponseInterface
 {
     /** @var App */
     private $app;
+    /** @var ResponseInterface */
+    private $decorated;
 
     /**
      * @param App $app
-     * @param ResponseInterface $response
+     * @param ResponseInterface $decorated
      */
-    public function __construct(App $app, ResponseInterface $response)
+    public function __construct(App $app, ResponseInterface $decorated)
     {
-        $this->app = $app;
-        parent::__construct($response);
+        $this->app       = $app;
+        $this->decorated = $decorated;;
     }
 
     /**
@@ -71,51 +72,79 @@ final class Response extends StratigilityResponse
         return $this->write($this->app->getView()->render($template, $params));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public function getProtocolVersion()
+    {
+        return $this->decorated->getProtocolVersion();
+    }
+
     public function withProtocolVersion($version)
     {
-        return new self($this->app, parent::withProtocolVersion($version));
+        return new self($this->app, $this->decorated->withProtocolVersion($version));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public function getHeaders()
+    {
+        return $this->decorated->getHeaders();
+    }
+
+    public function hasHeader($name)
+    {
+        return $this->hasHeader($name);
+    }
+
+    public function getHeader($name)
+    {
+        return $this->decorated->getHeader($name);
+    }
+
+    public function getHeaderLine($name)
+    {
+        return $this->decorated->getHeader($name);
+    }
+
+    public function withHeader($name, $value)
+    {
+        return new self($this->app, $this->decorated->withHeader($name, $value));
+    }
+
+    public function withAddedHeader($name, $value)
+    {
+        return new self($this->app, $this->decorated->withAddedHeader($name, $value));
+    }
+
+    public function withoutHeader($name)
+    {
+        return new self($this->app, $this->decorated->withoutHeader($name));
+    }
+
+    public function getBody()
+    {
+        return $this->decorated->getBody();
+    }
+
     public function withBody(StreamInterface $body)
     {
-        return new self($this->app, parent::withBody($body));
+        return new self($this->app, $this->decorated->withBody($body));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function withHeader($header, $value)
+    public function getStatusCode()
     {
-        return new self($this->app, parent::withHeader($header, $value));
+        return $this->decorated->getStatusCode();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function withAddedHeader($header, $value)
+    public function withStatus($code, $reasonPhrase = '')
     {
-        return new self($this->app, parent::withAddedHeader($header, $value));
+        return new self($this->app, $this->decorated->withStatus($code, $reasonPhrase));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function withoutHeader($header)
+    public function getReasonPhrase()
     {
-        return new self($this->app, parent::withoutHeader($header));
+        return $this->decorated->getReasonPhrase();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function withStatus($header, $reasonPhrase = null)
+    public function write($data)
     {
-        return new self($this->app, parent::withStatus($header, $reasonPhrase));
+        $this->getBody()->write($data);
+        return $this;
     }
 }

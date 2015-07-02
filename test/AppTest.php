@@ -27,7 +27,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
     {
         $router = $this->app->router();
         $router->get('/', function ($req, $res) {
-            $res->end('success');
+            $res->write('success');
         });
 
         $this->app->add($router);
@@ -60,7 +60,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
     public function testHttpVerbs($method)
     {
         $this->app->$method('/foo', function ($req, $res) {
-            $res->end('success');
+            $res->write('success');
         });
         $request = $this->newRequest('/foo', ['REQUEST_METHOD' => strtoupper($method)]);
         $result = $this->app->__invoke($request, new Response());
@@ -69,21 +69,21 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
     public function testDecoration()
     {
-        $result = $this->app->__invoke($this->newRequest('/'), new Response(), function ($req, $res) {
+        $res = $this->app->__invoke($this->newRequest('/'), new Response(), function ($req, $res) {
             $this->assertInstanceOf(TonisRequest::class, $req);
             $this->assertInstanceOf(TonisResponse::class, $res);
 
-            $res->write('success');
+            return $res->write('success');
         });
-        $this->assertSame('success', $result->getBody()->__toString());
+        $this->assertSame('success', $res->getBody()->__toString());
 
-        $result = $this->app->__invoke($this->newTonisRequest('/'), $this->newTonisResponse(), function ($req, $res) {
+        $res = $this->app->__invoke($this->newTonisRequest('/'), $this->newTonisResponse(), function ($req, $res) {
             $this->assertInstanceOf(TonisRequest::class, $req);
             $this->assertInstanceOf(TonisResponse::class, $res);
 
-            $res->write('success');
+            return $res->write('success');
         });
-        $this->assertSame('success', $result->getBody()->__toString());
+        $this->assertSame('success', $res->getBody()->__toString());
     }
 
     public function httpVerbProvider()

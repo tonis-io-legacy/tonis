@@ -11,6 +11,6 @@ class Container extends LeagueContainer implements ContainerInterface
      */
     public function has($id)
     {
-        return $this->isRegistered($id);
+        return $this->isRegistered($id) || $this->isSingleton($id);
     }
 }

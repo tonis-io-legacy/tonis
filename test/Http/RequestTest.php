@@ -6,7 +6,6 @@ use Tonis\TestAsset\NewRequestTrait;
 use Zend\Diactoros\ServerRequest as DiactorosRequest;
 use Zend\Diactoros\Stream;
 use Zend\Diactoros\Uri;
-use Zend\Stratigility\Http\Request as StratigilityRequest;
 
 /**
  * @covers \Tonis\Http\Request
@@ -45,9 +44,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testApp()
     {
-        $app = new App();
-        $sRequest = new StratigilityRequest(new DiactorosRequest);
-        $req = new Request($app, $sRequest);
+        $app     = new App();
+        $request = new DiactorosRequest();
+        $req     = new Request($app, $request);
 
         $this->assertSame($app, $req->app());
     }

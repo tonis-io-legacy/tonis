@@ -3,12 +3,14 @@ namespace Tonis;
 
 use League\Container\ServiceProvider as BaseServiceProvider;
 use League\Plates\Engine;
-use Tonis\View\PlatesStrategy;
 
 class ServiceProvider extends BaseServiceProvider
 {
     /** @var array */
     protected $provides = [
+        Engine::class,
+        Router::class,
+        RouteMap::class,
         View\Manager::class
     ];
 
@@ -18,8 +20,28 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $container = $this->getContainer();
-        $container->add(View\Manager::class, function () {
-            return new View\Manager(new PlatesStrategy(new Engine(__DIR__ . '/../view')));
+
+        // route map which contains routes for lookup
+        $container->singleton(RouteMap::class, function() {
+            return new RouteMap;
+        });
+
+        // router
+        $container->add(Router::class, function() use ($container) {
+            return new Router($container->get(RouteMap::class));
+        });
+
+        // plates engine
+        $container->singleton(Engine::class, function() use ($container) {
+            $engine = new Engine(__DIR__ . '/../view');
+            $engine->registerFunction('url', new View\Plates\UrlFunction($container->get(RouteMap::class)));
+
+            return $engine;
+        });
+
+        // view manager
+        $container->add(View\Manager::class, function () use ($container) {
+            return new View\Manager(new View\PlatesStrategy($container->get(Engine::class)));
         });
     }
 }

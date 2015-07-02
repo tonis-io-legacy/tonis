@@ -5,8 +5,6 @@ use Tonis\App;
 use Zend\Diactoros\Response as DiactorosResponse;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Stream;
-use Zend\Diactoros\Uri;
-use Zend\Stratigility\Http\Response as StratigilityResponse;
 
 /**
  * @covers \Tonis\Http\Response
@@ -15,8 +13,6 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Response */
     private $response;
-    /** @var StratigilityResponse */
-    private $sResponse;
     /** @var DiactorosResponse */
     private $dResponse;
     /** @var App */
@@ -26,8 +22,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $this->app = new App();
         $this->dResponse = new DiactorosResponse;
-        $this->sResponse = new StratigilityResponse($this->dResponse);
-        $this->response = new Response($this->app, $this->sResponse);
+        $this->response  = new Response($this->app, $this->dResponse);
     }
 
     public function testJson()

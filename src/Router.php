@@ -19,11 +19,17 @@ final class Router
     private $paramHandlers = [];
     /** @var RelayBuilder */
     private $relayBuilder;
+    /** @var RouteMap */
+    private $routeMap;
 
-    public function __construct()
+    /**
+     * @param RouteMap $routeMap
+     */
+    public function __construct(RouteMap $routeMap = null)
     {
         $this->collector    = new RouteCollector(new RouteParser, new RouteGenerator);
         $this->relayBuilder = new RelayBuilder;
+        $this->routeMap     = $routeMap ?: new RouteMap;
     }
 
     /**
@@ -37,12 +43,18 @@ final class Router
         $dispatcher = new Dispatcher($this->collector->getData());
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
         $code       = $result[0];
-        $handler    = isset($result[1]) ? $result[1] : null;
-        $params     = isset($result[2]) ? $result[2] : [];
 
         if ($code != Dispatcher::FOUND) {
             return $next($request, $response);
         }
+
+        $route = $result[1];
+
+        if (!$route instanceof Route) {
+            throw new Exception\InvalidRoute;
+        }
+
+        $params = $result[2];
 
         foreach ($params as $key => $value) {
             $request[$key] = $value;
@@ -51,7 +63,7 @@ final class Router
         $relay    = $this->relayBuilder->newInstance($this->middleware);
         $response = $relay($request, $response);
 
-        return $this->paramHandler($request, $response, $next, $handler, $params);
+        return $this->paramHandler($request, $response, $next, $route->getHandler(), $params);
     }
 
     /**
@@ -107,84 +119,95 @@ final class Router
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function get($path, $handler)
     {
-        $this->route('GET', $path, $handler);
+        return $this->route('GET', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function post($path, $handler)
     {
-        $this->route('POST', $path, $handler);
+        return $this->route('POST', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function patch($path, $handler)
     {
-        $this->route('PATCH', $path, $handler);
+        return $this->route('PATCH', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function put($path, $handler)
     {
-        $this->route('PUT', $path, $handler);
+        return $this->route('PUT', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function delete($path, $handler)
     {
-        $this->route('DELETE', $path, $handler);
+        return $this->route('DELETE', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route*
      */
     public function head($path, $handler)
     {
-        $this->route('HEAD', $path, $handler);
+        return $this->route('HEAD', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function options($path, $handler)
     {
-        $this->route('OPTIONS', $path, $handler);
+        return $this->route('OPTIONS', $path, $handler);
     }
 
     /**
      * @param string $path
      * @param callable $handler
-     * @return Router
+     * @return Route
      */
     public function any($path, $handler)
     {
-        $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
+        return $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
     }
 
     /**
      * @param string|string[] $methods
      * @param string $path
      * @param callable $handler
+     * @return Route
      */
     public function route($methods, $path, $handler)
     {
-        $this->collector->addRoute($methods, $path, $handler);
+        $route = $this->routeMap->add($path, $handler);
+        $this->collector->addRoute($methods, $path, $route);
+
+        return $route;
     }
 
     /**

@@ -15,8 +15,7 @@
         "league/container": "^1.3",
         "league/plates": "^3.0",
         "relay/relay": "^0.2",
-        "zendframework/zend-diactoros": "^1.0",
-        "zendframework/zend-stratigility": "^1.0"
+        "zendframework/zend-diactoros": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0",

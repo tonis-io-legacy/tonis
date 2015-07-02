@@ -4,14 +4,14 @@ namespace Tonis;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Stratigility\MiddlewarePipe;
+use Relay\RelayBuilder;
 
 final class App
 {
     /** @var ContainerInterface  */
     private $container;
-    /** @var MiddlewarePipe */
-    private $pipe;
+    /** @var callable[] */
+    private $middleware = [];
     /** @var View\Manager */
     private $view;
 
@@ -25,24 +25,22 @@ final class App
             $container->addServiceProvider(new ServiceProvider);
         }
 
-        $this->pipe      = new MiddlewarePipe;
-        $this->container = $container;
-        $this->view      = $container->get(View\Manager::class);
+        $this->container    = $container;
+        $this->relayBuilder = new RelayBuilder();
+        $this->view         = $container->get(View\Manager::class);
     }
 
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @param callable $done
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $done = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
         $request  = $this->decorateRequest($request);
         $response = $this->decorateResponse($response);
-        $pipe     = $this->pipe;
-        $done     = $done ?: new FinalHandler();
-        $result   = $pipe($request, $response, $done);
+        $relay    = $this->relayBuilder->newInstance($this->middleware);
+        $result   = $relay($request, $response);
 
         return $result instanceof ResponseInterface ? $result : $response;
     }
@@ -59,7 +57,7 @@ final class App
      */
     public function router()
     {
-        return new Router;
+        return $this->container->get(Router::class);
     }
 
     /**
@@ -68,7 +66,7 @@ final class App
      */
     public function get($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -77,7 +75,7 @@ final class App
      */
     public function post($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -86,7 +84,7 @@ final class App
      */
     public function put($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -95,7 +93,7 @@ final class App
      */
     public function patch($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -104,7 +102,7 @@ final class App
      */
     public function delete($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -113,7 +111,7 @@ final class App
      */
     public function options($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -122,18 +120,17 @@ final class App
      */
     public function head($path, $handler)
     {
-        $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->httpVerb($path, $handler, __FUNCTION__);
     }
 
     /**
      * Proxies to MiddlewarePipe::pipe.
      *
-     * @param string|callable $path
      * @param callable $handler
      */
-    public function add($path, $handler = null)
+    public function add($handler)
     {
-        $this->pipe->pipe($path, $handler);
+        $this->middleware[] = $handler;
     }
 
     /**
@@ -162,9 +159,11 @@ final class App
     private function httpVerb($path, $handler, $type)
     {
         $router = $this->router();
-        $router->$type($path, $handler);
+        $route  = $router->$type($path, $handler);
 
         $this->add($router);
+
+        return $route;
     }
 
     /**
