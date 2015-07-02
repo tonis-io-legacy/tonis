@@ -105,7 +105,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $response = $app($this->newRequest('/'), new Response, function ($request, $response) {
             return $response->write('success');
         });
-        $this->assertSame('success', $response->getBody()->__toString());
+        $this->assertContains('success', $response->getBody()->__toString());
     }
 
     public function httpVerbProvider()

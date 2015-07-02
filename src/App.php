@@ -48,11 +48,18 @@ final class App
         $response = $this->decorateResponse($response);
         $relay    = $this->relayBuilder->newInstance($this->middleware);
         $error    = $this->errorHandler;
+        $notFound = $this->notFoundHandler;
 
         try {
             $response = $relay($request, $response);
         } catch (\Exception $ex) {
             $response = $error($request, $response, $ex);
+        }
+
+        // todo: detect this better
+        $body = (string) $response->getBody();
+        if (0 === strlen($body)) {
+            $response = $notFound($request, $response);
         }
 
         return $next ? $next($request, $response) : $response;
