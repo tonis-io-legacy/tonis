@@ -14,6 +14,8 @@ final class App
     private $errorHandler;
     /** @var Handler\NotFoundInterface */
     private $notFoundHandler;
+    /** @var RelayBuilder */
+    private $relayBuilder;
     /** @var callable[] */
     private $middleware = [];
     /** @var View\Manager */

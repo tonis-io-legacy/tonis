@@ -165,7 +165,7 @@ final class Router
     /**
      * @param string $path
      * @param callable $handler
-     * @return Route*
+     * @return Route
      */
     public function head($path, $handler)
     {
