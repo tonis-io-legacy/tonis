@@ -10,6 +10,10 @@ final class App
 {
     /** @var ContainerInterface  */
     private $container;
+    /** @var Handler\ErrorInterface */
+    private $errorHandler;
+    /** @var Handler\NotFoundInterface */
+    private $notFoundHandler;
     /** @var callable[] */
     private $middleware = [];
     /** @var View\Manager */
@@ -25,26 +29,33 @@ final class App
             $container->addServiceProvider(new ServiceProvider);
         }
 
-        $this->container    = $container;
-        $this->relayBuilder = new RelayBuilder();
-        $this->view         = $container->get(View\Manager::class);
+        $this->relayBuilder    = new RelayBuilder();
+        $this->container       = $container;
+        $this->errorHandler    = $container->get(Handler\ErrorInterface::class);
+        $this->notFoundHandler = $container->get(Handler\NotFoundInterface::class);
+        $this->view            = $container->get(View\Manager::class);
     }
 
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
+     * @param callable $next
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $done = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        $this->middleware[] = $done?: new FinalHandler;
-
         $request  = $this->decorateRequest($request);
         $response = $this->decorateResponse($response);
         $relay    = $this->relayBuilder->newInstance($this->middleware);
-        $result   = $relay($request, $response);
+        $error    = $this->errorHandler;
 
-        return $result instanceof ResponseInterface ? $result : $response;
+        try {
+            $response = $relay($request, $response);
+        } catch (\Exception $ex) {
+            $response = $error($request, $response, $ex);
+        }
+
+        return $next ? $next($request, $response) : $response;
     }
 
     /**

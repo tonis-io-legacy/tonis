@@ -27,7 +27,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
     {
         $router = $this->app->router();
         $router->get('/', function ($req, $res) {
-            $res->write('success');
+            return $res->write('success');
         });
 
         $this->app->add($router);
@@ -35,6 +35,19 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $response = $this->app->__invoke($this->newRequest('/'), new Response());
         $this->assertInstanceOf(TonisResponse::class, $response);
         $this->assertSame('success', $response->getBody()->__toString());
+    }
+
+    public function testExceptionsGetHandledByErrorHandler()
+    {
+        $handler = function ($request, $response) {
+            throw new \RuntimeException('exception was caught');
+        };
+
+        $app = $this->app;
+        $app->add($handler);
+
+        $response = $app($this->newRequest('/'), new Response());
+        $this->assertContains('exception was caught', $response->getBody()->__toString());
     }
 
     public function testRouter()
@@ -60,7 +73,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
     public function testHttpVerbs($method)
     {
         $this->app->$method('/foo', function ($req, $res) {
-            $res->write('success');
+            return $res->write('success');
         });
         $request = $this->newRequest('/foo', ['REQUEST_METHOD' => strtoupper($method)]);
         $result = $this->app->__invoke($request, new Response());
@@ -69,23 +82,31 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
     public function testDecoration()
     {
-        $res = $this->app->__invoke($this->newRequest('/'), new Response(), function ($req, $res) {
+        $handler =  function ($req, $res) {
             $this->assertInstanceOf(TonisRequest::class, $req);
             $this->assertInstanceOf(TonisResponse::class, $res);
 
             return $res->write('success');
-        });
+        };
+
+        $this->app->add($handler);
+
+        $res = $this->app->__invoke($this->newRequest('/'), new Response());
         $this->assertInstanceOf(TonisResponse::class, $res);
         $this->assertSame('success', $res->getBody()->__toString());
 
-        $res = $this->app->__invoke($this->newTonisRequest('/'), $this->newTonisResponse(), function ($req, $res) {
-            $this->assertInstanceOf(TonisRequest::class, $req);
-            $this->assertInstanceOf(TonisResponse::class, $res);
-
-            return $res->write('success');
-        });
+        $res = $this->app->__invoke($this->newTonisRequest('/'), $this->newTonisResponse());
         $this->assertInstanceOf(TonisResponse::class, $res);
         $this->assertSame('success', $res->getBody()->__toString());
+    }
+
+    public function testDoneHandler()
+    {
+        $app      = $this->app;
+        $response = $app($this->newRequest('/'), new Response, function ($request, $response) {
+            return $response->write('success');
+        });
+        $this->assertSame('success', $response->getBody()->__toString());
     }
 
     public function httpVerbProvider()

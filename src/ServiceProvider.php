@@ -9,6 +9,8 @@ class ServiceProvider extends BaseServiceProvider
     /** @var array */
     protected $provides = [
         Engine::class,
+        Handler\ErrorInterface::class,
+        Handler\NotFoundInterface::class,
         Router::class,
         RouteMap::class,
         View\Manager::class
@@ -24,6 +26,16 @@ class ServiceProvider extends BaseServiceProvider
         // route map which contains routes for lookup
         $container->singleton(RouteMap::class, function() {
             return new RouteMap;
+        });
+
+        // handles errors in the life-cycle
+        $container->singleton(Handler\ErrorInterface::class, function() {
+            return new Handler\ErrorHandler;
+        });
+
+        // handles not found errors in the life-cycle
+        $container->singleton(Handler\NotFoundInterface::class, function() {
+            return new Handler\NotFound;
         });
 
         // router
