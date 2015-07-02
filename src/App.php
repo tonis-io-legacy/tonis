@@ -35,8 +35,10 @@ final class App
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $done = null)
     {
+        $this->middleware[] = $done?: new FinalHandler;
+
         $request  = $this->decorateRequest($request);
         $response = $this->decorateResponse($response);
         $relay    = $this->relayBuilder->newInstance($this->middleware);

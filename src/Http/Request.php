@@ -138,7 +138,7 @@ final class Request implements \ArrayAccess, ServerRequestInterface
 
     public function withBody(StreamInterface $body)
     {
-        return new self($this->app, $this->psrRequest->withBody(withBody));
+        return new self($this->app, $this->psrRequest->withBody($body));
     }
 
     public function getRequestTarget()

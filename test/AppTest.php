@@ -75,6 +75,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
             return $res->write('success');
         });
+        $this->assertInstanceOf(TonisResponse::class, $res);
         $this->assertSame('success', $res->getBody()->__toString());
 
         $res = $this->app->__invoke($this->newTonisRequest('/'), $this->newTonisResponse(), function ($req, $res) {
@@ -83,6 +84,7 @@ class AppTest extends \PHPUnit_Framework_TestCase
 
             return $res->write('success');
         });
+        $this->assertInstanceOf(TonisResponse::class, $res);
         $this->assertSame('success', $res->getBody()->__toString());
     }
 

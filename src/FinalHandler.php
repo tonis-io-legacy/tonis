@@ -2,7 +2,6 @@
 namespace Tonis;
 
 use Exception;
-use Zend\Stratigility\Utils;
 
 final class FinalHandler
 {
@@ -32,7 +31,7 @@ final class FinalHandler
      */
     private function handleError($error, Http\Request $request, Http\Response $response)
     {
-        //$response = $response->withStatus(Utils::getStatusCode($error, $response));
+        $response = $response->withStatus($this->getStatusCode($error, $response));
         $vars = [
             'request' => $request,
             'response' => $response
@@ -60,5 +59,19 @@ final class FinalHandler
         return $response
             ->withStatus(404)
             ->render('error/404', ['request' => $request]);
+    }
+
+    private function getStatusCode($error, Http\Response $response)
+    {
+        // Exceptions with valid HTTP code
+        if ($error instanceof \Exception && ($error->getCode() >= 400 && $error->getCode() < 600)) {
+            return $error->getCode();
+        }
+
+        $statusCode = $response->getStatusCode();
+        if (!$statusCode || $statusCode < 400 || $statusCode >= 600) {
+            $statusCode = 500;
+        }
+        return $statusCode;
     }
 }
