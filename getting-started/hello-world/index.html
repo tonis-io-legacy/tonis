@@ -229,7 +229,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Tonis\App;
 $app-&gt;get('/', function($request, $response) {
-    $response-&gt;end('Hello from Tonis');
+    $response-&gt;write('Hello from Tonis');
 });
 
 $server = Zend\Diactoros\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
