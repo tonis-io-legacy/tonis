@@ -176,6 +176,26 @@
             "title": "Route Not Found"
         },
         {
+            "location": "/basics/dependency-injection/",
+            "text": "Overview\n\n\nTonis using a dependency container to manage and inject dependencies. Tonis uses a container based on the \n\nLeague Container\n but any container that implements \n\nInterop\\Container\\ContainerInterface\n may be used.\n\n\nFor more information on the concepts see \nDependency Injection\n and \n\nInversion of Control\n on Wikipedia.\n\n\nUsage\n\n\nTo use a container you must inject it when you create the \nTonis\\App\n object.\n\n\n$container = new \\Tonis\\Container;\n$app       = new \\Tonis\\App($container);\n\n\n\n\nIf no container is specified, Tonis creates the default one for you.\n\n\n// this is identical to the example above\n$app = new \\Tonis\\App;\n\n\n\n\nThe container is available from \nTonis\\App\n through the \ngetContainer()\n method. \n\n\n$container = $app-\ngetContainer();\n$fooClass  = $container-\nget('FooClass');\n\n\n\n\nRequired Services\n\n\nIf you choose to use your own container you MUST provide the following services:\n\n\n\n    \n\n        Tonis\\Router\n    \n\n    \n\n        MUST return a NEW instance of \nTonis\\Router\n on each get. \n    \n\n    \n\n        Tonis\\Handler\\ErrorInterface\n    \n\n    \n\n        An instance of \nTonis\\Handler\\ErrorInterface\n which handles exceptions.\n    \n\n    \n\n        Tonis\\Handler\\NotFoundInterface\n    \n\n    \n\n        An instance of \nTonis\\Handler\\NotFoundInterface\n which handles missing routes.\n    \n\n    \n\n        Tonis\\View\\Manager\n    \n\n    \n\n        An instance of \nTonis\\View\\Manager\n which handles rendering templates.",
+            "title": "Dependency Injection"
+        },
+        {
+            "location": "/basics/dependency-injection/#overview",
+            "text": "Tonis using a dependency container to manage and inject dependencies. Tonis uses a container based on the  League Container  but any container that implements  Interop\\Container\\ContainerInterface  may be used.  For more information on the concepts see  Dependency Injection  and  Inversion of Control  on Wikipedia.",
+            "title": "Overview"
+        },
+        {
+            "location": "/basics/dependency-injection/#usage",
+            "text": "To use a container you must inject it when you create the  Tonis\\App  object.  $container = new \\Tonis\\Container;\n$app       = new \\Tonis\\App($container);  If no container is specified, Tonis creates the default one for you.  // this is identical to the example above\n$app = new \\Tonis\\App;  The container is available from  Tonis\\App  through the  getContainer()  method.   $container = $app- getContainer();\n$fooClass  = $container- get('FooClass');",
+            "title": "Usage"
+        },
+        {
+            "location": "/basics/dependency-injection/#required-services",
+            "text": "If you choose to use your own container you MUST provide the following services:  \n     \n        Tonis\\Router\n     \n     \n        MUST return a NEW instance of  Tonis\\Router  on each get. \n     \n     \n        Tonis\\Handler\\ErrorInterface\n     \n     \n        An instance of  Tonis\\Handler\\ErrorInterface  which handles exceptions.\n     \n     \n        Tonis\\Handler\\NotFoundInterface\n     \n     \n        An instance of  Tonis\\Handler\\NotFoundInterface  which handles missing routes.\n     \n     \n        Tonis\\View\\Manager\n     \n     \n        An instance of  Tonis\\View\\Manager  which handles rendering templates.",
+            "title": "Required Services"
+        },
+        {
             "location": "/objects/request/",
             "text": "Overview\n\n\nThe Request object encapsulates data sent during a HTTP request. The \nTonis\\Http\\Request\n object decorates \n\nZend\\Stratigility\\Http\\Request\n which implements \nPsr\\Http\\Message\\RequestInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\nArrayAccess\n\n\nTonis\\Http\\Request\n implements \nArrayAccess\n to provide access to the route match parameters.\n\n\n$app-\nget('/hello/{name}', function ($request, $response) {\n    // output is Hello, foo\n    return $response-\nwrite('Hello, ' . $request['name']);\n});\n\n\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the request.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response-\nwrite(get_class($request-\napp()); \n});\n\n\n\n\ngetParams()\n\n\npublic function getParams(): array\n\n\nGet all route params from the matched route.\n\n\n$app-\nget('/hello/{name}', function ($request, $response) {\n    // output is array ('name' =\n 'foo',)\n    return $response-\nwrite(var_export($request-\ngetParams(), true));\n});",
             "title": "Request"
