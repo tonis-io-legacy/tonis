@@ -262,12 +262,12 @@
         },
         {
             "location": "/resources/official-middleware/",
-            "text": "Overview\n\n\nThe following is a list of officially supported middleware:\n\n\n\n\n\n\n\n\nMiddleware\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\nError Handler\n\n\nAdds an error handler that supports logging with Mongolog.\n\n\n\n\n\n\nResponse Time\n\n\nAdds a X-Response-Time header to your responses.",
+            "text": "Overview\n\n\nThe following is a list of officially supported middleware:\n\n\n\n\n\n\n\n\nMiddleware\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\nError Handler\n\n\nAdds an error handler that supports logging with Mongolog.\n\n\n\n\n\n\nResponse Cache\n\n\nAdds very basic static response caching with Doctrine\\Cache\n\n\n\n\n\n\nResponse Time\n\n\nAdds a X-Response-Time header to your responses.",
             "title": "Official Middleware"
         },
         {
             "location": "/resources/official-middleware/#overview",
-            "text": "The following is a list of officially supported middleware:     Middleware  Description      Error Handler  Adds an error handler that supports logging with Mongolog.    Response Time  Adds a X-Response-Time header to your responses.",
+            "text": "The following is a list of officially supported middleware:     Middleware  Description      Error Handler  Adds an error handler that supports logging with Mongolog.    Response Cache  Adds very basic static response caching with Doctrine\\Cache    Response Time  Adds a X-Response-Time header to your responses.",
             "title": "Overview"
         }
     ]
