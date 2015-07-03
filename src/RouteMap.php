@@ -68,7 +68,7 @@ class RouteMap implements \Countable, \Iterator
             }
         }
 
-        return $this->assembleFromParts($name, $useOptional ? $routeParts[1] : $routeParts[0]);
+        return $this->assembleFromParts($name, $params, $useOptional ? $routeParts[1] : $routeParts[0]);
     }
 
     /**
@@ -155,10 +155,11 @@ class RouteMap implements \Countable, \Iterator
 
     /**
      * @param string $name
+     * @param array $params
      * @param array $parts
      * @return string
      */
-    private function assembleFromParts($name, array $parts)
+    private function assembleFromParts($name, array $params, array $parts)
     {
         $url = '';
 

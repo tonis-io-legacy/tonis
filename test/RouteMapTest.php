@@ -29,7 +29,7 @@ class RouteMapTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($handler, $route->getHandler());
     }
 
-    public function testAssmeble()
+    public function testAssemble()
     {
         $handler = function () {};
 
@@ -49,7 +49,7 @@ class RouteMapTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Tonis\Exception\MissingRoute
      * @expectedExceptionMessage Route with name "foo" does not exist
      */
-    public function testAssmebleThrowsExceptionForMissingRoute()
+    public function testAssembleThrowsExceptionForMissingRoute()
     {
         $this->map->assemble('foo');
     }
