@@ -27,8 +27,7 @@ final class App
     public function __construct(ContainerInterface $container = null)
     {
         if (null === $container) {
-            $container = new Container();
-            $container->addServiceProvider(new ServiceProvider);
+            $container = new Container;
         }
 
         $this->relayBuilder    = new RelayBuilder();
@@ -73,7 +72,7 @@ final class App
      * e.g., $router = $app->router();
      *       $router->get(...)
      *
-     *       $app->add('/foo', $router);
+     *       $app->add($router);
      *
      * @return Router
      */

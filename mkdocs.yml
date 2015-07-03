@@ -15,6 +15,7 @@ pages:
   - basics/routing.md
   - basics/middleware.md
   - 'Error Handlers': basics/error-handlers.md
+  - 'Dependency Injection': basics/dependency-injection.md
 - Objects:
   - objects/request.md
   - objects/response.md

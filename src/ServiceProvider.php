@@ -38,11 +38,6 @@ class ServiceProvider extends BaseServiceProvider
             return new Handler\NotFound;
         });
 
-        // router
-        $container->add(Router::class, function () use ($container) {
-            return new Router($container->get(RouteMap::class));
-        });
-
         // plates engine
         $container->singleton(Engine::class, function () use ($container) {
             $engine = new Engine(__DIR__ . '/../view');
@@ -52,8 +47,13 @@ class ServiceProvider extends BaseServiceProvider
         });
 
         // view manager
-        $container->add(View\Manager::class, function () use ($container) {
+        $container->singleton(View\Manager::class, function () use ($container) {
             return new View\Manager(new View\PlatesStrategy($container->get(Engine::class)));
+        });
+
+        // router
+        $container->add(Router::class, function () use ($container) {
+            return new Router($container->get(RouteMap::class));
         });
     }
 }
