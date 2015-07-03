@@ -42,11 +42,9 @@ class RouteMap implements \Countable, \Iterator
             throw new Exception\MissingRoute($name);
         }
 
-        $route      = $this->nameCache[$name];
-        $path       = $route->getPath();
-        $routeParts = $this->routeParser->parse($path);
-        $url        = '';
-
+        $route       = $this->nameCache[$name];
+        $path        = $route->getPath();
+        $routeParts  = $this->routeParser->parse($path);
         $useOptional = false;
 
         // $routeParts contains at most two entries
@@ -63,22 +61,7 @@ class RouteMap implements \Countable, \Iterator
             }
         }
 
-        $parts = $useOptional ? $routeParts[1] : $routeParts[0];
-
-        foreach ($parts as $part) {
-            if (is_string($part)) {
-                $url .= $part;
-                continue;
-            }
-
-            if (!isset($params[$part[0]])) {
-                throw new Exception\MissingRouteParam($name, $part[0]);
-            }
-
-            $url .= $params[$part[0]];
-        }
-
-        return $url;
+        return $this->assembleFromParts($name, $useOptional ? $routeParts[1] : $routeParts[0]);
     }
 
     /**
@@ -161,5 +144,30 @@ class RouteMap implements \Countable, \Iterator
     public function count()
     {
         return count($this->routes);
+    }
+
+    /**
+     * @param string $name
+     * @param array $parts
+     * @return string
+     */
+    private function assembleFromParts($name, array $parts)
+    {
+        $url = '';
+
+        foreach ($parts as $part) {
+            if (is_string($part)) {
+                $url .= $part;
+                continue;
+            }
+
+            if (!isset($params[$part[0]])) {
+                throw new Exception\MissingRouteParam($name, $part[0]);
+            }
+
+            $url .= $params[$part[0]];
+        }
+
+        return $url;
     }
 }
