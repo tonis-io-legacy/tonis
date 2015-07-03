@@ -7,11 +7,7 @@ use Tonis\Http\Response;
 final class NotFound implements NotFoundInterface
 {
     /**
-     * Checks if $error is present and responds with error or 404 appropriately.
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return Response
+     * {@inheritDoc}
      */
     public function __invoke(Request $request, Response $response)
     {
