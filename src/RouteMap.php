@@ -55,10 +55,16 @@ class RouteMap implements \Countable, \Iterator
         if (isset($routeParts[1])) {
             $useOptional = true;
             foreach ($routeParts[1] as $part) {
-                if (is_array($part) && !isset($params[$part[0]])) {
-                    $useOptional = false;
-                    break;
+                if (is_string($part)) {
+                    continue;
                 }
+
+                if (isset($params[$part[0]])) {
+                    continue;
+                }
+
+                $useOptional = false;
+                break;
             }
         }
 
