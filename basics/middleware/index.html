@@ -119,10 +119,14 @@
                 <li class="toctree-l3"><a href="#router-level-middleware">Router Level Middleware</a></li>
                 
             
-                <li class="toctree-l3"><a href="#error-handling">Error-handling</a></li>
-                
-            
             </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../error-handlers/">Error Handlers</a>
         
     </li>
 
@@ -229,15 +233,9 @@ middleware on the same mount path will create a stack for that path. </p>
 <p>Application level middleware is added to <code>Tonis</code> with the <code>add</code> method and may include a path to mount to.</p>
 <pre><code class="php">$app = new \Tonis\App;
 
-// middleware with no mount path gets executed on every request 
+// middleware gets executed on every request 
 $app-&gt;add(function ($request, $response, $next) {
     $response-&gt;write('always executed');
-    return $next($request, $response);
-});
-
-// middleware mounted on /articles will be executed for any requested that has /articles
-$app-&gt;add('/articles', function ($request, $response, $next) {
-    $response-&gt;write('articles');
     return $next($request, $response);
 });
 
@@ -252,15 +250,8 @@ Typically, you'll create a router instance using the <code>router()</code> metho
 <pre><code class="php">$app    = new \Tonis\App;
 $router = $app-&gt;router():
 
-// middleware with no mount path gets executed on every request 
 $router-&gt;add(function ($request, $response, $next) {
     $response-&gt;write('always executed');
-    return $next($request, $response);
-});
-
-// middleware mounted on /articles will be executed for any requested that has /articles
-$router-&gt;add('', function ($request, $response, $next) {
-    $response-&gt;write('articles');
     return $next($request, $response);
 });
 
@@ -268,32 +259,11 @@ $router-&gt;get('/{id}', function ($request, $response) {
     $response-&gt;end('Articles');
 });
 
-// this mounts the $router middleware to /articles which will then respond to /articles and /articles/{id}
-$app-&gt;add('/articles', $router);
+// this mounts the $router middleware
+$app-&gt;add($router);
 </code></pre>
 
-<p><strong>NOTE</strong> Middleware added to a router and then mounted to Tonis with <code>add</code> will only be executed if the path matches. </p>
-<h2 id="error-handling">Error-handling</h2>
-<p>Error-handling middleware is similar to other middleware except with four arguments instead of three. </p>
-<pre><code class="php">$errorMiddleware = function ($request, $response, $next, $err) { ... }
-</code></pre>
-
-<p>For example, to add an error handler that uses <code>error_log</code> you would do the following:</p>
-<pre><code class="php">$app = new \Tonis\App;
-
-$app-&gt;add(function ($request, $response, $next) {
-    return $next($request, $response, 'The third argument to next causes an error');
-});
-
-$app-&gt;add(function ($request, $response, $next, $error) {
-    error_log($error); // logs &quot;The third argument to next causes an error&quot;
-    $next($request, $response);
-});
-
-$app-&gt;get('/', function ($request, $response) {
-    return response-&gt;write('foo');
-});
-</code></pre>
+<p><strong>NOTE</strong> Middleware added to a router and then mounted to Tonis with <code>add</code> will only be executed if the path matches.</p>
               
             </div>
           </div>
@@ -301,7 +271,7 @@ $app-&gt;get('/', function ($request, $response) {
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../objects/request/" class="btn btn-neutral float-right" title="Request"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../error-handlers/" class="btn btn-neutral float-right" title="Error Handlers"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../routing/" class="btn btn-neutral" title="Routing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -337,7 +307,7 @@ $app-&gt;get('/', function ($request, $response) {
         <span><a href="../routing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../../objects/request/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../error-handlers/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

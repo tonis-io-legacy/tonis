@@ -4,7 +4,7 @@
     
     <url>
      <loc>http://docs.tonis.io/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,25 +13,25 @@
         
     <url>
      <loc>http://docs.tonis.io/getting-started/installing/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/getting-started/hello-world/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/getting-started/contributing/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/getting-started/license/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -41,13 +41,19 @@
         
     <url>
      <loc>http://docs.tonis.io/basics/routing/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/basics/middleware/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>http://docs.tonis.io/basics/error-handlers/</loc>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -57,19 +63,19 @@
         
     <url>
      <loc>http://docs.tonis.io/objects/request/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/objects/response/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>http://docs.tonis.io/objects/router/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -79,7 +85,7 @@
         
     <url>
      <loc>http://docs.tonis.io/resources/official-middleware/</loc>
-     <lastmod>2015-06-30</lastmod>
+     <lastmod>2015-07-02</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
