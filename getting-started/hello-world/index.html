@@ -77,7 +77,7 @@
                 <li class="toctree-l3"><a href="#quick-start">Quick Start</a></li>
                 
             
-                <li class="toctree-l3"><a href="#mounted-middleware">Mounted Middleware</a></li>
+                <li class="toctree-l3"><a href="#router-middleware">Router Middleware</a></li>
                 
             
                 <li class="toctree-l3"><a href="#tonis-project">Tonis Project</a></li>
@@ -239,10 +239,9 @@ $server-&gt;listen();
 <p>You can run it with:</p>
 <p><code>php -S 127.0.0.1:8080 index.php</code></p>
 <p>Then, load <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> in a browser to see the output.</p>
-<h2 id="mounted-middleware">Mounted Middleware</h2>
-<p>This example shows how to mount middleware to an endpoint. You can use this technique to reuse middleware or mount
-it to a different route.</p>
-<pre><code class="php">$app    = new \Tonis\App;
+<h2 id="router-middleware">Router Middleware</h2>
+<p>This example shows how to mount middleware using a router instance. This is commonly used to reuse chunks of code.</p>
+<pre><code class="php">$app = new \Tonis\App;
 
 // this will be executed for every request
 $app-&gt;add(function ($request, $response, $next) {
@@ -260,12 +259,12 @@ $app-&gt;get('/', function ($request, $response) {
 // routers are middleware and may be mounted to the app
 // additionally, they are reusable, and you can use them to create bundles/packages/modules
 $router = $app-&gt;router();
-$router-&gt;get('/', function ($request, $response) {
-    return $response-&gt;write('GET on /articles/');
+$router-&gt;get('/articles', function ($request, $response) {
+    return $response-&gt;write('GET on /articles');
 });
 
-// this mounts the router to /articles so the GET above will respond to /articles/
-$app-&gt;add('/articles', $router);
+// mount the router back to the application
+$app-&gt;add($router);
 </code></pre>
 
 <p>A <code>GET</code> request to <code>/</code> using the above app would return:</p>
@@ -274,9 +273,9 @@ GET on /
 post
 </code></pre>
 
-<p>A <code>GET</code> request to <code>/articles/</code> using the above app would return:</p>
+<p>A <code>GET</code> request to <code>/articles</code> using the above app would return:</p>
 <pre><code>pre
-GET on /articles/
+GET on /articles
 post
 </code></pre>
 
