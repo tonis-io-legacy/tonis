@@ -37,10 +37,11 @@ class RouteMap implements \Countable, \Iterator
      */
     public function assemble($name, $params = [])
     {
-        $this->buildNameCache();
         if (!$this->hasRoute($name)) {
             throw new Exception\MissingRoute($name);
         }
+
+        $this->buildNameCache();
 
         $route       = $this->nameCache[$name];
         $path        = $route->getPath();
