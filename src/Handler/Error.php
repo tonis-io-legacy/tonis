@@ -5,7 +5,7 @@ use Exception;
 use Tonis\Http\Request;
 use Tonis\Http\Response;
 
-final class ErrorHandler implements ErrorInterface
+final class Error implements ErrorInterface
 {
     /**
      * {@inheritDoc)

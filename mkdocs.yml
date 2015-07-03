@@ -14,6 +14,7 @@ pages:
 - Basics:
   - basics/routing.md
   - basics/middleware.md
+  - 'Error Handlers': basics/error-handlers.md
 - Objects:
   - objects/request.md
   - objects/response.md

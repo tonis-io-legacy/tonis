@@ -30,7 +30,7 @@ class ServiceProvider extends BaseServiceProvider
 
         // handles errors in the life-cycle
         $container->singleton(Handler\ErrorInterface::class, function () {
-            return new Handler\ErrorHandler;
+            return new Handler\Error;
         });
 
         // handles not found errors in the life-cycle

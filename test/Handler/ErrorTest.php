@@ -4,18 +4,18 @@ namespace Tonis\Handler;
 use Tonis\TestAsset\NewRequestTrait;
 
 /**
- * @covers \Tonis\Handler\ErrorHandler
+ * @covers \Tonis\Handler\Error
  */
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorTest extends \PHPUnit_Framework_TestCase
 {
     use NewRequestTrait;
 
-    /** @var ErrorHandler */
+    /** @var Error */
     private $handler;
 
     protected function setUp()
     {
-        $this->handler = new ErrorHandler;
+        $this->handler = new Error;
     }
 
     public function testStatusCodeResetOnInvalidExceptionCode()
