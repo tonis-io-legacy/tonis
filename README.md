@@ -5,7 +5,7 @@
 
 # Tonis
 
-Tonis is a PSR-7 minimal and flexible web application framework built for simplicity and performance.
+Tonis is a PSR-7 compatible minimalist web application framework built for simplicity and performance.
 
 Documentation
 -------------
