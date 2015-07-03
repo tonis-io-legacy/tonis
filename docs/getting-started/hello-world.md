@@ -23,14 +23,13 @@ You can run it with:
 
 Then, load [http://127.0.0.1:8080](http://127.0.0.1:8080) in a browser to see the output.
 
-Mounted Middleware
-------------------
+Router Middleware
+-----------------
 
-This example shows how to mount middleware to an endpoint. You can use this technique to reuse middleware or mount
-it to a different route.
+This example shows how to mount middleware using a router instance. This is commonly used to reuse chunks of code.
 
 ```php
-$app    = new \Tonis\App;
+$app = new \Tonis\App;
 
 // this will be executed for every request
 $app->add(function ($request, $response, $next) {
@@ -48,12 +47,12 @@ $app->get('/', function ($request, $response) {
 // routers are middleware and may be mounted to the app
 // additionally, they are reusable, and you can use them to create bundles/packages/modules
 $router = $app->router();
-$router->get('/', function ($request, $response) {
-    return $response->write('GET on /articles/');
+$router->get('/articles', function ($request, $response) {
+    return $response->write('GET on /articles');
 });
 
-// this mounts the router to /articles so the GET above will respond to /articles/
-$app->add('/articles', $router);
+// mount the router back to the application
+$app->add($router);
 ```
 
 A `GET` request to `/` using the above app would return:
@@ -64,11 +63,11 @@ GET on /
 post
 ```
 
-A `GET` request to `/articles/` using the above app would return:
+A `GET` request to `/articles` using the above app would return:
  
 ```
 pre
-GET on /articles/
+GET on /articles
 post
 ```
 
