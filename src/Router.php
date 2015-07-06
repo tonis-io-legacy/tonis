@@ -58,6 +58,7 @@ final class Router
         // If so, we can call the route handler, otherwise, we need to skip over it.
         $middleware = $this->middleware;
         $callable   = function ($request, $response) use (&$callable, &$middleware, $route, $next) {
+            /** @var callable $layer */
             $layer = array_shift($middleware);
 
             if (false === $layer) {
