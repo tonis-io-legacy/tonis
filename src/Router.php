@@ -5,7 +5,6 @@ use FastRoute\DataGenerator\GroupCountBased as RouteGenerator;
 use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
-use Relay\RelayBuilder;
 use Tonis\Http\Request;
 use Tonis\Http\Response;
 
@@ -17,8 +16,6 @@ final class Router
     private $middleware = [];
     /** @var array */
     private $paramHandlers = [];
-    /** @var RelayBuilder */
-    private $relayBuilder;
     /** @var RouteMap */
     private $routeMap;
 
@@ -27,9 +24,8 @@ final class Router
      */
     public function __construct(RouteMap $routeMap = null)
     {
-        $this->collector    = new RouteCollector(new RouteParser, new RouteGenerator);
-        $this->relayBuilder = new RelayBuilder;
-        $this->routeMap     = $routeMap ?: new RouteMap;
+        $this->collector = new RouteCollector(new RouteParser, new RouteGenerator);
+        $this->routeMap  = $routeMap ?: new RouteMap;
     }
 
     /**
@@ -56,50 +52,71 @@ final class Router
             $request[$key] = $value;
         }
 
-        $relay    = $this->relayBuilder->newInstance($this->middleware);
-        $response = $relay($request, $response);
+        // Custom middleware handler.
+        // We have to iterate through middleware as it was added so that they retain the proper ordering.
+        // We have to check if the middleware is a route and if it was the route matched during dispatching.
+        // If so, we can call the route handler, otherwise, we need to skip over it.
+        $middleware = $this->middleware;
+        $callable   = function ($request, $response) use (&$callable, &$middleware, $route, $next) {
+            $layer = array_shift($middleware);
 
-        return $this->paramHandler($request, $response, $next, $route->getHandler(), $params);
-    }
-
-    /**
-     * @internal
-     * @param Request $request
-     * @param Response $response
-     * @param callable $done
-     * @param callable $route
-     * @param array $params
-     */
-    public function paramHandler(
-        Request $request,
-        Response $response,
-        callable $done,
-        callable $route,
-        array $params
-    ) {
-        $handler = function ($request, $response) use (&$handler, $done, $route, &$params) {
-            // the params have been exhausted, we can call the route
-            if (empty($params)) {
-                return $route($request, $response, $done);
+            if (false === $layer) {
+                return $next($request, $response);
             }
 
-            $name = key($params);
-            array_shift($params);
+            if ($layer instanceof Route) {
+                if ($layer !== $route) {
+                    return $callable($request, $response, $next);
+                }
 
-            // no param handlers, we can call the route
-            if (!isset($this->paramHandlers[$name])) {
-                return $route($request, $response, $done);
+                $layer = $route->getHandler();
+                return $layer($request, $response);
             }
 
-            $builder  = $this->relayBuilder;
-            $relay    = $builder->newInstance($this->paramHandlers[$name]);
-            $response = $relay($request, $response);
-
-            return $handler($request, $response);
+            return $layer($request, $response, $callable);
         };
 
-        return $handler($request, $response);
+        return $callable($request, $response);
     }
+
+//    /**
+//     * @internal
+//     * @param Request $request
+//     * @param Response $response
+//     * @param callable $done
+//     * @param callable $route
+//     * @param array $params
+//     */
+//    public function paramHandler(
+//        Request $request,
+//        Response $response,
+//        callable $done,
+//        callable $route,
+//        array $params
+//    ) {
+//        $handler = function ($request, $response) use (&$handler, $done, $route, &$params) {
+//            // the params have been exhausted, we can call the route
+//            if (empty($params)) {
+//                return $route($request, $response, $done);
+//            }
+//
+//            $name = key($params);
+//            array_shift($params);
+//
+//            // no param handlers, we can call the route
+//            if (!isset($this->paramHandlers[$name])) {
+//                return $route($request, $response, $done);
+//            }
+//
+//            $builder  = $this->relayBuilder;
+//            $relay    = $builder->newInstance($this->paramHandlers[$name]);
+//            $response = $relay($request, $response);
+//
+//            return $handler($request, $response);
+//        };
+//
+//        return $handler($request, $response);
+//    }
 
     /**
      * Adds param handlers to a queue. The queue is processed at invocation by RelayPHP.
@@ -202,6 +219,7 @@ final class Router
     {
         $route = $this->routeMap->add($path, $handler);
         $this->collector->addRoute($methods, $path, $route);
+        $this->middleware[] = $route;
 
         return $route;
     }
