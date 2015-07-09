@@ -1,5 +1,5 @@
 <?php
-namespace Tonis;
+namespace Tonis\Router;
 
 use FastRoute\RouteParser\Std as RouteParser;
 use Tonis\Exception;

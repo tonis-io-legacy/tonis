@@ -11,8 +11,8 @@ class ServiceProvider extends BaseServiceProvider
         Engine::class,
         Handler\ErrorInterface::class,
         Handler\NotFoundInterface::class,
-        RouteMap::class,
-        Router::class,
+        Router\RouteMap::class,
+        Router\Router::class,
         View\Manager::class
     ];
 
@@ -24,8 +24,8 @@ class ServiceProvider extends BaseServiceProvider
         $container = $this->getContainer();
 
         // route map which contains routes for lookup
-        $container->singleton(RouteMap::class, function () {
-            return new RouteMap;
+        $container->singleton(Router\RouteMap::class, function () {
+            return new Router\RouteMap;
         });
 
         // handles errors in the life-cycle
@@ -41,7 +41,7 @@ class ServiceProvider extends BaseServiceProvider
         // plates engine
         $container->singleton(Engine::class, function () use ($container) {
             $engine = new Engine(__DIR__ . '/../view');
-            $engine->registerFunction('url', new View\Plates\UrlFunction($container->get(RouteMap::class)));
+            $engine->registerFunction('url', new View\Plates\UrlFunction($container->get(Router\RouteMap::class)));
 
             return $engine;
         });
@@ -52,8 +52,8 @@ class ServiceProvider extends BaseServiceProvider
         });
 
         // router
-        $container->add(Router::class, function () use ($container) {
-            return new Router($container->get(RouteMap::class));
+        $container->add(Router\Router::class, function () use ($container) {
+            return new Router\Router($container->get(Router\RouteMap::class));
         });
     }
 }

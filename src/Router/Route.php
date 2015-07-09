@@ -1,5 +1,5 @@
 <?php
-namespace Tonis;
+namespace Tonis\Router;
 
 final class Route
 {

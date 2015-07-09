@@ -74,11 +74,11 @@ final class App
      *
      *       $app->add($router);
      *
-     * @return Router
+     * @return Router\Router
      */
     public function router()
     {
-        return $this->container->get(Router::class);
+        return $this->container->get(Router\Router::class);
     }
 
     /**
