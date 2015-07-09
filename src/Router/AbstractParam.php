@@ -29,11 +29,9 @@ abstract class AbstractParam
      */
     public function __invoke(Request $request, Response $response, callable $next)
     {
-        $params = $request->getQueryParams();
-
-        if (isset($params[$this->param])) {
+        if ($this->shouldInvoke($request, $response)) {
             $handler = $this->handler;
-            $handler($request, $response, $params[$this->param]);
+            $handler($request, $response, $this->getValue($request, $response));
         }
 
         return $next($request, $response);
@@ -45,6 +43,13 @@ abstract class AbstractParam
      * @return bool
      */
     abstract public function shouldInvoke(Request $request, Response $response);
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return mixed
+     */
+    abstract public function getValue(Request $request, Response $response);
 
     /**
      * @return string
