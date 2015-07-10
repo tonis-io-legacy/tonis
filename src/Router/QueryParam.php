@@ -32,10 +32,10 @@ final class QueryParam extends AbstractParam
         $params = $this->params();
 
         foreach ($params as $param) {
-            $values[] = $query[$param];
+            $values[$param] = $query[$param];
         }
 
-        return count($values) > 1 ? $values : $values[0];
+        return count($values) > 1 ? $values : current($values);
     }
 
     /**
