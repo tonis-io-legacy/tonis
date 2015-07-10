@@ -13,4 +13,12 @@ final class RouteParam extends AbstractParam
     {
         return isset($request[$this->param]);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getValue(Request $request, Response $response)
+    {
+        return $request[$this->param];
+    }
 }

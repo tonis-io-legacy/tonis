@@ -21,7 +21,11 @@
         "phpunit/phpunit": "^4.0",
         "scrutinizer/ocular": "^1.1.1",
         "squizlabs/php_codesniffer": "^2.0",
+        "twig/twig": "^1.18",
         "zendframework/zend-diactoros": "^1.0"
+    },
+    "suggest": {
+        "twig/twig": "to use the Twig templating engine"
     },
     "autoload": {
         "psr-4": {

@@ -1,8 +1,8 @@
 <?php
-namespace Tonis;
+namespace Tonis\Router;
 
 /**
- * @covers \Tonis\Route
+ * @covers \Tonis\Router\Route
  */
 class RouteTest extends \PHPUnit_Framework_TestCase
 {

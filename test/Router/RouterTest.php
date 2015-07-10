@@ -1,11 +1,11 @@
 <?php
-namespace Tonis;
+namespace Tonis\Router;
 
 use Tonis\TestAsset\NewRequestTrait;
 use Zend\Diactoros\Response;
 
 /**
- * @covers \Tonis\Router
+ * @covers \Tonis\Router\Router
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,9 +21,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testParam()
     {
-        $this->router->param('id', function ($req, $res, $next) {
-            $res->write($req['id']);
-            return $next($req, $res);
+        $this->router->param('id', function ($req, $res, $value) {
+            $res->write($value);
         });
         $this->router->get('/{id}', function ($req, $res) {
             return $res->write('get');

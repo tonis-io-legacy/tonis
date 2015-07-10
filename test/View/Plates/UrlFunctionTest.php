@@ -1,7 +1,7 @@
 <?php
 namespace Tonis\View\Plates;
 
-use Tonis\RouteMap;
+use Tonis\Router\RouteMap;
 
 /**
  * @covers \Tonis\View\Plates\UrlFunction

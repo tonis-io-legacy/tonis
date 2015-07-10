@@ -2,6 +2,7 @@
 namespace Tonis;
 
 use League\Container\Container;
+use Tonis\Router\Router;
 
 /**
  * @covers \Tonis\ServiceProvider

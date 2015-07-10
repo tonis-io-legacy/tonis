@@ -4,6 +4,7 @@ namespace Tonis;
 use Interop\Container\ContainerInterface;
 use Tonis\Http\Request as TonisRequest;
 use Tonis\Http\Response as TonisResponse;
+use Tonis\Router\Router;
 use Tonis\TestAsset\NewRequestTrait;
 use Zend\Diactoros\Response;
 
