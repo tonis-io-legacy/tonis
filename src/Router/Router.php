@@ -16,18 +16,22 @@ final class Router
     private $middleware = [];
     /** @var RouteMap */
     private $routeMap;
+    /** @var Resolver\ResolverInterface */
+    private $resolver;
 
     /**
-     * @param RouteMap $routeMap
+     * @param RouteMap                   $routeMap
+     * @param Resolver\ResolverInterface $resolver
      */
-    public function __construct(RouteMap $routeMap = null)
+    public function __construct(RouteMap $routeMap = null, Resolver\ResolverInterface $resolver = null)
     {
         $this->collector = new RouteCollector(new RouteParser, new RouteGenerator);
+        $this->resolver  = $resolver ?: new Resolver\Invoke;
         $this->routeMap  = $routeMap ?: new RouteMap;
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @param callable $next
      * @return Response
@@ -70,7 +74,8 @@ final class Router
                     return $callable($request, $response, $next);
                 }
 
-                $layer = $route->getHandler();
+                $layer = $this->resolver->resolve($route->getHandler());
+
                 return $layer($request, $response);
             }
 
@@ -81,33 +86,39 @@ final class Router
     }
 
     /**
+     * @return RouteMap
+     */
+    public function map()
+    {
+        return $this->routeMap;
+    }
+
+    /**
      * Adds query handlers to a queue. The queue is processed at invocation by RelayPHP.
      *
-     * @param string $param
+     * @param string   $param
      * @param callable $handler
      */
     public function query($param, $handler)
     {
-        $param = new QueryParam($param, $handler);
+        $param              = new QueryParam($param, $handler);
         $this->middleware[] = $param;
     }
 
     /**
      * Adds param handlers to a queue. The queue is processed at invocation by RelayPHP.
      *
-     * @param string $param
+     * @param string   $param
      * @param callable $handler
      */
     public function param($param, $handler)
     {
-        $param = new RouteParam($param, $handler);
+        $param              = new RouteParam($param, $handler);
         $this->middleware[] = $param;
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function get($path, $handler)
     {
@@ -115,9 +126,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function post($path, $handler)
     {
@@ -125,9 +134,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function patch($path, $handler)
     {
@@ -135,9 +142,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function put($path, $handler)
     {
@@ -145,9 +150,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function delete($path, $handler)
     {
@@ -155,9 +158,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function head($path, $handler)
     {
@@ -165,9 +166,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function options($path, $handler)
     {
@@ -175,9 +174,7 @@ final class Router
     }
 
     /**
-     * @param string $path
-     * @param callable $handler
-     * @return Route
+     * {@inheritDoc}
      */
     public function any($path, $handler)
     {
@@ -185,9 +182,18 @@ final class Router
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function group($name, callable $func)
+    {
+        $group = new RouteGroup($this, $name);
+        $func($group);
+    }
+
+    /**
      * @param string|string[] $methods
-     * @param string $path
-     * @param callable $handler
+     * @param string          $path
+     * @param callable        $handler
      * @return Route
      */
     public function route($methods, $path, $handler)

@@ -12,7 +12,7 @@ abstract class AbstractParam
     protected $handler;
 
     /**
-     * @param string $param
+     * @param string   $param
      * @param callable $handler
      */
     final public function __construct($param, callable $handler)
@@ -22,7 +22,7 @@ abstract class AbstractParam
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @param callable $next
      * @return Response
@@ -38,14 +38,14 @@ abstract class AbstractParam
     }
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @return bool
      */
     abstract public function shouldInvoke(Request $request, Response $response);
 
     /**
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
      * @return mixed
      */

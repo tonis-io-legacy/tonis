@@ -8,7 +8,7 @@ use Relay\RelayBuilder;
 
 final class App
 {
-    /** @var ContainerInterface  */
+    /** @var ContainerInterface */
     private $container;
     /** @var Handler\ErrorInterface */
     private $errorHandler;
@@ -39,8 +39,8 @@ final class App
 
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable $next
+     * @param ResponseInterface      $response
+     * @param callable               $next
      * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
@@ -58,7 +58,7 @@ final class App
         }
 
         // todo: detect this better
-        $body = (string) $response->getBody();
+        $body = (string)$response->getBody();
         if (0 === strlen($body)) {
             $response = $notFound($request, $response);
         }
@@ -82,7 +82,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function get($path, $handler)
@@ -91,7 +91,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function post($path, $handler)
@@ -100,7 +100,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function put($path, $handler)
@@ -109,7 +109,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function patch($path, $handler)
@@ -118,7 +118,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function delete($path, $handler)
@@ -127,7 +127,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function options($path, $handler)
@@ -136,7 +136,7 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
      */
     public function head($path, $handler)
@@ -171,9 +171,9 @@ final class App
     }
 
     /**
-     * @param string $path
+     * @param string   $path
      * @param callable $handler
-     * @param string $type
+     * @param string   $type
      *
      * @todo reuse router instance when possible
      */
@@ -198,6 +198,7 @@ final class App
         if ($request instanceof Http\Request) {
             return $request;
         }
+
         return new Http\Request($this, $request);
     }
 
@@ -212,6 +213,7 @@ final class App
         if ($response instanceof Http\Response) {
             return $response;
         }
+
         return new Http\Response($this, $response);
     }
 }

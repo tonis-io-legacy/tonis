@@ -12,9 +12,9 @@ final class Route
 
     /**
      * @param string $path
-     * @param callable $handler
+     * @param mixed  $handler
      */
-    public function __construct($path, callable $handler)
+    public function __construct($path, $handler)
     {
         $this->path    = $path;
         $this->handler = $handler;
@@ -31,6 +31,7 @@ final class Route
         if (null !== $name) {
             $this->name = $name;
         }
+
         return $this->name;
     }
 

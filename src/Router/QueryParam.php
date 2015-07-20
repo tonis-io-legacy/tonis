@@ -19,6 +19,7 @@ final class QueryParam extends AbstractParam
                 return false;
             }
         }
+
         return true;
     }
 
