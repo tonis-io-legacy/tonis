@@ -3,7 +3,7 @@ namespace Tonis;
 
 use League\Container\ServiceProvider as BaseServiceProvider;
 use League\Plates\Engine;
-use Tonis\Router\Resolver\Container;
+use Tonis\Router\Resolver;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -54,7 +54,7 @@ class ServiceProvider extends BaseServiceProvider
 
         // router
         $container->add(Router\Router::class, function () use ($container) {
-            return new Router\Router($container->get(Router\RouteMap::class), new Container($container));
+            return new Router\Router($container->get(Router\RouteMap::class), new Resolver\Container($container));
         });
     }
 }
