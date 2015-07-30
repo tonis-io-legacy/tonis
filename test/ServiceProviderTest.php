@@ -1,7 +1,6 @@
 <?php
 namespace Tonis;
 
-use League\Container\Container;
 use Tonis\Router\Router;
 
 /**
