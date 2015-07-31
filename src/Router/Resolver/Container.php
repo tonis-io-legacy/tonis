@@ -3,6 +3,9 @@ namespace Tonis\Router\Resolver;
 
 use Interop\Container\ContainerInterface;
 
+/**
+ * @covers \Tonis\Router\Resolver\Container
+ */
 final class Container implements ResolverInterface
 {
     /** @var ContainerInterface */

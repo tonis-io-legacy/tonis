@@ -3,6 +3,9 @@ namespace Tonis\Router\Resolver;
 
 use StdClass;
 
+/**
+ * @covers \Tonis\Router\Resolver\Invoke
+ */
 class InvokeTest extends \PHPUnit_Framework_TestCase
 {
     public function testResolve()

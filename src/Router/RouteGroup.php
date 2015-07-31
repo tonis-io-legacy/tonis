@@ -5,12 +5,14 @@ final class RouteGroup implements RouterInterface
 {
     /** @var string */
     private $prefix;
+    /** @var RouterInterface */
+    private $router;
 
     /**
-     * @param Router $router
+     * @param RouterInterface $router
      * @param string $prefix
      */
-    public function __construct(Router $router, $prefix)
+    public function __construct(RouterInterface $router, $prefix)
     {
         $this->prefix = $prefix;
         $this->router = $router;
@@ -87,5 +89,21 @@ final class RouteGroup implements RouterInterface
     public function any($path, $handler)
     {
         return $this->router->any($this->prefix . $path, $handler);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @return RouterInterface
+     */
+    public function getRouter()
+    {
+        return $this->router;
     }
 }
