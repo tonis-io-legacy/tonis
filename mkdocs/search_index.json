@@ -112,7 +112,7 @@
         }, 
         {
             "location": "/basics/routing/", 
-            "text": "Overview\n\n\nRouting refers to the definition of URIs and how an application responds to a client request. A route\nis a combination of a \nURI\n, a \n\nrequest method\n, and one or more handlers.\n\n\nThe following is an example of a very basic route:\n\n\n$app = new \\Tonis\\App;\n\n// respond with \nhello world\n when a GET request is made to \n/\n\n$app-\nget('/', function ($request, $response) {\n    $response-\nend(\nhello world\n);    \n});\n\n\n\n\nRoute Methods\n\n\nTonis supports the following HTTP methods: \nGET\n, \nPOST\n, \nPUT\n, \nPATCH\n, \nDELETE\n, \nOPTIONS\n, \n\nHEAD\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/', function ($request, $response) {\n    $response-\nend(\nGET request to homepage\n);    \n});\n\n$app-\npost('/', function ($request, $response) {\n    $response-\nend(\nPOST request to homepage\n);    \n});\n\n\n\n\nRoute Parameters\n\n\nRoute parameters may be used by enclosing part of the route in \n{...}\n.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name}', function ($request, $response) {\n    $response-\nend('I match /foo, /bar, /foobar, etc.');\n});\n\n\n\n\nYou can specify a custom pattern match by using \n{foo:regex}\n where regex is a regular expression.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name:[0-9]+}', function ($request, $response) {\n    $response-\nend('I match /123 but not /foo');\n});\n\n\n\n\nAdditionally, parts of the route enclosed in \n[...]\n are considered optional.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/foo[bar]', function ($request, $response) {\n    $response-\nend('I match /foo and /foobar but not /bar');\n});\n\n\n\n\nAccessing Parameters\n\n\nAll matched route parameters are available in the \n$requestuest\n object of the route handler using \n\nArrayAccess\n. \n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name}', function ($request, $response) {\n    $response-\nend('Hi ' . $request['name']);\n});", 
+            "text": "Overview\n\n\nRouting refers to the definition of URIs and how an application responds to a client request. A route\nis a combination of a \nURI\n, a \n\nrequest method\n, and one or more handlers.\n\n\nThe following is an example of a very basic route:\n\n\n$app = new \\Tonis\\App;\n\n// respond with \nhello world\n when a GET request is made to \n/\n\n$app-\nget('/', function ($request, $response) {\n    $response-\nend(\nhello world\n);    \n});\n\n\n\n\nRoute Methods\n\n\nTonis supports the following HTTP methods: \nGET\n, \nPOST\n, \nPUT\n, \nPATCH\n, \nDELETE\n, \nOPTIONS\n, \n\nHEAD\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/', function ($request, $response) {\n    $response-\nend(\nGET request to homepage\n);    \n});\n\n$app-\npost('/', function ($request, $response) {\n    $response-\nend(\nPOST request to homepage\n);    \n});\n\n\n\n\nRoute Parameters\n\n\nRoute parameters may be used by enclosing part of the route in \n{...}\n.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name}', function ($request, $response) {\n    $response-\nend('I match /foo, /bar, /foobar, etc.');\n});\n\n\n\n\nYou can specify a custom pattern match by using \n{foo:regex}\n where regex is a regular expression.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name:[0-9]+}', function ($request, $response) {\n    $response-\nend('I match /123 but not /foo');\n});\n\n\n\n\nAdditionally, parts of the route enclosed in \n[...]\n are considered optional.\n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/foo[bar]', function ($request, $response) {\n    $response-\nend('I match /foo and /foobar but not /bar');\n});\n\n\n\n\nAccessing Parameters\n\n\nAll matched route parameters are available in the \n$request\n object of the route handler using \n\nArrayAccess\n. \n\n\n$app = new \\Tonis\\App;\n\n$app-\nget('/{name}', function ($request, $response) {\n    $response-\nend('Hi ' . $request['name']);\n});", 
             "title": "Routing"
         }, 
         {
@@ -132,7 +132,7 @@
         }, 
         {
             "location": "/basics/routing/#accessing-parameters", 
-            "text": "All matched route parameters are available in the  $requestuest  object of the route handler using  ArrayAccess .   $app = new \\Tonis\\App;\n\n$app- get('/{name}', function ($request, $response) {\n    $response- end('Hi ' . $request['name']);\n});", 
+            "text": "All matched route parameters are available in the  $request  object of the route handler using  ArrayAccess .   $app = new \\Tonis\\App;\n\n$app- get('/{name}', function ($request, $response) {\n    $response- end('Hi ' . $request['name']);\n});", 
             "title": "Accessing Parameters"
         }, 
         {
@@ -196,89 +196,99 @@
             "title": "Required Services"
         }, 
         {
-            "location": "/objects/request/", 
+            "location": "/api/request/", 
             "text": "Overview\n\n\nThe Request object encapsulates data sent during a HTTP request. The \nTonis\\Http\\Request\n object decorates \n\nZend\\Stratigility\\Http\\Request\n which implements \nPsr\\Http\\Message\\RequestInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\nArrayAccess\n\n\nTonis\\Http\\Request\n implements \nArrayAccess\n to provide access to the route match parameters.\n\n\n$app-\nget('/hello/{name}', function ($request, $response) {\n    // output is Hello, foo\n    return $response-\nwrite('Hello, ' . $request['name']);\n});\n\n\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the request.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response-\nwrite(get_class($request-\napp()); \n});\n\n\n\n\ngetParams()\n\n\npublic function getParams(): array\n\n\nGet all route params from the matched route.\n\n\n$app-\nget('/hello/{name}', function ($request, $response) {\n    // output is array ('name' =\n 'foo',)\n    return $response-\nwrite(var_export($request-\ngetParams(), true));\n});", 
             "title": "Request"
         }, 
         {
-            "location": "/objects/request/#overview", 
+            "location": "/api/request/#overview", 
             "text": "The Request object encapsulates data sent during a HTTP request. The  Tonis\\Http\\Request  object decorates  Zend\\Stratigility\\Http\\Request  which implements  Psr\\Http\\Message\\RequestInterface . It's highly recommended that you\nreview  PSR-7 - HTTP messages interfaces  to fully understand PSR-7.  The following are methods available in addition to what PSR-7 provides.", 
             "title": "Overview"
         }, 
         {
-            "location": "/objects/request/#arrayaccess", 
+            "location": "/api/request/#arrayaccess", 
             "text": "Tonis\\Http\\Request  implements  ArrayAccess  to provide access to the route match parameters.  $app- get('/hello/{name}', function ($request, $response) {\n    // output is Hello, foo\n    return $response- write('Hello, ' . $request['name']);\n});", 
             "title": "ArrayAccess"
         }, 
         {
-            "location": "/objects/request/#app", 
+            "location": "/api/request/#app", 
             "text": "public function app(): Tonis\\App  Retrieve the instance of  Tonis\\App  bound to the request.  $app- get('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response- write(get_class($request- app()); \n});", 
             "title": "app()"
         }, 
         {
-            "location": "/objects/request/#getparams", 
+            "location": "/api/request/#getparams", 
             "text": "public function getParams(): array  Get all route params from the matched route.  $app- get('/hello/{name}', function ($request, $response) {\n    // output is array ('name' =  'foo',)\n    return $response- write(var_export($request- getParams(), true));\n});", 
             "title": "getParams()"
         }, 
         {
-            "location": "/objects/response/", 
+            "location": "/api/response/", 
             "text": "Overview\n\n\nThe Response object encapsulates data sent during a HTTP response. The \nTonis\\Http\\Response\n object decorates \n\nZend\\Stratigility\\Http\\Response\n which implements \nPsr\\Http\\Message\\ResponseInterface\n. It's highly recommended that you\nreview \nPSR-7 - HTTP messages interfaces\n to fully understand PSR-7.\n\n\nThe following are methods available in addition to what PSR-7 provides.\n\n\napp()\n\n\npublic function app(): Tonis\\App\n\n\nRetrieve the instance of \nTonis\\App\n bound to the response.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response-\nwrite(get_class($reponse-\napp()); \n});\n\n\n\n\njson()\n\n\npublic function json(mixed $input): Tonis\\Http\\Response\n\n\nEncodes the input as JSON and sets the Content-Type header to application/json.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is {\nfoo\n: \nbar\n}\n    return $response-\njson(['foo' =\n 'bar']);\n});\n\n\n\n\njsonp()\n\n\npublic function jsonp(mixed $input, string $callback): Tonis\\Http\\Response\n\n\nEncodes the input as JSONP and sets the Content-Type header to application/javascript.\n\n\n$app-\nget('/', function ($request, $response) {\n    // output is MyFunction({\nfoo\n: \nbar\n});\n    return $response-\njsonp(['foo' =\n 'bar'], 'MyFunction);\n});\n\n\n\n\nrender()\n\n\npublic function render(string $template, array $params = []): string\n\n\nAttempts to render the \n$template\n with \n$params\n using the ViewManager. If a strategy \nis not available then the Tonis fallback strategy is used. \n\n\n$app-\nget('/article/{id}', function ($request, $response) {\n    // output is render result of `article/view` template\n    return $response-\nrender('article/view', $request-\ngetParams());\n});", 
             "title": "Response"
         }, 
         {
-            "location": "/objects/response/#overview", 
+            "location": "/api/response/#overview", 
             "text": "The Response object encapsulates data sent during a HTTP response. The  Tonis\\Http\\Response  object decorates  Zend\\Stratigility\\Http\\Response  which implements  Psr\\Http\\Message\\ResponseInterface . It's highly recommended that you\nreview  PSR-7 - HTTP messages interfaces  to fully understand PSR-7.  The following are methods available in addition to what PSR-7 provides.", 
             "title": "Overview"
         }, 
         {
-            "location": "/objects/response/#app", 
+            "location": "/api/response/#app", 
             "text": "public function app(): Tonis\\App  Retrieve the instance of  Tonis\\App  bound to the response.  $app- get('/', function ($request, $response) {\n    // output is Tonis\\App\n    return $response- write(get_class($reponse- app()); \n});", 
             "title": "app()"
         }, 
         {
-            "location": "/objects/response/#json", 
+            "location": "/api/response/#json", 
             "text": "public function json(mixed $input): Tonis\\Http\\Response  Encodes the input as JSON and sets the Content-Type header to application/json.  $app- get('/', function ($request, $response) {\n    // output is { foo :  bar }\n    return $response- json(['foo' =  'bar']);\n});", 
             "title": "json()"
         }, 
         {
-            "location": "/objects/response/#jsonp", 
+            "location": "/api/response/#jsonp", 
             "text": "public function jsonp(mixed $input, string $callback): Tonis\\Http\\Response  Encodes the input as JSONP and sets the Content-Type header to application/javascript.  $app- get('/', function ($request, $response) {\n    // output is MyFunction({ foo :  bar });\n    return $response- jsonp(['foo' =  'bar'], 'MyFunction);\n});", 
             "title": "jsonp()"
         }, 
         {
-            "location": "/objects/response/#render", 
+            "location": "/api/response/#render", 
             "text": "public function render(string $template, array $params = []): string  Attempts to render the  $template  with  $params  using the ViewManager. If a strategy \nis not available then the Tonis fallback strategy is used.   $app- get('/article/{id}', function ($request, $response) {\n    // output is render result of `article/view` template\n    return $response- render('article/view', $request- getParams());\n});", 
             "title": "render()"
         }, 
         {
-            "location": "/objects/router/", 
-            "text": "Overview\n\n\nThe \nTonis\\Router\n handles all routing in Tonis and is built on \nnikic/FastRoute\n for optimal performance. For more\ninformation on routing see the \nrouting documentation\n.\n\n\nThe following are methods available.\n\n\nHTTP Verbs\n\n\npublic function verb(string $path, callable $handler): void\n\n\nCreates a route that matches on the specified HTTP verb and the path specified. \n\n\nHTTP Verb can be one of: \nget\n \npost\n \nput\n \npatch\n \ndelete\n \nhead\n \noptions\n\n\n$router-\nget('/', function ($request, $response) { ... });\n\n\n\n\nany()\n\n\npublic function any(string $path, callable $handler): void\n\n\nCreates a route that matches any HTTP verb and the path specified.\n\n\n$router-\nany('/', function ($request, $response) { ... });\n\n\n\n\nparam()\n\n\npublic function param(string $param, callable $handler): void\n\n\nAdds middleware for a matched route parameter. \n\n\n// this will be called anytime \narticle_id\n exists in a route\n$router-\nparam('article_id', function ($request, $response, $next) {\n    // assume repository was injected\n    $article = $this-\nrepository-\nfind($request['article_id']);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now \narticle\n is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route with \narticle_id\n so the handler can be called\n$router-\nget('/articles/{article_id};\n\n\n\n\nadd()\n\n\npublic function add(callable $middleware): void\n\n\nAdd middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.\n\n\n$router-\nadd(function ($request, $response, $next) {\n    $response-\nwrite('pre ');\n    $response = $next($request, $response);\n    $response-\nwrite(' post');\n\n    return $response;\n});\n\n// a call to \nGET /\n would output \npre GET / post\n\n$router-\nget('/', function ($request, $response) {\n    return $response-\nwrite('GET /');\n});", 
+            "location": "/api/router/", 
+            "text": "Overview\n\n\nThe \nTonis\\Router\n handles all routing in Tonis and is built on \nnikic/FastRoute\n for optimal performance. For more\ninformation on routing see the \nrouting documentation\n.\n\n\nThe following are methods available.\n\n\nHTTP Verbs\n\n\npublic function verb(string $path, callable $handler): \\Tonis\\Router\\Route\n\n\nCreates a route that matches on the specified HTTP verb and the path specified. \n\n\nHTTP Verb can be one of: \nget\n \npost\n \nput\n \npatch\n \ndelete\n \nhead\n \noptions\n\n\n$router-\nget('/', function ($request, $response) { ... });\n\n\n\n\nany()\n\n\npublic function any(string $path, callable $handler): \\Tonis\\Router\\Route\n\n\nCreates a route that matches any HTTP verb and the path specified.\n\n\n$router-\nany('/', function ($request, $response) { ... });\n\n\n\n\nparam()\n\n\npublic function param(string $param, callable $handler): void\n\n\nAdds middleware for a matched route parameter. \n\n\n// this will be called anytime \narticle_id\n exists in a route\n$router-\nparam('article_id', function ($request, $response, $value) {\n    // assume repository was injected\n    $article = $this-\nrepository-\nfind($value);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now \narticle\n is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route with \narticle_id\n so the handler can be called\n$router-\nget('/articles/{article_id}', function () {});\n\n\n\n\nquery()\n\n\npublic function query(string $param, callable $handler): void\n\n\nAdds middleware for a query parameter. \n\n\n// this will be called anytime \narticle_id\n exists as a query parameter\n$router-\nquery('article_id', function ($request, $response, $value) {\n    // assume repository was injected\n    $article = $this-\nrepository-\nfind($value);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now \narticle\n is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route for the articles\n$router-\nget('/articles', function () {});\n\n// make a request with the query parameter\n// GET: /articles?article_id=1234\n\n\n\n\nadd()\n\n\npublic function add(callable $middleware): void\n\n\nAdd middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.\n\n\n$router-\nadd(function ($request, $response, $next) {\n    $response-\nwrite('pre ');\n    $response = $next($request, $response);\n    $response-\nwrite(' post');\n\n    return $response;\n});\n\n// a call to \nGET /\n would output \npre GET / post\n\n$router-\nget('/', function ($request, $response) {\n    return $response-\nwrite('GET /');\n});\n\n\n\n\ngroup()\n\n\npublic function group(string $prefix, callable $handler): \\Tonis\\Router\\GroupInterface\n\n\nGroups routes under a common prefix. Great for combining similar route paths such as API versions.\n\n\n$router-\ngroup('/api/v1', function (\\Tonis\\Router\\Group $v1) {\n    $v1-\nget('/articles', function () {});\n    $v1-\nget('/articles/{id}', function () {});\n});\n\n// /api/v1/articles and /api/v1/articles/:id would be routable.", 
             "title": "Router"
         }, 
         {
-            "location": "/objects/router/#overview", 
+            "location": "/api/router/#overview", 
             "text": "The  Tonis\\Router  handles all routing in Tonis and is built on  nikic/FastRoute  for optimal performance. For more\ninformation on routing see the  routing documentation .  The following are methods available.", 
             "title": "Overview"
         }, 
         {
-            "location": "/objects/router/#http-verbs", 
-            "text": "public function verb(string $path, callable $handler): void  Creates a route that matches on the specified HTTP verb and the path specified.   HTTP Verb can be one of:  get   post   put   patch   delete   head   options  $router- get('/', function ($request, $response) { ... });", 
+            "location": "/api/router/#http-verbs", 
+            "text": "public function verb(string $path, callable $handler): \\Tonis\\Router\\Route  Creates a route that matches on the specified HTTP verb and the path specified.   HTTP Verb can be one of:  get   post   put   patch   delete   head   options  $router- get('/', function ($request, $response) { ... });", 
             "title": "HTTP Verbs"
         }, 
         {
-            "location": "/objects/router/#any", 
-            "text": "public function any(string $path, callable $handler): void  Creates a route that matches any HTTP verb and the path specified.  $router- any('/', function ($request, $response) { ... });", 
+            "location": "/api/router/#any", 
+            "text": "public function any(string $path, callable $handler): \\Tonis\\Router\\Route  Creates a route that matches any HTTP verb and the path specified.  $router- any('/', function ($request, $response) { ... });", 
             "title": "any()"
         }, 
         {
-            "location": "/objects/router/#param", 
-            "text": "public function param(string $param, callable $handler): void  Adds middleware for a matched route parameter.   // this will be called anytime  article_id  exists in a route\n$router- param('article_id', function ($request, $response, $next) {\n    // assume repository was injected\n    $article = $this- repository- find($request['article_id']);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now  article  is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route with  article_id  so the handler can be called\n$router- get('/articles/{article_id};", 
+            "location": "/api/router/#param", 
+            "text": "public function param(string $param, callable $handler): void  Adds middleware for a matched route parameter.   // this will be called anytime  article_id  exists in a route\n$router- param('article_id', function ($request, $response, $value) {\n    // assume repository was injected\n    $article = $this- repository- find($value);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now  article  is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route with  article_id  so the handler can be called\n$router- get('/articles/{article_id}', function () {});", 
             "title": "param()"
         }, 
         {
-            "location": "/objects/router/#add", 
+            "location": "/api/router/#query", 
+            "text": "public function query(string $param, callable $handler): void  Adds middleware for a query parameter.   // this will be called anytime  article_id  exists as a query parameter\n$router- query('article_id', function ($request, $response, $value) {\n    // assume repository was injected\n    $article = $this- repository- find($value);\n\n    // this will be caught by the default error handler and show a nice 404 page\n    if (!$article) {\n        throw new \\RuntimeException('No article', 404);\n    }\n\n    // now  article  is available to any handler with article_id in the route\n    // this let's you easily reuse common code\n    $request['article'] = $article;\n    return $next($request, $response);\n});\n\n// create a route for the articles\n$router- get('/articles', function () {});\n\n// make a request with the query parameter\n// GET: /articles?article_id=1234", 
+            "title": "query()"
+        }, 
+        {
+            "location": "/api/router/#add", 
             "text": "public function add(callable $middleware): void  Add middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.  $router- add(function ($request, $response, $next) {\n    $response- write('pre ');\n    $response = $next($request, $response);\n    $response- write(' post');\n\n    return $response;\n});\n\n// a call to  GET /  would output  pre GET / post \n$router- get('/', function ($request, $response) {\n    return $response- write('GET /');\n});", 
             "title": "add()"
+        }, 
+        {
+            "location": "/api/router/#group", 
+            "text": "public function group(string $prefix, callable $handler): \\Tonis\\Router\\GroupInterface  Groups routes under a common prefix. Great for combining similar route paths such as API versions.  $router- group('/api/v1', function (\\Tonis\\Router\\Group $v1) {\n    $v1- get('/articles', function () {});\n    $v1- get('/articles/{id}', function () {});\n});\n\n// /api/v1/articles and /api/v1/articles/:id would be routable.", 
+            "title": "group()"
         }, 
         {
             "location": "/resources/official-middleware/", 

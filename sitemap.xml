@@ -68,19 +68,19 @@
     
         
     <url>
-     <loc>http://docs.tonis.io/objects/request/</loc>
+     <loc>http://docs.tonis.io/api/request/</loc>
      <lastmod>2015-08-01</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>http://docs.tonis.io/objects/response/</loc>
+     <loc>http://docs.tonis.io/api/response/</loc>
      <lastmod>2015-08-01</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>http://docs.tonis.io/objects/router/</loc>
+     <loc>http://docs.tonis.io/api/router/</loc>
      <lastmod>2015-08-01</lastmod>
      <changefreq>daily</changefreq>
     </url>

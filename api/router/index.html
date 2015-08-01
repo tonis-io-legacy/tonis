@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Response - Tonis</title>
+  <title>Router - Tonis</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -20,7 +20,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Response";
+    var mkdocs_page_name = "Router";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -130,7 +130,7 @@
           
             <li>
     <ul class="subnav">
-    <li><span>Objects</span></li>
+    <li><span>API Reference</span></li>
 
         
             
@@ -141,34 +141,40 @@
 
         
             
+    <li class="toctree-l1 ">
+        <a class="" href="../response/">Response</a>
+        
+    </li>
+
+        
+            
     <li class="toctree-l1 current">
-        <a class="current" href="./">Response</a>
+        <a class="current" href="./">Router</a>
         
             <ul>
             
                 <li class="toctree-l3"><a href="#overview">Overview</a></li>
                 
             
-                <li class="toctree-l3"><a href="#app">app()</a></li>
+                <li class="toctree-l3"><a href="#http-verbs">HTTP Verbs</a></li>
                 
             
-                <li class="toctree-l3"><a href="#json">json()</a></li>
+                <li class="toctree-l3"><a href="#any">any()</a></li>
                 
             
-                <li class="toctree-l3"><a href="#jsonp">jsonp()</a></li>
+                <li class="toctree-l3"><a href="#param">param()</a></li>
                 
             
-                <li class="toctree-l3"><a href="#render">render()</a></li>
+                <li class="toctree-l3"><a href="#query">query()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#add">add()</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#group">group()</a></li>
                 
             
             </ul>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../router/">Router</a>
         
     </li>
 
@@ -213,11 +219,11 @@
     
       
         
-          <li>Objects &raquo;</li>
+          <li>API Reference &raquo;</li>
         
       
     
-    <li>Response</li>
+    <li>Router</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -232,45 +238,97 @@
             <div class="section">
               
                 <h2 id="overview">Overview</h2>
-<p>The Response object encapsulates data sent during a HTTP response. The <code>Tonis\Http\Response</code> object decorates 
-<code>Zend\Stratigility\Http\Response</code> which implements <code>Psr\Http\Message\ResponseInterface</code>. It's highly recommended that you
-review <a href="http://www.php-fig.org/psr/psr-7/">PSR-7 - HTTP messages interfaces</a> to fully understand PSR-7.</p>
-<p>The following are methods available in addition to what PSR-7 provides.</p>
-<h2 id="app">app()</h2>
-<p><code>public function app(): Tonis\App</code></p>
-<p>Retrieve the instance of <code>Tonis\App</code> bound to the response.</p>
-<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
-    // output is Tonis\App
-    return $response-&gt;write(get_class($reponse-&gt;app()); 
+<p>The <code>Tonis\Router</code> handles all routing in Tonis and is built on <code>nikic/FastRoute</code> for optimal performance. For more
+information on routing see the <a href="../../basics/routing">routing documentation</a>.</p>
+<p>The following are methods available.</p>
+<h2 id="http-verbs">HTTP Verbs</h2>
+<p><code>public function verb(string $path, callable $handler): \Tonis\Router\Route</code></p>
+<p>Creates a route that matches on the specified HTTP verb and the path specified. </p>
+<p>HTTP Verb can be one of: <code>get</code> <code>post</code> <code>put</code> <code>patch</code> <code>delete</code> <code>head</code> <code>options</code></p>
+<pre><code class="php">$router-&gt;get('/', function ($request, $response) { ... });
+</code></pre>
+
+<h2 id="any">any()</h2>
+<p><code>public function any(string $path, callable $handler): \Tonis\Router\Route</code></p>
+<p>Creates a route that matches any HTTP verb and the path specified.</p>
+<pre><code class="php">$router-&gt;any('/', function ($request, $response) { ... });
+</code></pre>
+
+<h2 id="param">param()</h2>
+<p><code>public function param(string $param, callable $handler): void</code></p>
+<p>Adds middleware for a matched route parameter. </p>
+<pre><code class="php">// this will be called anytime &quot;article_id&quot; exists in a route
+$router-&gt;param('article_id', function ($request, $response, $value) {
+    // assume repository was injected
+    $article = $this-&gt;repository-&gt;find($value);
+
+    // this will be caught by the default error handler and show a nice 404 page
+    if (!$article) {
+        throw new \RuntimeException('No article', 404);
+    }
+
+    // now &quot;article&quot; is available to any handler with article_id in the route
+    // this let's you easily reuse common code
+    $request['article'] = $article;
+    return $next($request, $response);
+});
+
+// create a route with &quot;article_id&quot; so the handler can be called
+$router-&gt;get('/articles/{article_id}', function () {});
+</code></pre>
+
+<h2 id="query">query()</h2>
+<p><code>public function query(string $param, callable $handler): void</code></p>
+<p>Adds middleware for a query parameter. </p>
+<pre><code class="php">// this will be called anytime &quot;article_id&quot; exists as a query parameter
+$router-&gt;query('article_id', function ($request, $response, $value) {
+    // assume repository was injected
+    $article = $this-&gt;repository-&gt;find($value);
+
+    // this will be caught by the default error handler and show a nice 404 page
+    if (!$article) {
+        throw new \RuntimeException('No article', 404);
+    }
+
+    // now &quot;article&quot; is available to any handler with article_id in the route
+    // this let's you easily reuse common code
+    $request['article'] = $article;
+    return $next($request, $response);
+});
+
+// create a route for the articles
+$router-&gt;get('/articles', function () {});
+
+// make a request with the query parameter
+// GET: /articles?article_id=1234
+</code></pre>
+
+<h2 id="add">add()</h2>
+<p><code>public function add(callable $middleware): void</code></p>
+<p>Add middleware to the router. Middleware is called prior to dispatching the route handler and only if a route matches.</p>
+<pre><code class="php">$router-&gt;add(function ($request, $response, $next) {
+    $response-&gt;write('pre ');
+    $response = $next($request, $response);
+    $response-&gt;write(' post');
+
+    return $response;
+});
+
+// a call to &quot;GET /&quot; would output &quot;pre GET / post&quot;
+$router-&gt;get('/', function ($request, $response) {
+    return $response-&gt;write('GET /');
 });
 </code></pre>
 
-<h2 id="json">json()</h2>
-<p><code>public function json(mixed $input): Tonis\Http\Response</code></p>
-<p>Encodes the input as JSON and sets the Content-Type header to application/json.</p>
-<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
-    // output is {&quot;foo&quot;: &quot;bar&quot;}
-    return $response-&gt;json(['foo' =&gt; 'bar']);
+<h2 id="group">group()</h2>
+<p><code>public function group(string $prefix, callable $handler): \Tonis\Router\GroupInterface</code></p>
+<p>Groups routes under a common prefix. Great for combining similar route paths such as API versions.</p>
+<pre><code class="php">$router-&gt;group('/api/v1', function (\Tonis\Router\Group $v1) {
+    $v1-&gt;get('/articles', function () {});
+    $v1-&gt;get('/articles/{id}', function () {});
 });
-</code></pre>
 
-<h2 id="jsonp">jsonp()</h2>
-<p><code>public function jsonp(mixed $input, string $callback): Tonis\Http\Response</code></p>
-<p>Encodes the input as JSONP and sets the Content-Type header to application/javascript.</p>
-<pre><code class="php">$app-&gt;get('/', function ($request, $response) {
-    // output is MyFunction({&quot;foo&quot;: &quot;bar&quot;});
-    return $response-&gt;jsonp(['foo' =&gt; 'bar'], 'MyFunction);
-});
-</code></pre>
-
-<h2 id="render">render()</h2>
-<p><code>public function render(string $template, array $params = []): string</code></p>
-<p>Attempts to render the <code>$template</code> with <code>$params</code> using the ViewManager. If a strategy 
-is not available then the Tonis fallback strategy is used. </p>
-<pre><code class="php">$app-&gt;get('/article/{id}', function ($request, $response) {
-    // output is render result of `article/view` template
-    return $response-&gt;render('article/view', $request-&gt;getParams());
-});
+// /api/v1/articles and /api/v1/articles/:id would be routable.
 </code></pre>
               
             </div>
@@ -279,10 +337,10 @@ is not available then the Tonis fallback strategy is used. </p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../router/" class="btn btn-neutral float-right" title="Router"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../resources/official-middleware/" class="btn btn-neutral float-right" title="Official Middleware"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../request/" class="btn btn-neutral" title="Request"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../response/" class="btn btn-neutral" title="Response"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -312,10 +370,10 @@ is not available then the Tonis fallback strategy is used. </p>
           <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../request/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../response/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../router/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../../resources/official-middleware/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
