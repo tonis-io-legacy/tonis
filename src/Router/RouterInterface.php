@@ -58,11 +58,4 @@ interface RouterInterface
      * @return Route
      */
     public function any($path, $handler);
-
-    /**
-     * @param  string  $name
-     * @param callable $func
-     * @return RouterInterface
-     */
-    public function group($name, callable $func);
 }

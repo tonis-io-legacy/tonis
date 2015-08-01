@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Relay\RelayBuilder;
 
-final class App
+final class App implements Router\RouterInterface
 {
     /** @var ContainerInterface */
     private $container;
@@ -82,66 +82,67 @@ final class App
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function get($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function post($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function put($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function patch($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function delete($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function options($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
+     * {@inheritDoc}
      */
     public function head($path, $handler)
     {
-        return $this->httpVerb($path, $handler, __FUNCTION__);
+        return $this->route($path, $handler, __FUNCTION__);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function any($path, $handler)
+    {
+        return $this->route($path, $handler, __FUNCTION__);
     }
 
     /**
@@ -177,7 +178,7 @@ final class App
      *
      * @todo reuse router instance when possible
      */
-    private function httpVerb($path, $handler, $type)
+    private function route($path, $handler, $type)
     {
         $router = $this->router();
         $route  = $router->$type($path, $handler);

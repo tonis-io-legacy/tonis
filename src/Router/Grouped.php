@@ -1,7 +1,7 @@
 <?php
 namespace Tonis\Router;
 
-final class Grouped implements RouterInterface
+final class Grouped implements RouterInterface, GroupInterface
 {
     /** @var string */
     private $prefix;
@@ -100,7 +100,7 @@ final class Grouped implements RouterInterface
     }
 
     /**
-     * @return RouterInterface
+     * @return self
      */
     public function getRouter()
     {
