@@ -4,7 +4,7 @@ namespace Tonis\Router;
 /**
  * @covers \Tonis\Router\Group
  */
-class GroupedTest extends \PHPUnit_Framework_TestCase
+class GroupTest extends \PHPUnit_Framework_TestCase
 {
     /** @var RouterInterface */
     private $router;
