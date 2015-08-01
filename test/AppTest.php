@@ -109,6 +109,26 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('success', $response->getBody()->__toString());
     }
 
+    public function testAny()
+    {
+        $app = $this->app;
+        $ran = false;
+
+        $app->any('/', function ($req, $res) use (&$ran) {
+            $ran = !$ran;
+            return $res;
+        });
+
+        $app($this->newTonisRequest('/'), $this->newTonisResponse());
+        $this->assertTrue($ran);
+
+        $app($this->newTonisRequest('/', ['REQUEST_METHOD' => 'POST']), $this->newTonisResponse());
+        $this->assertFalse($ran);
+
+        $app($this->newTonisRequest('/', ['REQUEST_METHOD' => 'HEAD']), $this->newTonisResponse());
+        $this->assertTrue($ran);
+    }
+
     public function httpVerbProvider()
     {
         return [
