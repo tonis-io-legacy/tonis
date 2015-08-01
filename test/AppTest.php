@@ -23,6 +23,18 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->app = new App();
     }
 
+    /**
+     * @covers \Tonis\Exception\InvalidResponse
+     * @expectedException \Tonis\Exception\InvalidResponse
+     * @expectedExceptionMessage An invalid response was returned from handler
+     */
+    public function testInvalidResponseThrowsException()
+    {
+        $app = $this->app;
+        $app->get('/', function () {});
+        $app($this->newTonisRequest('/'), $this->newTonisResponse());
+    }
+
     public function testAdd()
     {
         $router = $this->app->router();

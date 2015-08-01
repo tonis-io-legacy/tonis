@@ -57,7 +57,10 @@ final class App implements Router\RouterInterface
             $response = $error($request, $response, $ex);
         }
 
-        // todo: detect this better
+        if (!$response instanceof ResponseInterface) {
+            throw new Exception\InvalidResponse;
+        }
+
         $body = (string)$response->getBody();
         if (0 === strlen($body)) {
             $response = $notFound($request, $response);
