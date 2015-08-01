@@ -65,10 +65,6 @@ final class Router implements RouterInterface
             /** @var callable $layer */
             $layer = array_shift($middleware);
 
-            if (false === $layer) {
-                return $next($request, $response);
-            }
-
             if ($layer instanceof Route) {
                 if ($layer !== $route) {
                     return $callable($request, $response, $next);

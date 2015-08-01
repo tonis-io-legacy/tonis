@@ -19,6 +19,23 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->router = new Router;
     }
 
+    public function testMiddlewareRouteIsSkippedIfNotSame()
+    {
+        $called = false;
+        $skipped = true;
+
+        $this->router->get('/foo', function () use (&$skipped) {
+            $skipped = false;
+        });
+        $this->router->get('/', function () use (&$called) {
+            $called = true;
+        });
+        $this->router->__invoke($this->newTonisRequest('/'), $this->newTonisResponse(), function () {});
+
+        $this->assertTrue($skipped);
+        $this->assertTrue($called);
+    }
+
     public function testQuery()
     {
         $this->router->query('id', function ($req, $res, $value) {
