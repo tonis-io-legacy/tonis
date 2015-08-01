@@ -52,7 +52,7 @@ You can specify a custom pattern match by using ```{foo:regex}``` where regex is
 ```php
 $app = new \Tonis\App;
 
-$app->get('/{name:[0-9]+', function ($request, $response) {
+$app->get('/{name:[0-9]+}', function ($request, $response) {
     $response->end('I match /123 but not /foo');
 });
 ```
