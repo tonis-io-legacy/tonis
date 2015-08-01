@@ -80,13 +80,3 @@ $app->get('/{name}', function ($request, $response) {
     $response->end('Hi ' . $request['name']);
 });
 ```
-
-Grouping Routes
----------------
-
-Routing grouping combines several routes under a common prefix. This is useful for changing a part of a route
-and keeping the rest identical.
-
-```php
-
-```

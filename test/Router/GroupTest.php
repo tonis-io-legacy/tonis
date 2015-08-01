@@ -8,13 +8,13 @@ class GroupedTest extends \PHPUnit_Framework_TestCase
 {
     /** @var RouterInterface */
     private $router;
-    /** @var Grouped */
-    private $routeGroup;
+    /** @var Group */
+    private $group;
 
     protected function setUp()
     {
-        $this->router     = new Router();
-        $this->routeGroup = new Grouped($this->router, 'prefix');
+        $this->router = new Router();
+        $this->group  = new Group($this->router, 'prefix');
     }
 
     /**
@@ -23,7 +23,7 @@ class GroupedTest extends \PHPUnit_Framework_TestCase
     public function testProxyCalls($method)
     {
         $handler = function() {};
-        $this->routeGroup->$method('/foo', $handler);
+        $this->group->$method('/foo', $handler);
 
         $refl = new \ReflectionClass($this->router);
         $col  = $refl->getProperty('collector');
@@ -38,7 +38,7 @@ class GroupedTest extends \PHPUnit_Framework_TestCase
     public function testAny()
     {
         $handler = function() {};
-        $this->routeGroup->any('/foo', $handler);
+        $this->group->any('/foo', $handler);
 
         $refl = new \ReflectionClass($this->router);
         $col  = $refl->getProperty('collector');
@@ -53,7 +53,7 @@ class GroupedTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRouter()
     {
-        $this->assertSame($this->router, $this->routeGroup->getRouter());
+        $this->assertSame($this->router, $this->group->getRouter());
     }
 
     public function testGroup()
@@ -63,7 +63,7 @@ class GroupedTest extends \PHPUnit_Framework_TestCase
             $this->assertSame('prefix/foo', $group->getPrefix());
             $valid = true;
         };
-        $this->routeGroup->group('/foo', $handler);
+        $this->group->group('/foo', $handler);
         $this->assertTrue($valid);
     }
 

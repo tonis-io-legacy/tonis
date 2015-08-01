@@ -1,7 +1,7 @@
 <?php
 namespace Tonis\Router;
 
-final class Grouped implements RouterInterface, GroupInterface
+final class Group implements RouterInterface, GroupInterface
 {
     /** @var string */
     private $prefix;
@@ -25,6 +25,8 @@ final class Grouped implements RouterInterface, GroupInterface
     {
         $group = new self($this->router, $this->prefix . $prefix);
         $func($group);
+
+        return $group;
     }
 
     /**
