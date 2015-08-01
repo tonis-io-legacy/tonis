@@ -174,7 +174,7 @@ final class Router implements RouterInterface
      */
     public function group($name, callable $func)
     {
-        $group = new Grouped($this, $name);
+        $group = new Group($this, $name);
         $func($group);
     }
 

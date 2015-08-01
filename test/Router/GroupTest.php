@@ -2,7 +2,7 @@
 namespace Tonis\Router;
 
 /**
- * @covers \Tonis\Router\Grouped
+ * @covers \Tonis\Router\Group
  */
 class GroupedTest extends \PHPUnit_Framework_TestCase
 {
@@ -59,7 +59,7 @@ class GroupedTest extends \PHPUnit_Framework_TestCase
     public function testGroup()
     {
         $valid   = false;
-        $handler = function (Grouped $group) use (&$valid) {
+        $handler = function (Group $group) use (&$valid) {
             $this->assertSame('prefix/foo', $group->getPrefix());
             $valid = true;
         };
