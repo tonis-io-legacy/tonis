@@ -86,14 +86,6 @@ final class Router implements RouterInterface
     }
 
     /**
-     * @return RouteMap
-     */
-    public function map()
-    {
-        return $this->routeMap;
-    }
-
-    /**
      * Adds query handlers to a queue. The queue is processed at invocation by RelayPHP.
      *
      * @param string   $param
@@ -186,7 +178,7 @@ final class Router implements RouterInterface
      */
     public function group($name, callable $func)
     {
-        $group = new RouteGroup($this, $name);
+        $group = new GroupedRouter($this, $name);
         $func($group);
     }
 

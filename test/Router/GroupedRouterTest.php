@@ -2,19 +2,19 @@
 namespace Tonis\Router;
 
 /**
- * @covers \Tonis\Router\RouteGroup
+ * @covers \Tonis\Router\GroupedRouter
  */
-class RouteGroupTest extends \PHPUnit_Framework_TestCase
+class GroupedRouterTest extends \PHPUnit_Framework_TestCase
 {
     /** @var RouterInterface */
     private $router;
-    /** @var RouteGroup */
+    /** @var GroupedRouter */
     private $routeGroup;
 
     protected function setUp()
     {
         $this->router     = new Router();
-        $this->routeGroup = new RouteGroup($this->router, 'prefix');
+        $this->routeGroup = new GroupedRouter($this->router, 'prefix');
     }
 
     /**
@@ -59,7 +59,7 @@ class RouteGroupTest extends \PHPUnit_Framework_TestCase
     public function testGroup()
     {
         $valid   = false;
-        $handler = function (RouteGroup $group) use (&$valid) {
+        $handler = function (GroupedRouter $group) use (&$valid) {
             $this->assertSame('prefix/foo', $group->getPrefix());
             $valid = true;
         };

@@ -19,6 +19,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->router = new Router;
     }
 
+    public function testQuery()
+    {
+        $this->router->query('id', function ($req, $res, $value) {
+            $res->write($value);
+        });
+        $this->router->get('/', function ($req, $res) {
+            return $res->write('get');
+        });
+
+        $_GET['id'] = '1234';
+        $request  = $this->newTonisRequest('/');
+        $response = $this->newTonisResponse();
+        $handler  = function($req, $res) {
+            return $res;
+        };
+
+        $result = $this->router->__invoke($request, $response, $handler);
+        $this->assertSame('1234get', $result->getBody()->__toString());
+    }
+
     public function testParam()
     {
         $this->router->param('id', function ($req, $res, $value) {
@@ -119,6 +139,18 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['/foo' => $expectedHandler], $collector->getData()[0]['DELETE']);
         $this->assertEquals(['/foo' => $expectedHandler], $collector->getData()[0]['HEAD']);
         $this->assertEquals(['/foo' => $expectedHandler], $collector->getData()[0]['OPTIONS']);
+    }
+
+    public function testGroup()
+    {
+        $success = false;
+        $handler = function (GroupedRouter $group) use (&$success) {
+            $this->assertSame('foo', $group->getPrefix());
+            $success = true;
+        };
+
+        $this->router->group('foo', $handler);
+        $this->assertTrue($success);
     }
 
     public function httpVerbProvider()
