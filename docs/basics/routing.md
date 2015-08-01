@@ -70,7 +70,7 @@ $app->get('/foo[bar]', function ($request, $response) {
 Accessing Parameters
 --------------------
 
-All matched route parameters are available in the ```$requestuest``` object of the route handler using 
+All matched route parameters are available in the ```$request``` object of the route handler using 
 [ArrayAccess](http://www.php.net/arrayaccess). 
 
 ```php
@@ -79,4 +79,14 @@ $app = new \Tonis\App;
 $app->get('/{name}', function ($request, $response) {
     $response->end('Hi ' . $request['name']);
 });
+```
+
+Grouping Routes
+---------------
+
+Routing grouping combines several routes under a common prefix. This is useful for changing a part of a route
+and keeping the rest identical.
+
+```php
+
 ```

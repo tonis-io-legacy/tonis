@@ -161,7 +161,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testGroup()
     {
         $success = false;
-        $handler = function (GroupedRouter $group) use (&$success) {
+        $handler = function (Grouped $group) use (&$success) {
             $this->assertSame('foo', $group->getPrefix());
             $success = true;
         };
