@@ -267,7 +267,7 @@ $app-&gt;get('/{name}', function ($request, $response) {
 <p>You can specify a custom pattern match by using <code>{foo:regex}</code> where regex is a regular expression.</p>
 <pre><code class="php">$app = new \Tonis\App;
 
-$app-&gt;get('/{name:[0-9]+', function ($request, $response) {
+$app-&gt;get('/{name:[0-9]+}', function ($request, $response) {
     $response-&gt;end('I match /123 but not /foo');
 });
 </code></pre>
