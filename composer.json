@@ -42,7 +42,8 @@
         }
     },
     "bin": [
-        "bin/tonis.php"
+        "bin/tonis.php",
+        "bin/tonis"
     ],
     "extra": {
         "branch-alias": {
