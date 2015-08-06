@@ -23,6 +23,17 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->app = new App();
     }
 
+    public function testPackage()
+    {
+        $app     = $this->app;
+        $package = new TestAsset\Package;
+
+        $app->package($package);
+        $app($this->newRequest('/'), new Response);
+
+        $this->assertTrue($package->ran);
+    }
+
     /**
      * @covers \Tonis\Exception\InvalidResponse
      * @expectedException \Tonis\Exception\InvalidResponse
