@@ -85,6 +85,14 @@ final class App implements Router\RouterInterface
     }
 
     /**
+     * @param PackageInterface $package
+     */
+    public function package(PackageInterface $package)
+    {
+        $package->register($this);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function get($path, $handler)
