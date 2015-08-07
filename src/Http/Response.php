@@ -33,6 +33,21 @@ final class Response implements ResponseInterface
     }
 
     /**
+     * Returns a response with a proper status code and Location header. If permanent
+     * is true, a 301 status code is used instead of 302.
+     *
+     * @param string $url
+     * @param bool   $permanent
+     * @return ResponseInterface
+     */
+    public function redirect($url, $permanent = false)
+    {
+        return $this
+            ->withHeader('Location', $url)
+            ->withStatus($permanent ? 301 : 302);
+    }
+
+    /**
      * Encodes the input as JSON and sets the Content-Type header to application/json.
      *
      * @param mixed $input

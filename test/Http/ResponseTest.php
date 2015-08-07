@@ -26,6 +26,12 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->response  = new Response($this->app, $this->dResponse);
     }
 
+    public function testRedirect()
+    {
+        $response = $this->response->redirect('http://www.foo.com', false);
+        $this->assertNotEmpty($response->getHeader('Location'));
+    }
+
     public function testJson()
     {
         $response = $this->response->json(['foo' => 'bar']);
