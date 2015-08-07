@@ -30,6 +30,13 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->response->redirect('http://www.foo.com', false);
         $this->assertNotEmpty($response->getHeader('Location'));
+        $this->assertSame('http://www.foo.com', $response->getHeader('Location')[0]);
+        $this->assertSame(302, $response->getStatusCode());
+
+        $response = $this->response->redirect('http://www.foo.com', true);
+        $this->assertNotEmpty($response->getHeader('Location'));
+        $this->assertSame('http://www.foo.com', $response->getHeader('Location')[0]);
+        $this->assertSame(301, $response->getStatusCode());
     }
 
     public function testJson()
