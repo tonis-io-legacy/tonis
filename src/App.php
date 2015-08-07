@@ -18,13 +18,16 @@ final class App implements Router\RouterInterface
     private $relayBuilder;
     /** @var callable[] */
     private $middleware = [];
+    /** @var bool */
+    private $debug = false;
     /** @var View\Manager */
     private $view;
 
     /**
      * @param ContainerInterface $container
+     * @param bool $debug
      */
-    public function __construct(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container = null, $debug = false)
     {
         if (null === $container) {
             $container = new Container;
@@ -35,6 +38,7 @@ final class App implements Router\RouterInterface
         $this->errorHandler    = $container->get(Handler\ErrorInterface::class);
         $this->notFoundHandler = $container->get(Handler\NotFoundInterface::class);
         $this->view            = $container->get(View\Manager::class);
+        $this->debug           = $debug;
     }
 
     /**
@@ -183,11 +187,39 @@ final class App implements Router\RouterInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * Retrieves environment variables from $_ENV or getenv(). If the key
+     * does not exist in $_ENV then getenv() is checked. Converts return value of
+     * getenv() from false to null if there was an error.
+     *
+     * @param string $key
+     * @param null   $value
+     * @return mixed
+     */
+    public function env($key, $value = null)
+    {
+        if ($value !== null) {
+            $_ENV[$key] = $value;
+            putenv($key . '=' . $value);
+        }
+
+        if (isset($_ENV[$key])) {
+            return $_ENV[$key];
+        }
+        return false === getenv($key) ? null : getenv($key);
+    }
+
+    /**
      * @param string   $path
      * @param callable $handler
      * @param string   $type
-     *
-     * @todo reuse router instance when possible
      */
     private function route($path, $handler, $type)
     {
