@@ -97,7 +97,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['withProtocolVersion', ['1.0']],
-            ['withBody', [new Stream(sys_get_temp_dir())]],
+            ['withBody', [new Stream(sys_get_temp_dir() . '/test', 'wr')]],
             ['withHeader', ['Content-Type', 'application/json']],
             ['withAddedHeader', ['Content-Type', 'application/json']],
             ['withoutHeader', ['Content-Type']],
