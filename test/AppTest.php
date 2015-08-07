@@ -23,6 +23,22 @@ class AppTest extends \PHPUnit_Framework_TestCase
         $this->app = new App();
     }
 
+    public function testIsDebug()
+    {
+        $this->assertFalse($this->app->isDebug());
+        $app = new App(null, true);
+        $this->assertTrue($app->isDebug());
+    }
+
+    public function testEnv()
+    {
+        $this->assertNull($this->app->env('doesnotexist'));
+        $this->app->env('foo', 'bar');
+        $this->assertSame('bar', $this->app->env('foo'));
+        $this->assertSame('bar', getenv('foo'));
+        $this->assertSame('bar', $_ENV['foo']);
+    }
+
     public function testPackage()
     {
         $app     = $this->app;
