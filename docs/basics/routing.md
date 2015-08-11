@@ -12,7 +12,7 @@ $app = new \Tonis\App;
 
 // respond with "hello world" when a GET request is made to "/"
 $app->get('/', function ($request, $response) {
-    $response->end("hello world");    
+    return $response->write("hello world");    
 });
 ```
 
@@ -26,11 +26,11 @@ Tonis supports the following HTTP methods: ```GET```, ```POST```, ```PUT```, ```
 $app = new \Tonis\App;
 
 $app->get('/', function ($request, $response) {
-    $response->end("GET request to homepage");    
+    return $response->write("GET request to homepage");    
 });
 
 $app->post('/', function ($request, $response) {
-    $response->end("POST request to homepage");    
+    return $response->write("POST request to homepage");    
 });
 ```
 
@@ -43,7 +43,7 @@ Route parameters may be used by enclosing part of the route in ```{...}```.
 $app = new \Tonis\App;
 
 $app->get('/{name}', function ($request, $response) {
-    $response->end('I match /foo, /bar, /foobar, etc.');
+    return $response->write('I match /foo, /bar, /foobar, etc.');
 });
 ```
 
@@ -53,7 +53,7 @@ You can specify a custom pattern match by using ```{foo:regex}``` where regex is
 $app = new \Tonis\App;
 
 $app->get('/{name:[0-9]+}', function ($request, $response) {
-    $response->end('I match /123 but not /foo');
+    return $response->write('I match /123 but not /foo');
 });
 ```
 
@@ -63,7 +63,7 @@ Additionally, parts of the route enclosed in ```[...]``` are considered optional
 $app = new \Tonis\App;
 
 $app->get('/foo[bar]', function ($request, $response) {
-    $response->end('I match /foo and /foobar but not /bar');
+    return $response->write('I match /foo and /foobar but not /bar');
 });
 ```
 
@@ -77,6 +77,6 @@ All matched route parameters are available in the ```$request``` object of the r
 $app = new \Tonis\App;
 
 $app->get('/{name}', function ($request, $response) {
-    $response->end('Hi ' . $request['name']);
+    return $response->write('Hi ' . $request['name']);
 });
 ```
