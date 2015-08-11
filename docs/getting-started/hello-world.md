@@ -10,7 +10,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Tonis\App;
 $app->get('/', function($request, $response) {
-    $response->write('Hello from Tonis');
+    return $response->write('Hello from Tonis');
 });
 
 $server = Zend\Diactoros\Server::createServer($app, $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES);
