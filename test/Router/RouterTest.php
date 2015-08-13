@@ -75,6 +75,20 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('1234get', $result->getBody()->__toString());
     }
 
+    public function testNamedRoute()
+    {
+        $named = false;
+
+        $this->router->get('/foo', function ($req, $res) use (&$named) {
+            if ($req->getAttribute('route') == 'foo-route') {
+                $named = true;
+            }
+        })->name('foo-route');
+        $this->router->__invoke($this->newTonisRequest('/foo'), $this->newTonisResponse(), function () {});
+
+        $this->assertTrue($named);
+    }
+
     public function testAddingMiddleware()
     {
         $this->router->add(function ($req, $res) {
