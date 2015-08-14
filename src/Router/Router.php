@@ -50,11 +50,9 @@ final class Router implements RouterInterface
         $route  = $result[1];
         $params = $result[2];
 
-        if (($routeName = $route->name()) !== null) {
-            $request = $request->withAttribute('route', $routeName);
-        }
-
-        $request = $request->withAttribute('params', $params);
+        $request = $request
+            ->withAttribute('params', $params)
+            ->withAttribute('route', $route->name());
 
         foreach ($params as $key => $value) {
             $request[$key] = $value;
