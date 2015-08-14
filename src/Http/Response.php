@@ -4,6 +4,7 @@ namespace Tonis\Http;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Tonis\App;
+use Tonis\Router\RouteMap;
 
 final class Response implements ResponseInterface
 {
@@ -45,6 +46,24 @@ final class Response implements ResponseInterface
         return $this
             ->withHeader('Location', $url)
             ->withStatus($permanent ? 301 : 302);
+    }
+
+    /**
+     * Redirects to a named route.
+     *
+     * @see \Tonis\Http\Response::redirect()
+     * @param string $route
+     * @param array $params
+     * @param bool|false $permanent
+     * @return ResponseInterface
+     */
+    public function redirectToRoute($route, array $params = [], $permanent = false)
+    {
+        /** @var RouteMap $map */
+        $map = $this->app()->getContainer()->get(RouteMap::class);
+        $url = $map->assemble($route, $params);
+
+        return $this->redirect($url, $permanent);
     }
 
     /**

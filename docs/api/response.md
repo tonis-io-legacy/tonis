@@ -49,6 +49,39 @@ $app->get('/', function ($request, $response) {
 });
 ```
 
+redirect()
+----------
+
+`public function redirect(string $url, bool $permanent = false): Tonis\Http\Response`
+
+Returns a response with a proper status code and Location header. If permanent is true,
+a 301 status code is used instead of 302.
+
+```php
+$app->get('/', function ($request, $response) {
+    return $response->redirect('http://www.example.com');
+});
+```
+
+redirectToRoute()
+----------------
+
+`public function redirect(string $route, array $params = [], bool $permanent = false): Tonis\Http\Response`
+
+Redirects to a named route.
+
+```php
+$app
+    ->get('/foo', function ($request, $response) {
+        return $response->write('bar');
+    })
+    ->name('foo');
+
+$app->get('/', function ($request, $response) {
+    return $response->redirectToRoute('foo');
+});
+```
+
 render()
 --------
 
