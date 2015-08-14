@@ -39,6 +39,20 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(301, $response->getStatusCode());
     }
 
+    public function testRedirectToRoute()
+    {
+        $this
+            ->app
+            ->get('/foo', function ($req, Response $res) {
+                return $res->write('foo');
+            })
+            ->name('foo');
+
+        $response = $this->response->redirectToRoute('foo');
+        $this->assertNotEmpty($response->getHeader('Location'));
+        $this->assertSame('/foo', $response->getHeader('Location')[0]);
+    }
+
     public function testJson()
     {
         $response = $this->response->json(['foo' => 'bar']);
