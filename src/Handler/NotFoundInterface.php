@@ -3,15 +3,8 @@ namespace Tonis\Handler;
 
 use Tonis\Http\Request;
 use Tonis\Http\Response;
+use Tonis\Middleware;
 
-interface NotFoundInterface
+interface NotFoundInterface extends Middleware\RouterInterface
 {
-    /**
-     * NotFound interface only accepts two arguments, $request and $response, and terminates the life-cycle.
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return Response
-     */
-    public function __invoke(Request $request, Response $response);
 }
