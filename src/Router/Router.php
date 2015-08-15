@@ -7,9 +7,9 @@ use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
 use Tonis\Http\Request;
 use Tonis\Http\Response;
-use Tonis\MiddlewareInterface;
+use Tonis\Middleware\AppInterface;
 
-final class Router implements MiddlewareInterface, RouterInterface
+final class Router implements AppInterface, RouterInterface
 {
     /** @var RouteCollector */
     private $collector;

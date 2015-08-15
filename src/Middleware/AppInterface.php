@@ -1,13 +1,13 @@
 <?php
-namespace Tonis;
+namespace Tonis\Middleware;
 
 use Tonis\Http\Request;
 use Tonis\Http\Response;
 
-interface MiddlewareInterface
+interface AppInterface
 {
     /**
-     * Interface defining middleware specific to Tonis.
+     * Interface defining application level middleware specific to Tonis.
      *
      * Takes a \Tonis\Http\Request, a \Tonis\Http\Response, and a callable $next. Implementation MAY
      * call the next middleware in the stack with $next($request, $reponse). Implementation MUST
