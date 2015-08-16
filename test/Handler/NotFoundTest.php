@@ -1,16 +1,16 @@
 <?php
 namespace Tonis\Handler;
 
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 
 /**
  * @covers \Tonis\Handler\NotFound
  */
 class NotFoundTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
-    /** @var ErrorHandler */
+    /** @var NotFound */
     private $handler;
 
     protected function setUp()

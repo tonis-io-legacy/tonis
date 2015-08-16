@@ -5,7 +5,7 @@ use Interop\Container\ContainerInterface;
 use Tonis\Http\Request as TonisRequest;
 use Tonis\Http\Response as TonisResponse;
 use Tonis\Router\Router;
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 use Zend\Diactoros\Response;
 
 /**
@@ -13,7 +13,7 @@ use Zend\Diactoros\Response;
  */
 class AppTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
     /** @var App */
     private $app;

@@ -1,7 +1,7 @@
 <?php
 namespace Tonis\Router;
 
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 use Zend\Diactoros\Response;
 
 /**
@@ -9,7 +9,7 @@ use Zend\Diactoros\Response;
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
     /** @var Router */
     private $router;

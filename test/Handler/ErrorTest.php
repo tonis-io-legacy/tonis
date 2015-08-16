@@ -1,14 +1,14 @@
 <?php
 namespace Tonis\Handler;
 
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 
 /**
  * @covers \Tonis\Handler\Error
  */
 class ErrorTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
     /** @var Error */
     private $handler;

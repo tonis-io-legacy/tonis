@@ -2,14 +2,14 @@
 namespace Tonis\Router;
 
 use Tonis\Http\Request;
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 
 /**
  * @cover \Tonis\Router\QueryParam
  */
 class QueryParamTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
     /** @var QueryParam */
     private $param;

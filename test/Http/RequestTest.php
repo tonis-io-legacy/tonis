@@ -3,7 +3,7 @@ namespace Tonis\Http;
 
 use Tonis\App;
 use Tonis\Http\Request as TonisRequest;
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 use Zend\Diactoros\ServerRequest as DiactorosRequest;
 use Zend\Diactoros\Stream;
 use Zend\Diactoros\Uri;
@@ -13,7 +13,7 @@ use Zend\Diactoros\Uri;
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
     public function testArrayAccess()
     {

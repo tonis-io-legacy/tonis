@@ -1,14 +1,14 @@
 <?php
 namespace Tonis\Router;
 
-use Tonis\TestAsset\NewRequestTrait;
+use Tonis\Test\TonisPsr7Trait;
 
 /**
  * @cover \Tonis\Router\AbstractParam
  */
 class AbstractParamTest extends \PHPUnit_Framework_TestCase
 {
-    use NewRequestTrait;
+    use TonisPsr7Trait;
 
     /** @var RouteParam */
     private $param;

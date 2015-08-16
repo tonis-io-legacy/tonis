@@ -1,5 +1,5 @@
 <?php
-namespace Tonis\TestAsset;
+namespace Tonis\Test;
 
 use Tonis\App;
 use Tonis\Http\Request as TonisRequest;
@@ -7,7 +7,7 @@ use Tonis\Http\Response as TonisResponse;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 
-trait NewRequestTrait
+trait TonisPsr7Trait
 {
     /**
      * @return TonisResponse
