@@ -26,6 +26,9 @@ final class Container implements ResolverInterface
     {
         if (is_string($handler)) {
             return $this->container->get($handler);
+        } elseif (is_array($handler) && isset($handler[0]) && is_string($handler[0])) {
+            $handler[0] = $this->container->get($handler[0]);
+            return $handler;
         }
         return $handler;
     }
