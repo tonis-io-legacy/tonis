@@ -10,6 +10,8 @@ class RouteMap implements \Countable, \Iterator
     private $routes = [];
     /** @var Route[] */
     private $nameCache = [];
+    /** @var Route|null */
+    private $routeMatch;
     /** @var RouteParser */
     private $routeParser;
 
@@ -164,6 +166,22 @@ class RouteMap implements \Countable, \Iterator
     public function count()
     {
         return count($this->routes);
+    }
+
+    /**
+     * @return null|Route
+     */
+    public function getRouteMatch()
+    {
+        return $this->routeMatch;
+    }
+
+    /**
+     * @param null|Route $routeMatch
+     */
+    public function setRouteMatch($routeMatch)
+    {
+        $this->routeMatch = $routeMatch;
     }
 
     /**

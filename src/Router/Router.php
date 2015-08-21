@@ -53,7 +53,10 @@ final class Router implements AppInterface, RouterInterface
 
         $request = $request
             ->withAttribute('params', $params)
-            ->withAttribute('route', $route->name());
+            ->withAttribute('route', $route);
+
+        // set the route map match
+        $this->routeMap->setRouteMatch($route);
 
         foreach ($params as $key => $value) {
             $request[$key] = $value;

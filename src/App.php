@@ -18,6 +18,8 @@ final class App implements Router\RouterInterface
     private $relayBuilder;
     /** @var callable[] */
     private $middleware = [];
+    /** @var Router\RouteMap */
+    private $routeMap;
     /** @var bool */
     private $debug = false;
     /** @var View\Manager */
@@ -34,6 +36,7 @@ final class App implements Router\RouterInterface
         }
 
         $this->relayBuilder    = new RelayBuilder();
+        $this->routeMap        = new Router\RouteMap();
         $this->container       = $container;
         $this->errorHandler    = $container->get(Handler\ErrorInterface::class);
         $this->notFoundHandler = $container->get(Handler\NotFoundInterface::class);
@@ -65,8 +68,7 @@ final class App implements Router\RouterInterface
             throw new Exception\InvalidResponse;
         }
 
-        $body = (string)$response->getBody();
-        if (0 === strlen($body)) {
+        if (null === $this->routeMap->getRouteMatch()) {
             $response = $notFound($request, $response);
         }
 
@@ -85,7 +87,7 @@ final class App implements Router\RouterInterface
      */
     public function router()
     {
-        return $this->container->get(Router\Router::class);
+        return new Router\Router($this->routeMap, new Router\Resolver\Container($this->container));
     }
 
     /**
@@ -184,6 +186,14 @@ final class App implements Router\RouterInterface
     public function getView()
     {
         return $this->view;
+    }
+
+    /**
+     * @return Router\RouteMap
+     */
+    public function getRouteMap()
+    {
+        return $this->routeMap;
     }
 
     /**

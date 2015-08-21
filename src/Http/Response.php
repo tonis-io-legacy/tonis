@@ -59,8 +59,7 @@ final class Response implements ResponseInterface
      */
     public function redirectToRoute($route, array $params = [], $permanent = false)
     {
-        /** @var RouteMap $map */
-        $map = $this->app()->getContainer()->get(RouteMap::class);
+        $map = $this->app()->getRouteMap();
         $url = $map->assemble($route, $params);
 
         return $this->redirect($url, $permanent);
