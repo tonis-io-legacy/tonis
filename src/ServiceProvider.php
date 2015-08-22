@@ -12,6 +12,7 @@ class ServiceProvider extends BaseServiceProvider
         Engine::class,
         Handler\ErrorInterface::class,
         Handler\NotFoundInterface::class,
+        Router\RouteMap::class,
         View\Manager::class,
     ];
 
@@ -21,6 +22,10 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $container = $this->getContainer();
+
+        $container->singleton(Router\RouteMap::class, function () {
+            return new Router\RouteMap();
+        });
 
         // handles errors in the life-cycle
         $container->singleton(Handler\ErrorInterface::class, function () {

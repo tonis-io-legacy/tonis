@@ -36,8 +36,8 @@ final class App implements Router\RouterInterface
         }
 
         $this->relayBuilder    = new RelayBuilder();
-        $this->routeMap        = new Router\RouteMap();
         $this->container       = $container;
+        $this->routeMap        = $container->get(Router\RouteMap::class);
         $this->errorHandler    = $container->get(Handler\ErrorInterface::class);
         $this->notFoundHandler = $container->get(Handler\NotFoundInterface::class);
         $this->view            = $container->get(View\Manager::class);
