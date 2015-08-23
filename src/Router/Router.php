@@ -10,7 +10,7 @@ use Tonis\MiddlewareInterface;
 use Tonis\Resolver;
 use Zend\Stratigility\Http\ResponseInterface;
 
-final class Router implements MiddlewareInterface, RouterInterface
+final class Router implements MiddlewareInterface
 {
     /** @var RouteCollector */
     private $collector;

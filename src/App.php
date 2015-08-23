@@ -4,6 +4,8 @@ namespace Tonis;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\ServerRequestFactory;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class App extends MiddlewarePipe
@@ -16,11 +18,15 @@ final class App extends MiddlewarePipe
     private $isRouterAdded = false;
 
     /**
-     * @param ContainerInterface $container
+     * @param ContainerInterface        $container
+     * @param Response\EmitterInterface $emitter
      */
-    public function __construct(ContainerInterface $container = null)
-    {
+    public function __construct(
+        ContainerInterface $container = null,
+        Response\EmitterInterface $emitter = null
+    ) {
         $this->container = $container;
+        $this->emitter   = $emitter ?: new Response\SapiEmitter();
         $this->router    = new Router\Router(new Resolver\Basic($this->container));
 
         parent::__construct();
@@ -36,6 +42,19 @@ final class App extends MiddlewarePipe
     {
         $this->addRouterMiddleware();
         return parent::__invoke($request, $response, $done);
+    }
+
+    /**
+     * @param ServerRequestInterface|null $request
+     * @param ResponseInterface|null      $response
+     */
+    public function run(ServerRequestInterface $request = null, ResponseInterface $response = null)
+    {
+        $request  = $request ?: ServerRequestFactory::fromGlobals();
+        $response = $response ?: new Response();
+        $response = $this($request, $response);
+
+        $this->emitter->emit($response);
     }
 
     /**
