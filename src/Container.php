@@ -12,7 +12,6 @@ class Container extends LeagueContainer implements ContainerInterface
     public function __construct()
     {
         parent::__construct();
-        $this->addServiceProvider(new ServiceProvider);
     }
 
     /**

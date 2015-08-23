@@ -4,172 +4,125 @@ namespace Tonis;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Relay\RelayBuilder;
+use Zend\Stratigility\MiddlewarePipe;
 
-final class App implements Router\RouterInterface
+final class App extends MiddlewarePipe
 {
     /** @var ContainerInterface */
     private $container;
-    /** @var Handler\ErrorInterface */
-    private $errorHandler;
-    /** @var Handler\NotFoundInterface */
-    private $notFoundHandler;
-    /** @var RelayBuilder */
-    private $relayBuilder;
-    /** @var callable[] */
-    private $middleware = [];
-    /** @var Router\RouteMap */
-    private $routeMap;
+    /** @var Router\Router */
+    private $router;
     /** @var bool */
-    private $debug = false;
-    /** @var View\Manager */
-    private $view;
+    private $isRouterAdded = false;
 
     /**
      * @param ContainerInterface $container
-     * @param bool $debug
      */
-    public function __construct(ContainerInterface $container = null, $debug = false)
+    public function __construct(ContainerInterface $container = null)
     {
-        if (null === $container) {
-            $container = new Container;
-        }
+        $this->container = $container ?: new Container();
+        $this->router    = new Router\Router(new Resolver\Basic($this->container));
 
-        $this->relayBuilder    = new RelayBuilder();
-        $this->container       = $container;
-        $this->routeMap        = $container->get(Router\RouteMap::class);
-        $this->errorHandler    = $container->get(Handler\ErrorInterface::class);
-        $this->notFoundHandler = $container->get(Handler\NotFoundInterface::class);
-        $this->view            = $container->get(View\Manager::class);
-        $this->debug           = $debug;
+        parent::__construct();
     }
 
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @param callable               $next
+     * @param callable               $done
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next = null)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $done = null)
     {
-        $request  = $this->decorateRequest($request);
-        $response = $this->decorateResponse($response);
-        $relay    = $this->relayBuilder->newInstance($this->middleware);
-        $error    = $this->errorHandler;
-        $notFound = $this->notFoundHandler;
+        $this->addRouterMiddleware();
+        return parent::__invoke($request, $response, $done);
+    }
 
-        try {
-            $response = $relay($request, $response);
-        } catch (\Exception $ex) {
-            $response = $error($request, $response, $ex);
+    /**
+     * {@inheritDoc}
+     */
+    public function get($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function post($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function put($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function patch($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function delete($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function options($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function head($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function any($path, ...$handlers)
+    {
+        return $this->route($path, __FUNCTION__, $handlers);
+    }
+
+    /**
+     * @param string|callable $pathOrHandler
+     * @param callable        $handler
+     */
+    public function add($pathOrHandler, callable $handler = null)
+    {
+        $this->pipe($pathOrHandler, $handler);
+    }
+
+    /**
+     * Adds routing middleware to the pipeline. This happens automatically
+     * when a route is added or when the application is invoked but can be
+     * done manually if required.
+     */
+    public function addRouterMiddleware()
+    {
+        if ($this->isRouterAdded) {
+            return;
         }
-
-        if (!$response instanceof ResponseInterface) {
-            throw new Exception\InvalidResponse;
-        }
-
-        if (null === $this->routeMap->getRouteMatch()) {
-            $response = $notFound($request, $response);
-        }
-
-        return $next ? $next($request, $response) : $response;
-    }
-
-    /**
-     * Routers are middleware and can be added to Tonis.
-     *
-     * e.g., $router = $app->router();
-     *       $router->get(...)
-     *
-     *       $app->add($router);
-     *
-     * @return Router\Router
-     */
-    public function router()
-    {
-        return new Router\Router($this->routeMap, new Router\Resolver\Container($this->container));
-    }
-
-    /**
-     * @param PackageInterface $package
-     */
-    public function package(PackageInterface $package)
-    {
-        $package->register($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function get($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function post($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function put($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function patch($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function delete($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function options($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function head($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function any($path, $handler)
-    {
-        return $this->route($path, $handler, __FUNCTION__);
-    }
-
-    /**
-     * Proxies to MiddlewarePipe::pipe.
-     *
-     * @param callable $handler
-     */
-    public function add($handler)
-    {
-        $this->middleware[] = $handler;
+        $this->add($this->router);
+        $this->isRouterAdded = true;
     }
 
     /**
@@ -177,31 +130,10 @@ final class App implements Router\RouterInterface
      */
     public function getContainer()
     {
+        if (null === $this->container) {
+            throw new Exception\NoContainerRegistered();
+        }
         return $this->container;
-    }
-
-    /**
-     * @return View\Manager
-     */
-    public function getView()
-    {
-        return $this->view;
-    }
-
-    /**
-     * @return Router\RouteMap
-     */
-    public function getRouteMap()
-    {
-        return $this->routeMap;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDebug()
-    {
-        return $this->debug;
     }
 
     /**
@@ -227,47 +159,16 @@ final class App implements Router\RouterInterface
     }
 
     /**
-     * @param string   $path
-     * @param callable $handler
-     * @param string   $type
+     * @param string $path
+     * @param string $type
+     * @param mixed  ...$handlers
+     * @return
      */
-    private function route($path, $handler, $type)
+    private function route($path, $type, $handlers)
     {
-        $router = $this->router();
-        $route  = $router->$type($path, $handler);
-
-        $this->add($router);
+        $route = $this->router->$type($path, $handlers);
+        $this->addRouterMiddleware();
 
         return $route;
-    }
-
-    /**
-     * Decorates a request to add this app to it.
-     *
-     * @param ServerRequestInterface $request
-     * @return ServerRequestInterface|Http\Request
-     */
-    private function decorateRequest(ServerRequestInterface $request)
-    {
-        if ($request instanceof Http\Request) {
-            return $request;
-        }
-
-        return new Http\Request($this, $request);
-    }
-
-    /**
-     * Decorates a response to add this app to it.
-     *
-     * @param ResponseInterface $response
-     * @return ResponseInterface|Http\Response
-     */
-    private function decorateResponse(ResponseInterface $response)
-    {
-        if ($response instanceof Http\Response) {
-            return $response;
-        }
-
-        return new Http\Response($this, $response);
     }
 }

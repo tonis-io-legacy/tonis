@@ -5,39 +5,31 @@ use FastRoute\DataGenerator\GroupCountBased as RouteGenerator;
 use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
-use Tonis\Http\Request;
-use Tonis\Http\Response;
-use Tonis\Middleware\AppInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Tonis\MiddlewareInterface;
+use Tonis\Resolver;
+use Zend\Stratigility\Http\ResponseInterface;
 
-final class Router implements AppInterface, RouterInterface
+final class Router implements MiddlewareInterface, RouterInterface
 {
     /** @var RouteCollector */
     private $collector;
-    /** @var array */
-    private $middleware = [];
-    /** @var RouteMap */
-    private $routeMap;
     /** @var Resolver\ResolverInterface */
     private $resolver;
 
     /**
-     * @param RouteMap                   $routeMap
      * @param Resolver\ResolverInterface $resolver
      */
-    public function __construct(RouteMap $routeMap = null, Resolver\ResolverInterface $resolver = null)
+    public function __construct(Resolver\ResolverInterface $resolver = null)
     {
         $this->collector = new RouteCollector(new RouteParser, new RouteGenerator);
-        $this->resolver  = $resolver ?: new Resolver\Invoke;
-        $this->routeMap  = $routeMap ?: new RouteMap;
+        $this->resolver  = $resolver ?: new Resolver\Basic();
     }
 
     /**
-     * @param Request  $request
-     * @param Response $response
-     * @param callable $next
-     * @return Response
+     * {@inheritDoc}
      */
-    public function __invoke(Request $request, Response $response, callable $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $dispatcher = new Dispatcher($this->collector->getData());
         $result     = $dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
@@ -55,124 +47,71 @@ final class Router implements AppInterface, RouterInterface
             ->withAttribute('params', $params)
             ->withAttribute('route', $route);
 
-        // set the route map match
-        $this->routeMap->setRouteMatch($route);
-
-        foreach ($params as $key => $value) {
-            $request[$key] = $value;
-        }
-
-        // Custom middleware handler.
-        // We have to iterate through middleware as it was added so that they retain the proper ordering.
-        // We have to check if the middleware is a route and if it was the route matched during dispatching.
-        // If so, we can call the route handler, otherwise, we need to skip over it.
-        $middleware = $this->middleware;
-        $callable   = function ($request, $response) use (&$callable, &$middleware, $route, $next) {
-            /** @var callable $layer */
-            $layer = array_shift($middleware);
-
-            if ($layer instanceof Route) {
-                if ($layer !== $route) {
-                    return $callable($request, $response, $next);
-                }
-
-                $layer = $this->resolver->resolve($route->getHandler());
-
-                return $layer($request, $response);
-            }
-
-            return $layer($request, $response, $callable);
-        };
-
-        return $callable($request, $response);
-    }
-
-    /**
-     * Adds query handlers to a queue. The queue is processed at invocation by RelayPHP.
-     *
-     * @param string   $param
-     * @param callable $handler
-     */
-    public function query($param, $handler)
-    {
-        $param              = new QueryParam($param, $handler);
-        $this->middleware[] = $param;
-    }
-
-    /**
-     * Adds param handlers to a queue. The queue is processed at invocation by RelayPHP.
-     *
-     * @param string   $param
-     * @param callable $handler
-     */
-    public function param($param, $handler)
-    {
-        $param              = new RouteParam($param, $handler);
-        $this->middleware[] = $param;
+        return $route($this->resolver, $request, $response, $next);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get($path, $handler)
+    public function get($path, $handlers)
     {
-        return $this->route('GET', $path, $handler);
+        return $this->route('GET', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function post($path, $handler)
+    public function post($path, $handlers)
     {
-        return $this->route('POST', $path, $handler);
+        return $this->route('POST', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function patch($path, $handler)
+    public function patch($path, $handlers)
     {
-        return $this->route('PATCH', $path, $handler);
+        return $this->route('PATCH', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function put($path, $handler)
+    public function put($path, $handlers)
     {
-        return $this->route('PUT', $path, $handler);
+        return $this->route('PUT', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function delete($path, $handler)
+    public function delete($path, $handlers)
     {
-        return $this->route('DELETE', $path, $handler);
+        return $this->route('DELETE', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function head($path, $handler)
+    public function head($path, $handlers)
     {
-        return $this->route('HEAD', $path, $handler);
+        return $this->route('HEAD', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function options($path, $handler)
+    public function options($path, $handlers)
     {
-        return $this->route('OPTIONS', $path, $handler);
+        return $this->route('OPTIONS', $path, $handlers);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function any($path, $handler)
+    public function any($path, $handlers)
     {
-        return $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handler);
+        return $this->route(['GET', 'POST', 'PATCH', 'PUT', 'HEAD', 'DELETE', 'OPTIONS'], $path, $handlers);
     }
 
     /**
@@ -187,23 +126,14 @@ final class Router implements AppInterface, RouterInterface
     /**
      * @param string|string[] $methods
      * @param string          $path
-     * @param callable        $handler
+     * @param callable        $handlers
      * @return Route
      */
-    public function route($methods, $path, $handler)
+    public function route($methods, $path, $handlers)
     {
-        $route = $this->routeMap->add($path, $handler);
+        $route = new Route($path, $handlers);
         $this->collector->addRoute($methods, $path, $route);
-        $this->middleware[] = $route;
 
         return $route;
-    }
-
-    /**
-     * @param callable $middleware
-     */
-    public function add($middleware)
-    {
-        $this->middleware[] = $middleware;
     }
 }

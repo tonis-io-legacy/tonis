@@ -1,11 +1,11 @@
 <?php
-namespace Tonis\Router\Resolver;
+namespace Tonis\Resolver;
 
 interface ResolverInterface
 {
     /**
      * @param mixed $handler
-     * @return mixed
+     * @return callable
      */
     public function resolve($handler);
 }

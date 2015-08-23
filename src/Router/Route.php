@@ -1,53 +1,49 @@
 <?php
 namespace Tonis\Router;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Tonis\Resolver\ResolverInterface;
+use Zend\Stratigility\Http\ResponseInterface;
+
 final class Route
 {
     /** @var string */
     private $path;
     /** @var callable */
-    private $handler;
+    private $handlers;
     /** @var string|null */
     private $name;
 
     /**
      * @param string $path
-     * @param mixed  $handler
+     * @param mixed  $handlers
      */
-    public function __construct($path, $handler)
+    public function __construct($path, $handlers)
     {
-        $this->path    = $path;
-        $this->handler = $handler;
+        $this->path     = $path;
+        $this->handlers = $handlers;
     }
 
     /**
-     * accessor/mutator for name.
-     *
-     * @param null|string $name
-     * @return null|string
+     * {@inheritDoc}
      */
-    public function name($name = null)
-    {
-        if (null !== $name) {
-            $this->name = $name;
-        }
+    public function __invoke(
+        ResolverInterface $resolver,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next
+    ) {
+        $callable = function ($request, $response) use (&$callable, $next, $resolver) {
+            if (empty($this->handlers)) {
+                return $next($request, $response);
+            }
 
-        return $this->name;
-    }
+            $handler  = array_shift($this->handlers);
+            $handler  = $resolver->resolve($handler);
 
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
+            return $handler($request, $response, $callable);
+        };
 
-    /**
-     * @return callable
-     */
-    public function getHandler()
-    {
-        return $this->handler;
+        return $callable($request, $response, $next);
     }
 }
