@@ -115,15 +115,6 @@ final class Router implements MiddlewareInterface, RouterInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function group($name, callable $func)
-    {
-        $group = new Group($this, $name);
-        $func($group);
-    }
-
-    /**
      * @param string|string[] $methods
      * @param string          $path
      * @param callable        $handlers

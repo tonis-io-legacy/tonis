@@ -1,10 +1,10 @@
 <?php
-namespace Tonis;
+namespace Tonis\Container;
 
 use Interop\Container\ContainerInterface;
 use League\Container\Container as LeagueContainer;
 
-class Container extends LeagueContainer implements ContainerInterface
+class League extends LeagueContainer implements ContainerInterface
 {
     /**
      * {@inheritDoc}

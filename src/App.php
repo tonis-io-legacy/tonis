@@ -20,7 +20,7 @@ final class App extends MiddlewarePipe
      */
     public function __construct(ContainerInterface $container = null)
     {
-        $this->container = $container ?: new Container();
+        $this->container = $container;
         $this->router    = new Router\Router(new Resolver\Basic($this->container));
 
         parent::__construct();

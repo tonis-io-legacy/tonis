@@ -38,8 +38,8 @@ final class Route
                 return $next($request, $response);
             }
 
-            $handler  = array_shift($this->handlers);
-            $handler  = $resolver->resolve($handler);
+            $handler = array_shift($this->handlers);
+            $handler = $resolver->resolve($handler);
 
             return $handler($request, $response, $callable);
         };
