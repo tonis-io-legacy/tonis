@@ -4,7 +4,7 @@ namespace Tonis\Container;
 use Interop\Container\ContainerInterface;
 use Pimple\Container;
 
-class Pimple extends Container implements ContainerInterface
+class PimpleContainer extends Container implements ContainerInterface
 {
     /**
      * {@inheritDoc}

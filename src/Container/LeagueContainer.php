@@ -2,9 +2,9 @@
 namespace Tonis\Container;
 
 use Interop\Container\ContainerInterface;
-use League\Container\Container as LeagueContainer;
+use League\Container\Container;
 
-class League extends LeagueContainer implements ContainerInterface
+class LeagueContainer extends Container implements ContainerInterface
 {
     /**
      * {@inheritDoc}

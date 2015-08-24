@@ -8,12 +8,14 @@ use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\Stratigility\MiddlewarePipe;
 
-final class App extends MiddlewarePipe
+final class App
 {
     /** @var ContainerInterface */
     private $container;
     /** @var Router\Router */
     private $router;
+    /** @var MiddlewarePipe */
+    private $pipeline;
     /** @var bool */
     private $isRouterAdded = false;
 
@@ -28,8 +30,7 @@ final class App extends MiddlewarePipe
         $this->container = $container;
         $this->emitter   = $emitter ?: new Response\SapiEmitter();
         $this->router    = new Router\Router(new Resolver\Basic($this->container));
-
-        parent::__construct();
+        $this->pipeline  = new MiddlewarePipe();
     }
 
     /**
@@ -40,8 +41,10 @@ final class App extends MiddlewarePipe
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $done = null)
     {
-        $this->addRouterMiddleware();
-        return parent::__invoke($request, $response, $done);
+        $request  = $this->decorateRequest($request);
+        $response = $this->decorateResponse($response);
+
+        return $this->pipeline->__invoke($request, $response, $done);
     }
 
     /**
@@ -52,6 +55,7 @@ final class App extends MiddlewarePipe
     {
         $request  = $request ?: ServerRequestFactory::fromGlobals();
         $response = $response ?: new Response();
+
         $response = $this($request, $response);
 
         $this->emitter->emit($response);
@@ -60,65 +64,65 @@ final class App extends MiddlewarePipe
     /**
      * {@inheritDoc}
      */
-    public function get($path, ...$handlers)
+    public function get($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function post($path, ...$handlers)
+    public function post($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function put($path, ...$handlers)
+    public function put($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function patch($path, ...$handlers)
+    public function patch($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function delete($path, ...$handlers)
+    public function delete($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function options($path, ...$handlers)
+    public function options($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function head($path, ...$handlers)
+    public function head($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function any($path, ...$handlers)
+    public function any($path, $handlers)
     {
-        return $this->route($path, __FUNCTION__, $handlers);
+        return $this->route($path, __FUNCTION__, array_slice(func_get_args(), 1));
     }
 
     /**
@@ -127,7 +131,7 @@ final class App extends MiddlewarePipe
      */
     public function add($pathOrHandler, callable $handler = null)
     {
-        $this->pipe($pathOrHandler, $handler);
+        $this->pipeline->pipe($pathOrHandler, $handler);
     }
 
     /**
@@ -140,6 +144,7 @@ final class App extends MiddlewarePipe
         if ($this->isRouterAdded) {
             return;
         }
+
         $this->add($this->router);
         $this->isRouterAdded = true;
     }
@@ -152,6 +157,7 @@ final class App extends MiddlewarePipe
         if (null === $this->container) {
             throw new Exception\NoContainerRegistered();
         }
+
         return $this->container;
     }
 
@@ -180,7 +186,7 @@ final class App extends MiddlewarePipe
     /**
      * @param string $path
      * @param string $type
-     * @param mixed  ...$handlers
+     * @param mixed  $handlers
      * @return
      */
     private function route($path, $type, $handlers)
@@ -189,5 +195,33 @@ final class App extends MiddlewarePipe
         $this->addRouterMiddleware();
 
         return $route;
+    }
+
+    /**
+     * Decorates the request as a Tonis\Http\Request.
+     *
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface|Http\Request
+     */
+    private function decorateRequest(ServerRequestInterface $request)
+    {
+        if ($request instanceof Http\Request) {
+            return $request;
+        }
+        return new Http\Request($request);
+    }
+
+    /**
+     * Decorates the response as a Tonis\Http\Response.
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface|Http\Response
+     */
+    private function decorateResponse(ResponseInterface $response)
+    {
+        if ($response instanceof Http\Response) {
+            return $response;
+        }
+        return new Http\Response($response);
     }
 }

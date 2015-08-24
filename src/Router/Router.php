@@ -5,10 +5,10 @@ use FastRoute\DataGenerator\GroupCountBased as RouteGenerator;
 use FastRoute\Dispatcher\GroupCountBased as Dispatcher;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std as RouteParser;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tonis\MiddlewareInterface;
 use Tonis\Resolver;
-use Zend\Stratigility\Http\ResponseInterface;
 
 final class Router implements MiddlewareInterface
 {

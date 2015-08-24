@@ -1,8 +1,8 @@
 <?php
 namespace Tonis;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Stratigility\Http\ResponseInterface;
 
 interface MiddlewareInterface
 {
